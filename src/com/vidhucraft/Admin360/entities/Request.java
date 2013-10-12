@@ -22,7 +22,7 @@ public class Request {
 	private long time;
 	
 	/**
-	 * Creates a new request
+	 * Create a new request
 	 * @param playername String player's name
 	 */
 	public Request(String playername){
@@ -30,7 +30,7 @@ public class Request {
 	}
 	
 	/**
-	 * Creates a new request
+	 * Create a new request
 	 * @param playername String player's name
 	 * @param reason String request's reason
 	 */
