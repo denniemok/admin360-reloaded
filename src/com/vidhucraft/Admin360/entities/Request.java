@@ -7,7 +7,7 @@ import java.util.Queue;
  * This class represents the requests created by users. 
  * When a request is created, an instance of this class is created
  * along with the necessary information and is then queued in the 
- * request queue
+ * request queue.
  * @author Vidhu
  */
 public class Request {
