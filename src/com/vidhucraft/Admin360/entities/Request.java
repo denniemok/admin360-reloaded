@@ -21,11 +21,19 @@ public class Request {
 	private String reason;
 	private long time;
 	
-	
+	/**
+	 * Creates a new request
+	 * @param playername String player's name
+	 */
 	public Request(String playername){
 		new Request(playername, null);
 	}
 	
+	/**
+	 * Creates a new request
+	 * @param playername String player's name
+	 * @param reason String request's reason
+	 */
 	public Request(String playername, String reason){
 		this.playerName = playername;
 		this.reason = reason;
