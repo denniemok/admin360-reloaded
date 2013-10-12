@@ -4,6 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Admin360 extends JavaPlugin{
 	
+	
+	
 	@Override
 	public void onEnable(){
 		
