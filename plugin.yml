@@ -1,0 +1,27 @@
+name: Admin360
+main: com.vidhucraft.Admin360.Admin360
+version: 2.0.0
+softdepend: [PermissionsEx]
+commands:
+    a3:
+        description: General command for Admin360
+        usage: /<command> admin | status | count | aid | stats
+    helpme:
+        description: Allows a player to request a staff
+permissions:
+    admin360.*:
+        description: Gives access to all admin360 commands
+        children:
+            admin360.stats.others: true
+            admin360.admin:
+                description: Access to all admin360 admin commands
+                children:
+                    admin360.aid: true
+                    admin360.purge: true
+                    admin360.stats: true
+            admin360.player:
+                description: Access to all admin360 player commands
+                children:
+                    admin360.request: true
+                    admin360.status: true
+                    admin360.count: true
