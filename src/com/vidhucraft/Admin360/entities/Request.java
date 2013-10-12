@@ -1,5 +1,9 @@
 package com.vidhucraft.Admin360.entities;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 /**
  * This class represents the requests created by users. 
  * When a request is created, an instance of this class is created
@@ -8,6 +12,12 @@ package com.vidhucraft.Admin360.entities;
  * @author Vidhu
  */
 public class Request {
+	/**
+	 * The queue of all requests that are made and still pending
+	 */
+	Queue<Request> requestQueue = new LinkedList<Request>();
+	
+	//non-Static members
 	private String playerName;
 	private String reason;
 	private long time;
