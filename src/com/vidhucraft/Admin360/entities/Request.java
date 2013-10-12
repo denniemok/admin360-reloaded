@@ -14,7 +14,7 @@ public class Request {
 	/**
 	 * The queue of all requests that are made and still pending
 	 */
-	Queue<Request> requestQueue = new LinkedList<Request>();
+	public static Queue<Request> requestQueue = new LinkedList<Request>();
 	
 	//non-Static members
 	private String playerName;
