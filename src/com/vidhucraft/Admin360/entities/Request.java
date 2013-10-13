@@ -20,6 +20,7 @@ public class Request {
 	private String playerName;
 	private String reason;
 	private boolean isAttended;
+	private Admin handledBy;
 	private long time;
 	
 	/**
@@ -66,12 +67,36 @@ public class Request {
 		return time;
 	}
 
+	/**
+	 * Gets if this request has been handles
+	 * @return <b>bool</b> TRUE if this request has been handled or not
+	 */
 	public boolean isAttended() {
 		return isAttended;
 	}
 
+	/**
+	 * Sets whether this request has been handled or not
+	 * @param isAttended <b>bool</b> TRUE if request has been handled
+	 */
 	public void setAttended(boolean isAttended) {
 		this.isAttended = isAttended;
+	}
+
+	/**
+	 * Gets the admin who handled this request
+	 * @return <b>Admin</b>
+	 */
+	public Admin getHandledBy() {
+		return handledBy;
+	}
+
+	/**
+	 * Sets the admin who handled this request
+	 * @param handledBy <b>Admin</b> admin who handled this request
+	 */
+	public void setHandledBy(Admin handledBy) {
+		this.handledBy = handledBy;
 	}
 
 }
