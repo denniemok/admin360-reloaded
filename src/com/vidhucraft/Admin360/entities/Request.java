@@ -38,6 +38,7 @@ public class Request {
 	public Request(String playername, String reason){
 		this.playerName = playername;
 		this.reason = reason;
+		this.isAttended = false;
 		this.time = System.currentTimeMillis();
 	}
 	
