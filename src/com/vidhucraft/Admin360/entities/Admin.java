@@ -3,6 +3,9 @@ package com.vidhucraft.Admin360.entities;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
 /**
  * This class represents the Admins in the server. The static member
  * <pre>adminsOnline</pre> lists all the admins online on the server at the moment
@@ -11,12 +14,13 @@ import java.util.ArrayList;
  * @author Vidhu
  *
  */
-public class Admin {
+public class Admin{
 	//Static members
 	/**
 	 * A list containing all the admins online in the server
 	 */
 	public static List<Admin> adminsOnline = new ArrayList<Admin>();
+	
 	
 	//non Static members
 	private String adminName;
@@ -45,5 +49,13 @@ public class Admin {
 		if(adminName.equals(""))
 			throw new Exception("Admin name cannot be empty");
 		this.adminName = adminName;
+	}
+	
+	/**
+	 * Sends a message to the admin
+	 * @param message <b>String</b> message
+	 */
+	public void sendMessage(String message){
+		Bukkit.getPlayer(this.adminName).sendMessage(ChatColor.GREEN + message);
 	}
 }
