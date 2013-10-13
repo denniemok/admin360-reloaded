@@ -19,6 +19,7 @@ public class Request {
 	//non-Static members
 	private String playerName;
 	private String reason;
+	private boolean isAttended;
 	private long time;
 	
 	/**
@@ -62,6 +63,14 @@ public class Request {
 	 */
 	public Long getTime() {
 		return time;
+	}
+
+	public boolean isAttended() {
+		return isAttended;
+	}
+
+	public void setAttended(boolean isAttended) {
+		this.isAttended = isAttended;
 	}
 
 }
