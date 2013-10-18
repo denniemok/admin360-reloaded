@@ -1,5 +1,6 @@
 package com.vidhucraft.Admin360.entities;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,11 +17,46 @@ public class Request {
 	 */
 	public static Queue<Request> requestQueue = new LinkedList<Request>();
 	
+	/**
+	 * Collection of requests that are being handled by an admin at the moment
+	 * Key: name of admin
+	 * Value: Request object
+	 */
+	public static HashMap<String, Request> requestInProgresss = new HashMap<String, Request>();
+	
+	/**
+	 * Collection of request that are closed by the admin but are awaiting use response
+	 * of /a3 yes or /a3 no
+	 * Key: name of player
+	 * Value: Request object
+	 */
+	public static HashMap<String, Request> requestCompleted = new HashMap<String, Request>();
+	
+	
 	//non-Static members
+	/**
+	 * The player's name who created this request
+	 */
 	private String playerName;
+	
+	/**
+	 * The player's specified reason for this request
+	 */
 	private String reason;
+	
+	/**
+	 * If this request has been attended
+	 */
 	private boolean isAttended;
+	
+	/**
+	 * The admin who is handling this request
+	 */
 	private Admin handledBy;
+	
+	/**
+	 * The epoch time the request was created
+	 */
 	private long time;
 	
 	/**
@@ -40,7 +76,7 @@ public class Request {
 		this.playerName = playername;
 		this.reason = reason;
 		this.isAttended = false;
-		this.time = System.currentTimeMillis();
+		this.time = System.currentTimeMillis()/1000;
 	}
 	
 	/**
