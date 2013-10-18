@@ -1,5 +1,6 @@
 package com.vidhucraft.Admin360.entities;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class Admin{
 	/**
 	 * A list containing all the admins online in the server
 	 */
-	public static List<Admin> adminsOnline = new ArrayList<Admin>();
+	public static HashMap<String, Admin> adminsOnline = new HashMap<String, Admin>();
 	
 	
 	//non Static members
