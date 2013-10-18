@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import com.vidhucraft.Admin360.Admin360;
+
 /**
  * This class represents the Admins in the server. The static member
  * <pre>adminsOnline</pre> lists all the admins online on the server at the moment
@@ -58,4 +60,13 @@ public class Admin{
 	public void sendMessage(String message){
 		Bukkit.getPlayer(this.adminName).sendMessage(ChatColor.GREEN + message);
 	}
+	
+	/**
+	 * Gives an admin an honor
+	 * @param request The request the admin is getting honored for
+	 */
+	public void giveHonor(Request request){
+		Admin360.ds.addAdminHonor(request);
+	}
+
 }
