@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.vidhucraft.Admin360.Permissions;
 import com.vidhucraft.Admin360.entities.Admin;
+import com.vidhucraft.Admin360.entities.Request;
 
 public class PlayerListener implements Listener {
 
@@ -21,7 +22,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 	
-	
+	@EventHandler
 	public void onLeave(PlayerQuitEvent playerquitevent){
 		Player player = playerquitevent.getPlayer();
 		
@@ -29,5 +30,8 @@ public class PlayerListener implements Listener {
 		if(Permissions.hasPermission(player, Permissions.RespondToRequest, false)){
 			Admin.adminsOnline.remove(player.getName());
 		}
+		
+		//TODO:Remove any disconnected player's request from lists and queues
+		Request.removePlayerRequest(player.getName());
 	}
 }
