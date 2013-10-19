@@ -3,9 +3,18 @@ package com.vidhucraft.Admin360.entities;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.FireworkEffect.Type;
+import org.bukkit.Sound;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.util.Vector;
 
 import com.vidhucraft.Admin360.Admin360;
 
@@ -68,6 +77,25 @@ public class Admin{
 	 */
 	public void giveHonor(Request request){
 		Admin360.ds.addAdminHonor(request);
+		User.messagePlayer(this.adminName, "You have recieved an honor point!");
+		
+		//Fireworks test
+		Player pl = Bukkit.getPlayer(this.adminName);	
+		Firework fw = pl.getWorld().spawn(pl.getLocation(), Firework.class);
+		FireworkMeta fwm = fw.getFireworkMeta();
+		FireworkEffect effect = FireworkEffect.builder().trail(true).withColor(Color.LIME).with(Type.CREEPER).build();
+		fwm.addEffect(effect);
+		fwm.setPower(1);
+		fw.setFireworkMeta(fwm);
+		
+		//Sound Test
+		pl.getWorld().playSound(pl.getLocation(), Sound.LEVEL_UP, 1, 1);
 	}
 
+	public static void messageAdmins(String msg){
+		for (Map.Entry<String, Admin> entry : adminsOnline.entrySet()){
+			User.messagePlayer(entry.getKey(), 
+					ChatColor.DARK_GREEN + "[Admin360]" + ChatColor.GREEN + msg);
+		}
+	}
 }
