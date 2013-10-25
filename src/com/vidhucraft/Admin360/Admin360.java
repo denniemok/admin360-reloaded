@@ -1,6 +1,10 @@
 package com.vidhucraft.Admin360;
 
+import java.io.IOException;
+
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.vidhucraft.Admin360.Metrics;
 
 import com.vidhucraft.Admin360.commands.A3;
 import com.vidhucraft.Admin360.datasource.DataSource;
@@ -30,6 +34,15 @@ public class Admin360 extends JavaPlugin{
 		
 		//Load Admin in list (usefull on reloads)
 		Admin.refreshAdminList();
+		
+		//Enable metrics
+		Metrics metrics;
+		try {
+			metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
