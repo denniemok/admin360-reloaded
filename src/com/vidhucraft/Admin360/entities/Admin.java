@@ -1,8 +1,6 @@
 package com.vidhucraft.Admin360.entities;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -14,9 +12,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.util.Vector;
 
 import com.vidhucraft.Admin360.Admin360;
+import com.vidhucraft.Admin360.Permissions;
 
 /**
  * This class represents the Admins in the server. The static member
@@ -68,7 +66,7 @@ public class Admin{
 	 * @param message <b>String</b> message
 	 */
 	public void sendMessage(String message){
-		Bukkit.getPlayer(this.adminName).sendMessage(ChatColor.GREEN + message);
+		User.messagePlayer(this.adminName, message);
 	}
 	
 	/**
@@ -89,13 +87,29 @@ public class Admin{
 		fw.setFireworkMeta(fwm);
 		
 		//Sound Test
-		pl.getWorld().playSound(pl.getLocation(), Sound.LEVEL_UP, 1, 1);
+		pl.getWorld().playSound(pl.getLocation(), Sound.LEVEL_UP, 10, 1);
 	}
 
+	/**
+	 * Send a message to all admins
+	 * @param msg
+	 */
 	public static void messageAdmins(String msg){
 		for (Map.Entry<String, Admin> entry : adminsOnline.entrySet()){
 			User.messagePlayer(entry.getKey(), 
 					ChatColor.DARK_GREEN + "[Admin360]" + ChatColor.GREEN + msg);
+		}
+	}
+	
+	/**
+	 * Reloads all the admins in the admin list
+	 */
+	public static void refreshAdminList(){
+		Player[] playerarray = Bukkit.getOnlinePlayers();
+		for (Player player : playerarray) {
+			if(player.hasPermission(Permissions.RespondToRequest.getNode())){
+				adminsOnline.put(player.getName(), new Admin(player.getName()));
+			}
 		}
 	}
 }

@@ -82,8 +82,8 @@ public class SQLite_DataSource implements DataSource{
 			sql = "INSERT INTO Honors (HonorFrom, HonorTo, Request_TimeStamp, Honor_TimeStamp) "
 			+ "VALUES (?, ?, ?, ?)";
 			pst = con.prepareStatement(sql);
-			pst.setString(1, request.getHandledBy().getAdminName().toLowerCase());
-			pst.setString(2, request.getPlayerName().toLowerCase());
+			pst.setString(1, request.getPlayerName().toLowerCase());
+			pst.setString(2, request.getHandledBy().getAdminName().toLowerCase());
 			pst.setLong(3, request.getTime());
 			pst.setLong(4, System.currentTimeMillis()/1000);
 			

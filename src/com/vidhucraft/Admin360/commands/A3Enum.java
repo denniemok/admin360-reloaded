@@ -27,4 +27,21 @@ public enum A3Enum {
 	
 	//Reloads admin360
 	RELOAD,
+	
+	//Cancels request
+	CANCEL,
+	
+	//Gets the player's request status
+	STATUS,
+	
+	//Gets the number of requests in the queue
+	COUNT;
+	
+	public static A3Enum getEnum(String value){
+		if(value == null)
+			return null;
+		for(A3Enum v : values())
+            if(value.equalsIgnoreCase(v.name())) return v;
+		return null;
+	}
 }

@@ -31,7 +31,7 @@ public class PlayerListener implements Listener {
 			Admin.adminsOnline.remove(player.getName());
 		}
 		
-		//TODO:Remove any disconnected player's request from lists and queues
+		//Remove any disconnected player's request from lists and queues
 		Request.removePlayerRequest(player.getName());
 	}
 }

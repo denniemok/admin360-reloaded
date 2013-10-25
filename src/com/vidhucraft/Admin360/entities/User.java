@@ -24,6 +24,7 @@ public class User {
 	 * @param msg
 	 */
 	public static void messagePlayer(String playerName, String msg){
+		//Player giving null pointer exception when the reminger is schedual and is running
 		Player player = Bukkit.getPlayer(playerName);
 		player.sendMessage(ChatColor.GREEN + msg);
 	}
