@@ -1,1 +1,5 @@
-#No config as of yet :)
+#true if the user should be reminded to rate a completed request
+showReminder: true
+
+#time in seconds each time the user should be reminded to rate a request
+reminderFrequency: 6
