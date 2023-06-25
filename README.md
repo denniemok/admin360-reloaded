@@ -9,15 +9,17 @@ Have you ever been in a situation where many players need help, but there are on
 
 ## Motivation
 
-First released by Vidhu in 2013, Admin360 is a lightweight but essential tool at all time. The new version aims to bring this inactive plugin back to life together with several major improvements to its base. Not only does it include better code, enhanced performance, and customizable configuration, the new version also introduces many new features and QoL changes. The plugin works with various versions of Spigot, and passed numeral stress tests on large survival servers with over 100 players. <br><br>
+First released by Vidhu in 2013, Admin360 is a lightweight but essential tool at all time. The new version aims to bring this inactive plugin back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, backward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes. <br><br>
 
 ## Features
 
->**✔** simple and lightweight <br>
-**✔** easy-to-understand config.yml <br>
-**✔** works out-of-the-box <br>
-**✔** MySQL and SQLite support <br>
-**✔** 99% configurable
+1. Simple and lightweight _(stress tested on large server)_
+2. Easy-to-understand config.yml
+3. Works out-of-the-box
+4. MySQL and SQLite support
+5. 99% configurable <br>
+
+## Components
 
 **Support Ticket System: <br>
 Foster Disciplined And Quality Service <br>**
