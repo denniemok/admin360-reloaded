@@ -1,7 +1,7 @@
 [Spigot Resource Page](https://www.spigotmc.org/resources/admin360-reloaded.28285/) <br>
 View this project on spigotmc.org.
 
-![](https://img.shields.io/badge/Version-8.1.2-green) ![](https://img.shields.io/badge/Spigot-1.7+-lightgrey) ![](https://img.shields.io/badge/License-MIT-blue) ![](https://img.shields.io/badge/Language-Java-yellow) <br>
+![](https://img.shields.io/badge/Version-8.1.2-green) ![](https://img.shields.io/badge/Spigot-1.7+-lightgrey) ![](https://img.shields.io/badge/License-MIT-blue) ![](https://img.shields.io/badge/Language-Java-yellow) <br><br>
 
 # Admin360-Reloaded
 
@@ -33,7 +33,7 @@ The support ticket module empowers your players (with the appropriate permission
 **Honour Point System: <br>
 Create A Competitive Environment For Your Staff <br>**
 _Feedback Collection, Professional Statistics and Competitive Leaderboard <br>_
-The feedback system allows users to express their satisfaction with the service provided by staff members by awarding them an 'honour point' through positive ratings. Staff members have the ability to view both their own and their colleagues' honour points, introducing a sense of motivation and competition to strive for better ratings. Moreover, this feature enables server owners to assess the performance of their staff team effectively. By incorporating the honour point system, you can encourage staff engagement, incentivize quality service, and provide server owners with valuable insights into their team's performance. <br><br>
+The feedback system allows users to express their satisfaction with the service by awarding the staff an 'honour point'. Staff members have the ability to view both their own and their colleagues' honour points, introducing a sense of motivation and competition to strive for better ratings. Moreover, this feature enables server owners to assess the performance of their staff team effectively. By incorporating the honour point system, you can encourage staff engagement, incentivize quality service, and provide server owners with valuable insights into their team's performance. <br><br>
 
 ## Workflow
 
@@ -91,6 +91,71 @@ Completed : Eveything is done. The details of that ticket will be stored as a hi
 
 - It's so hard for me to explain everything here. Just give it a try, then you will know how it works! <br><br>
 
+## Commands
+
+The following is the updated Commands and Permissions for Admin36-Reloaded 8.1.2. For the permissions to work, a permission plugin (eg. LuckPerms, PermissionEx, GroupManager, etc.) is required.
+
+Commands without Permissions
+> /ticket, /ticket help - (no permission) - Display a list of commands <br>
+/admin360 help - (no permission) - Display a list of commands <br>
+/admin360 - (no permission) - Display Admin360 information
+
+Player Commands (admin360.player.*)
+> []: Optional; <>: Compulsory <br>
+/ticket create [details] - (admin360.player.basic) - Create a new ticket. <br>
+/ticket cancel - (admin360.player.basic) - Remove your ticket from the queue. <br>
+/ticket status - (admin360.player.status) - Check your ticket status. <br>
+/ticket stats - (admin360.player.stats) - View ticket statistics. <br>
+/ticket yes - (admin360.player.basic) - Feedback: Upvote a service. <br>
+/ticket no - (admin360.player.basic) - Feedback: Downvote a service.
+
+Staff Commands (admin360.staff.*)
+>[]: Optional; <>: Compulsory
+
+STEP 1: Choosing a ticket
+/ticket list - (admin360.staff.basic) - Display a list of tickets in the queue await to be processed. A handy tool for /ticket pick.
+/ticket pick <name> - (admin360.staff.basic) - Hand-pick a ticket from the queue, often based on the info from /ticket list.
+/ticker next - (admin360.staff.basic) - Proceed to process the next ticket in the queue. Good for those who are indecisive.
+[2 options here: You either pick one or do the next one.]
+
+STEP 2: Processing a ticket
+/ticket tp - (admin360.staff.tp) - Teleport to the player who opened the ticket that you are processing
+/ticket info - (admin360.staff.info) - Retrieve the details about the ticket that you are processing
+[Use other plugins for the communication part. e.g. /msg, /reply, etc.]
+
+STEP 3: Making a decision
+/ticket redirect <name> - (admin360.staff.redirect) - Redirect the ticket to another staff if it can only be resolved by staff of senior rank.
+/ticket drop - (admin360.staff.drop) - Drop or abandon the ticket, maybe because the one who opened the ticket asked silly questions or raised unreasonable requests. This can avoid receiving a revenge rating from some bad guys.
+/ticket close - (admin360.staff.basic) - Close and done-mark the ticket.
+[3 options here: You either redirect the ticket to someone else, drop it or close it.]
+
+Removal Tools
+/ticket purge - (admin360.staff.purge) - Remove all tickets in the queue.
+/ticket delete <name> - (admin360.staff.delete) - Delete silently everything related to a particular player regardless of his/her ticket status (except for completed tickets).
+
+Honor Points System
+/ticket hpstats [name] - (admin360.staff.hpstats) - Display honor points statistics.
+/ticket hptop [#] - (admin360.staff.hptop) - Display honor points leaderboard.
+/ticket history [#] - (admin360.staff.history) - Print honor points history. This can also be used as ticket history.
+/ticket hpreset <name> - (admin360.staff.hpreset) - Reset all records of a particular staff. It will also affect his or her records in /ticket history.
+
+Reload Config
+/admin360 reload - (admin360.staff.reload) - Reload the config file.
+
+
+IMPORTANT
+These permissions are not given to any user groups by default. You have to add them to the suitable permission group(s) by yourself. Admin360 will recognise those who have the permission "admin360.staff.basic" as staff when they join the server.
+
+To prevent boosting, your staff with permission "admin360.staff.basic" will not be allowed to use the command "/ticket create" by default. This is a hard-coded anti-exploit mechanism. <br><br>
+
+## Prerequisites
+
+- Java 8+
+- SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) Drivers
+(Should have been installed by your hosting providers by default)
+- Permission Plugin (e.g. LuckPerms, PermissionEx, GroupManager, etc.)
+- Spigot 1.7.x/1.8.x/1.9.x/1.10.x/1.11.x/1.12.x/1.13.x/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x/1.19.x/1.20.x (should be working on Bukkit, Paper or any of their forks)
+- For versions that support Bukkit 1.6 or earlier, download it from the old abandoned project page: https://dev.bukkit.org/bukkit-plugins/admin360/ <br><br>
 
 ## Support
 
