@@ -31,8 +31,8 @@ version: '8.1.2'
 # We welcome users who want to share their version of translation to everyone else.
 # Contact us so that we can make your translation official.
 # Project : https://www.spigotmc.org/resources/admin360-reloaded.28285/
-# Support : denniemok @ discord
-# Authors : Dennie, vidhu1911
+# Support : https://github.com/denniemok/Admin360-Reloaded/issues
+# Authors : Vidhu, Dennie
 
 
 
@@ -517,5 +517,5 @@ history-footer:
 # End of file. You're done with the configuration. Congratulations!
 
 # Project : https://www.spigotmc.org/resources/admin360-reloaded.28285/
-# Support : denniemok @ discord
-# Authors : Dennie, vidhu1911
+# Support : https://github.com/denniemok/Admin360-Reloaded/issues
+# Authors : Vidhu, Dennie

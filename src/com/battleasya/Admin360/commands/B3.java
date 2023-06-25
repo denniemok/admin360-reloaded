@@ -56,7 +56,7 @@ public class B3 implements CommandExecutor {
     public static void printInfo(CommandSender sender) {
         sender.sendMessage("");
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6ADMIN360&f] Version: &78.1.2"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6ADMIN360&f] Authors: &7Dennie, vidhu1911"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6ADMIN360&f] Authors: &7Vidhu, Dennie"));
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6ADMIN360&f] Project: &7https://cutt.ly/bjo1zpy"));
         sender.sendMessage("");
     }
