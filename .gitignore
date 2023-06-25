@@ -1,5 +1,7 @@
 # Project files #
 ############
+.idea/
+out/
 bin/
 lib/
 .settings/

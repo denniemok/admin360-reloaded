@@ -1,0 +1,39 @@
+name: Admin360-Reloaded
+main: com.battleasya.Admin360.Admin360
+version: 8.1.2
+description: An advanced /helpop option
+authors: [Dennie, vidhu1911]
+website: https://cutt.ly/bjo1zpy
+api-version: 1.13
+commands:
+  ticket:
+    description: An Admin360-Reloaded Command.
+  admin360:
+    description: An Admin360-Reloaded Command.
+permissions:
+  admin360.*:
+    description: Admin360 commands
+    children:
+      admin360.staff.*:
+        description: Admin360 commands for staff
+        default: op
+        children:
+          admin360.staff.basic: true
+          admin360.staff.tp: true
+          admin360.staff.info: true
+          admin360.staff.redirect: true
+          admin360.staff.drop: true
+          admin360.staff.purge: true
+          admin360.staff.delete: true
+          admin360.staff.hpstats: true
+          admin360.staff.hptop: true
+          admin360.staff.history: true
+          admin360.staff.hpreset: true
+          admin360.staff.reload: true
+      admin360.player.*:
+        description: Admin360 commands for players
+        default: op
+        children:
+          admin360.player.basic: true
+          admin360.player.status: true
+          admin360.player.stats: true
