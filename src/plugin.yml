@@ -1,20 +1,20 @@
 name: Admin360-Reloaded
 main: com.battleasya.Admin360.Admin360
 version: 8.1.2
-description: An advanced /helpop option
+description: An advanced /helpop tool
 authors: [Vidhu, Dennie]
 website: https://cutt.ly/bjo1zpy
 commands:
   ticket:
-    description: An Admin360-Reloaded Command.
+    description: Admin360 Command
   admin360:
-    description: An Admin360-Reloaded Command.
+    description: Admin360 Command
 permissions:
   admin360.*:
-    description: Admin360 commands
+    description: Admin360 Commands
     children:
       admin360.staff.*:
-        description: Admin360 commands for staff
+        description: Admin360 Staff Commands
         default: op
         children:
           admin360.staff.basic: true
@@ -30,7 +30,7 @@ permissions:
           admin360.staff.hpreset: true
           admin360.staff.reload: true
       admin360.player.*:
-        description: Admin360 commands for players
+        description: Admin360 Player Commands
         default: op
         children:
           admin360.player.basic: true
