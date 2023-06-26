@@ -3,17 +3,13 @@ View this project on spigotmc.org.
 
 ![](https://img.shields.io/badge/Version-8.1.2-green) ![](https://img.shields.io/badge/Spigot-1.7+-lightgrey) ![](https://img.shields.io/badge/License-MIT-blue) ![](https://img.shields.io/badge/Language-Java-yellow) <br><br>
 
-# Admin360-Reloaded
+<p align="center" width="100%">
+    <img src="https://proxy.spigotmc.org/d64c137938f4d812dd3212c5e5ee9927731b0a73?url=https%3A%2F%2Fi.imgur.com%2FxxVOyyN.png">
+</p>
 
-Admin360 is a Minecraft plugin. <br><br>
+Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
 
-## Background
-
-Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems. <br><br>
-
-## Motivation
-
-First released by Vidhu in 2013, Admin360 is a lightweight but essential tool at all time. The new version aims to bring this inactive plugin back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, backward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes. <br><br>
+First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essential community relations tool for server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes. <br><br>
 
 ## Features
 
