@@ -4,7 +4,6 @@ version: 8.1.2
 description: An advanced /helpop option
 authors: [Vidhu, Dennie]
 website: https://cutt.ly/bjo1zpy
-api-version: 1.13
 commands:
   ticket:
     description: An Admin360-Reloaded Command.
