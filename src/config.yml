@@ -5,7 +5,7 @@
 ############################################################
 
 # Version 8.1.2
-# Tested on Spigot 1.8.8, 1.12.2, 1.16.5.
+# Tested on Spigot 1.8.8, 1.12.2, 1.16.5
 
 # Config version = Plugin version.
 # Do not change this unless you know what you're doing.
@@ -242,12 +242,12 @@ stats-message:
 # /ticket list: List out all the tickets from the queue.
 # /ticket pick <name>: Pick a ticket from the queue and proceed.
 # /ticket next: Proceed to process the next request in the queue.
-# This is a staff command which requires the permission 'admin360.staff.basic".
+# This is a staff command which requires the permission "admin360.staff.basic".
 
 # "next" and "pick" share the same messages and settings.
-# next-failed-no-ticket : Currently, there are no tickets in the queue so you cannot proceed.
+# next-failed-no-ticket : Currently, there are no tickets in the queue, so you cannot proceed.
 # next-failed-attending : You are still attending a request. That's why you can't proceed to process the next ticket.
-# After picking a ticket, you will be teleport to the target player by Admin360 (which can be disabled).
+# After picking a ticket, you will be teleported to the target player by Admin360 (which can be disabled).
 
 # Your staff in the server (with permission "admin360.staff.basic") will be notified when the status of a ticket has
 # changed. The player who created the ticket will also be informed.
