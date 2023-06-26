@@ -11,14 +11,6 @@ Have you ever been in a situation where many players need help, but there are on
 
 First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essential community relations tool for server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes. <br><br>
 
-## Features
-
-1. Simple and lightweight _(stress tested on large server)_
-2. Easy-to-understand config.yml
-3. Works out-of-the-box
-4. MySQL and SQLite support
-5. 99% configurable <br><br>
-
 ## Components
 
 1. Support Ticket System: _Automated Queuing, Status Queries, Organised Notifications and Informative Statistics_
@@ -33,6 +25,11 @@ First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essent
 - Spigot 1.7.x/1.8.x/1.9.x/1.10.x/1.11.x/1.12.x/1.13.x/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x/1.19.x/1.20.x <br>
 (Should work on Bukkit, Paper or any of their forks)
 - For versions that support Bukkit 1.6 or earlier, you can download it from the old project page: https://dev.bukkit.org/bukkit-plugins/admin360/ <br><br>
+
+## Dependencies
+
+- Java 8
+- Spigot 1.8.8 API <br><br>
 
 ## Support
 
