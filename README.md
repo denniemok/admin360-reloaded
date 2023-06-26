@@ -26,7 +26,6 @@ First released by Vidhu in 2013, Admin360 is a lightweight but essential tool at
 ## Components
 
 1. Support Ticket System: _Automated Queuing, Status Queries, Organised Notifications and Informative Statistics_
-
 2. Honour Point System: _Feedback Collection, Professional Statistics and Competitive Leaderboard_ <br><br>
 
 ## Prerequisites
