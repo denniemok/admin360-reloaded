@@ -9,13 +9,7 @@ View this project on spigotmc.org.
 
 Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
 
-First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essential community relations tool for server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes.
-
-<hr>
-
-<p align="center" width="100%">
-    <img src="https://i.imgur.com/Cq64783.png">
-</p>
+First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essential community relations tool for server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes. <br><br>
 
 ## Features
 
@@ -33,11 +27,12 @@ First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essent
 ## Prerequisites
 
 - Java 8+
-- SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) Drivers
-(Should have been installed by your hosting providers by default)
-- Permission Plugin (e.g. LuckPerms, PermissionEx, GroupManager, etc.)
-- Spigot 1.7.x/1.8.x/1.9.x/1.10.x/1.11.x/1.12.x/1.13.x/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x/1.19.x/1.20.x (should be working on Bukkit, Paper or any of their forks)
-- For versions that support Bukkit 1.6 or earlier, download it from the old abandoned project page: https://dev.bukkit.org/bukkit-plugins/admin360/ <br><br>
+- SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) Drivers <br>
+(Not to be worried under most circumstances)
+- Permission Plugin (e.g., LuckPerms, PermissionEx, GroupManager, etc.)
+- Spigot 1.7.x/1.8.x/1.9.x/1.10.x/1.11.x/1.12.x/1.13.x/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x/1.19.x/1.20.x <br>
+(Should work on Bukkit, Paper or any of their forks)
+- For versions that support Bukkit 1.6 or earlier, you can download it from the old project page: https://dev.bukkit.org/bukkit-plugins/admin360/ <br><br>
 
 ## Support
 
