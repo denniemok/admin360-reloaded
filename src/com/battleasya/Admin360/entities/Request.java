@@ -5,130 +5,82 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 
 public class Request {
-    /**
-     * The queue of all requests that are made and still pending
-     */
+
+    public static int completedToday = 0;
+
+    /* The queue of all requests that are made and still pending */
     public static Queue<Request> requestQueue = new LinkedList<>();
 
-    /**
+    /*
      * Collection of requests that are being handled by an admin at the moment
      * Key: name of admin
      * Value: Request object
      */
     public static HashMap<String, Request> requestInProgress = new HashMap<>();
 
-    /**
+    /*
      * Collection of request that are closed by the admin but are awaiting user response
      * Key: name of player
      * Value: Request object
      */
     public static HashMap<String, Request> requestCompleted = new HashMap<>();
 
-    /**
-     * A collection of ReviewReminers which prompt the users to rates an admins help by doing
-     */
+    /* A collection of Reviews which prompt the users to rates an admins help by doing */
     public static HashMap<String, BukkitTask> reminders = new HashMap<>();
 
-    /**
-     * The player's name who created this request
-     */
+    /* The player's name who created this request */
     private final String playerName;
 
-    /**
-     * The player's specified reason for this request
-     */
+    /* The player's specified reason for this request */
     private final String reason;
 
-    /**
-     * If this request has been attended
-     */
-    //private boolean isAttended;
-
-    /**
-     * The admin who is handling this request
-     */
+    /* The admin who is handling this request */
     private String handledBy;
 
-    /**
-     * The epoch time the request was created
-     */
+    /* The epoch time the request was created */
     private final long time;
 
-    /**
-     * Create a new request
-     */
+    /* Create a new request */
     public Request(String playerName, String reason){
         this.playerName = playerName;
         this.reason = reason;
-        //this.isAttended = false;
         this.time = System.currentTimeMillis()/1000;
     }
 
-    /**
-     * Gets the player's name who create the request
-     */
+    /* Gets the player's name who create the request */
     public String getPlayerName() {
         return playerName;
     }
 
-    /**
-     * Gets the reason the player set for this request
-     */
+    /* Gets the reason the player set for this request */
     public String getReason() {
         return reason;
     }
 
-    /**
-     * Gets the Epoch timestame this request was created
-     */
+    /* Gets the Epoch timestamp this request was created*/
     public Long getTime() {
         return time;
     }
 
-    /**
-     * Gets if this request has been handles
-     */
-//    public boolean isAttended() {
-//        return isAttended;
-//    }
-
-    /**
-     * Sets whether this request has been handled or not
-     */
-//    public void setAttended(boolean isAttended) {
-//        this.isAttended = isAttended;
-//    }
-
-    /**
-     * Gets the admin who handled this request
-     */
+    /* Gets the admin who handled this request */
     public String getHandledBy() {
         return handledBy;
     }
 
-    /**
-     * Sets the admin who handled this request
-     */
+    /* Sets the admin who handled this request */
     public void setHandledBy(String handledBy) {
         this.handledBy = handledBy;
     }
 
-    /**
-     * Cancels a request already in queue
-     */
+    /* Cancels a request already in queue */
     public static void cancel(String playerName){
         //Remove from request Queue
-//        for (Request request : requestQueue) {
-//            if (request.playerName.equals(playerName)) {
-//                requestQueue.remove(request);
-//            }
-//        }
         requestQueue.removeIf(request -> request.playerName.equals(playerName));
     }
 
 
-    /**
-     * Returns a int depending on request status
+    /*
+     * Returns an int depending on request status
      * 0: No request present
      * 1: Request is currently queued
      * 2: Request is being honored by admins
@@ -142,7 +94,6 @@ public class Request {
             if (request.playerName.equals(playerName))
                 return 1;
         }
-
 
         //Check in requestInProgress
         for (Map.Entry<String, Request> entry : requestInProgress.entrySet())
@@ -167,16 +118,9 @@ public class Request {
         return 0;
     }
 
-    /**
-     * Removes any requests associated with the specified player
-     */
+    /* Removes any requests associated with the specified player */
     public static void removePlayerRequest(String playerName){
         //Remove from request Queue
-//        for (Request request : requestQueue) {
-//            if (request.playerName.equals(playerName)) {
-//                requestQueue.remove(request);
-//            }
-//        }
         requestQueue.removeIf(request -> request.playerName.equals(playerName));
 
         //Remove from requestInProgress
@@ -198,7 +142,7 @@ public class Request {
             reminder.cancel();
     }
 
-    /**
+    /*
      * Gets the player's request position in the queue.
      * If request is not found it return -1
      */
