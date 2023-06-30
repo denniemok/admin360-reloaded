@@ -1,7 +1,7 @@
 [Spigot Resource Page](https://www.spigotmc.org/resources/admin360-reloaded.28285/) <br>
 View this project on spigotmc.org.
 
-![](https://img.shields.io/badge/Version-8.1.2-green) ![](https://img.shields.io/badge/Spigot-1.7+-lightgrey) ![](https://img.shields.io/badge/License-MIT-blue) ![](https://img.shields.io/badge/Language-Java-yellow) <br><br>
+![](https://img.shields.io/badge/Version-8.1.2b-green) ![](https://img.shields.io/badge/Spigot-1.7+-lightgrey) ![](https://img.shields.io/badge/License-MIT-blue) ![](https://img.shields.io/badge/Language-Java-yellow) <br><br>
 
 <p align="center" width="100%">
     <img src="https://i.imgur.com/xxVOyyN.png">
