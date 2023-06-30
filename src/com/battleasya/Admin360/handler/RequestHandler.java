@@ -1,9 +1,10 @@
-package com.battleasya.Admin360.util;
+package com.battleasya.Admin360.handler;
 
 import com.battleasya.Admin360.Admin360;
 import com.battleasya.Admin360.entities.Admin;
 import com.battleasya.Admin360.entities.Request;
 import com.battleasya.Admin360.entities.User;
+import com.battleasya.Admin360.util.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -17,40 +18,39 @@ import java.util.Date;
 
 public class RequestHandler {
 
-    /**
-     * Adds a player in the request queue
+    private final Admin360 plugin;
+
+    /* RequestHandler Constructor */
+    public RequestHandler(Admin360 plugin) {
+        this.plugin = plugin;
+    }
+
+    /*
+     * Adds a player in the request queue with a reason they specify
      * Sends an error message to player if no staff are available
      */
-
-    //public static Admin360 plugin = Admin360.getPlugin(Admin360.class);
-    private static final Admin360 plugin = Admin360.getInstance();
-
-    /**
-     * Adds a player in the request queue with a reason they specify
-     */
-    public static void createTicket(String playerName, String details) {
+    public void createTicket(String playerName, String details) {
 
 
         //Check if staff are available
-        if (plugin.getConfig().getBoolean("staff-online-required") && Admin.adminsOnline.size() == 0) {
-            User.messagePlayer(playerName, plugin.getConfig().getString("create-failed-no-staff"));
+        if (Config.staffOnlineRequired && Admin.adminsOnline.size() == 0) {
+            User.messagePlayer(playerName, Config.createFailedNoStaff);
             return;
         }
-
 
         //Check if user already has a pending request(status)
         switch (Request.requestStatus(playerName)) {
             case 1:
-                User.messagePlayer(playerName, plugin.getConfig().getString("create-failed-in-queue"));
+                User.messagePlayer(playerName, Config.createFailedInQueue);
                 return;
             case 2:
-                User.messagePlayer(playerName, plugin.getConfig().getString("create-failed-in-progress"));
+                User.messagePlayer(playerName, Config.createFailedInProgress);
                 return;
             case 3:
-                //User.messagePlayer(playerName, plugin.getConfig().getString("create-failed-anti-exploit"));
+                //User.messagePlayer(playerName, Config.createFailedAntiExploit);
                 return;
             case 4:
-                User.messagePlayer(playerName, plugin.getConfig().getString("create-failed-require-feedback"));
+                User.messagePlayer(playerName, Config.create_failed_require_feedback);
                 return;
             default:
                 //Add request into queue
@@ -58,13 +58,13 @@ public class RequestHandler {
         }
 
         // Get number of seconds from wherever you want
-        if (plugin.getConfig().getBoolean("use-cooldown")){
-            int coolDownTime = plugin.getConfig().getInt("cooldown-timer");
+        if (Config.useCooldown){
+            int coolDownTime = Config.cooldownTimer;
             if(User.coolDown.containsKey(playerName)) {
                 long secondsLeft = ((User.coolDown.get(playerName)/1000)+coolDownTime) - (System.currentTimeMillis()/1000);
                 if(secondsLeft>0) {
                     // Still cooling down
-                    User.messagePlayer(playerName, plugin.getConfig().getString("cooldown-message")
+                    User.messagePlayer(playerName, Config.cooldownMessage
                             .replaceAll("<SECONDSLEFT>", String.valueOf(secondsLeft)));
                     return;
                 }
@@ -78,16 +78,16 @@ public class RequestHandler {
         //Notify user about request
         String positionInQueue = Integer.toString(Request.requestQueue.size());
 
-        for (String created_succeeded : plugin.getConfig().getStringList("create-succeeded")) {
+        for (String created_succeeded : Config.create_succeeded) {
             User.messagePlayer(playerName, created_succeeded.replaceAll("<POSITION>", positionInQueue));
         }
 
-        if (plugin.getConfig().getBoolean("ticket-created-trigger-custom-command")) {
-        	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("ticket-created-custom-command")
+        if (Config.ticket_created_trigger_custom_command) {
+        	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_created_custom_command
                     .replaceAll("<PLAYERNAME>", playerName).replaceAll("<POSITION>", positionInQueue));
         }
 
-        for (String ticket_created_notify_staff : plugin.getConfig().getStringList("ticket-created-notify-staff")) {
+        for (String ticket_created_notify_staff : Config.ticket_created_notify_staff) {
             Admin.messageAdmins(ticket_created_notify_staff.replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", details).replaceAll("<TICKETSREMAIN>", positionInQueue));
         }
@@ -95,10 +95,10 @@ public class RequestHandler {
     }
 
 
-    public static void printQueueList(String adminName) {
+    public void printQueueList(String adminName) {
         int i = 1;
         for (Request request : Request.requestQueue) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("list-message")
+            User.messagePlayer(adminName, Config.list_message
                     .replaceAll("<INDEX>", Integer.toString(i))
                     .replaceAll("<PLAYERNAME>", request.getPlayerName())
                     .replaceAll("<DETAILS>", request.getReason())
@@ -108,16 +108,16 @@ public class RequestHandler {
     }
 
 
-    public static void pickTicket(String adminName, String playerName) {
+    public void pickTicket(String adminName, String playerName) {
         //Check if a staff is already handling a player, this must go first to avoid problems
         if (Request.requestStatus(adminName) == 3) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("next-failed-attending"));
+            User.messagePlayer(adminName, Config.next_failed_attending);
             return;
         }
 
         //Sanity Check
         if (Request.requestQueue.peek() == null) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("next-failed-no-ticket"));
+            User.messagePlayer(adminName, Config.next_failed_no_ticket);
             return;
         }
 
@@ -137,7 +137,7 @@ public class RequestHandler {
 
         //cannot find player
         if (k == 0) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("next-failed-no-ticket"));
+            User.messagePlayer(adminName, Config.next_failed_no_ticket);
             return;
         }
 
@@ -150,7 +150,7 @@ public class RequestHandler {
             Request.removePlayerRequest(adminName);
         } else {
             //Teleport staff to player
-            if(plugin.getConfig().getBoolean("use-auto-teleport")) {
+            if(Config.use_auto_teleport) {
                 try {
                     admin.teleport(user);
                 } catch (Exception e) {
@@ -161,34 +161,34 @@ public class RequestHandler {
             //Message to the respective player and staff team
             String tickets = Integer.toString(Request.requestQueue.size());
 
-            for (String ticket_user_notify : plugin.getConfig().getStringList("ticket-in-progress-notify-player")) {
+            for (String ticket_user_notify : Config.ticket_in_progress_notify_player) {
                 User.messagePlayer(playerName, ticket_user_notify.replaceAll("<ADMINNAME>", adminName));
             }
 
-            for (String ticket_staff_notify : plugin.getConfig().getStringList("ticket-in-progress-notify-staff")) {
+            for (String ticket_staff_notify : Config.ticket_in_progress_notify_staff) {
                 Admin.messageAdmins(ticket_staff_notify.replaceAll("<ADMINNAME>", adminName)
                         .replaceAll("<PLAYERNAME>", playerName).replaceAll("<TICKETSREMAIN>", tickets));
             }
 
-            if(plugin.getConfig().getBoolean("ticket-in-progress-trigger-custom-command")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("ticket-in-progress-custom-command")
+            if(Config.ticket_in_progress_trigger_custom_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
                         .replaceAll("<PLAYERNAME>", playerName).replaceAll("<ADMINNAME>", adminName));
             }
         }
     }
 
 
-    public static void nextTicket(String adminName) {
+    public void nextTicket(String adminName) {
 
         //Check if a staff is already handling a player, this must go first to avoid problems
         if (Request.requestStatus(adminName) == 3) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("next-failed-attending"));
+            User.messagePlayer(adminName, Config.next_failed_attending);
             return;
         }
 
         //Sanity Check
         if (Request.requestQueue.peek() == null) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("next-failed-no-ticket"));
+            User.messagePlayer(adminName, Config.next_failed_no_ticket);
             return;
         }
 
@@ -204,7 +204,7 @@ public class RequestHandler {
         	Request.removePlayerRequest(adminName);
         } else {
             //Teleport staff to player
-            if(plugin.getConfig().getBoolean("use-auto-teleport")) {
+            if(Config.use_auto_teleport) {
                 try {
                     admin.teleport(user);
                 } catch (Exception e) {
@@ -223,17 +223,17 @@ public class RequestHandler {
             String playerName = user.getName();
             String tickets = Integer.toString(Request.requestQueue.size());
 
-            for (String ticket_user_notify : plugin.getConfig().getStringList("ticket-in-progress-notify-player")) {
+            for (String ticket_user_notify : Config.ticket_in_progress_notify_player) {
             	User.messagePlayer(playerName, ticket_user_notify.replaceAll("<ADMINNAME>", adminName));
         	}
             
-            for (String ticket_staff_notify : plugin.getConfig().getStringList("ticket-in-progress-notify-staff")) {
+            for (String ticket_staff_notify : Config.ticket_in_progress_notify_staff) {
             	Admin.messageAdmins(ticket_staff_notify.replaceAll("<ADMINNAME>", adminName)
                         .replaceAll("<PLAYERNAME>", playerName).replaceAll("<TICKETSREMAIN>", tickets));
         	}
 
-            if(plugin.getConfig().getBoolean("ticket-in-progress-trigger-custom-command")) {
-            	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("ticket-in-progress-custom-command")
+            if(Config.ticket_in_progress_trigger_custom_command) {
+            	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
                         .replaceAll("<PLAYERNAME>", playerName).replaceAll("<ADMINNAME>", adminName));
             }
         }
@@ -241,7 +241,7 @@ public class RequestHandler {
     }
 
 
-    public static void teleportPlayer(String adminName) {
+    public void teleportPlayer(String adminName) {
 
         //Check if a staff is already handling a player
         if (Request.requestStatus(adminName) == 3) {
@@ -250,20 +250,20 @@ public class RequestHandler {
 
             try {
                 Bukkit.getPlayer(adminName).teleport(Bukkit.getPlayer(request.getPlayerName()));
-                User.messagePlayer(adminName, plugin.getConfig().getString("teleport-succeeded")
+                User.messagePlayer(adminName, Config.teleport_succeeded
                         .replaceAll("<PLAYERNAME>", request.getPlayerName()));
             } catch (Exception e) {
                 //empty catch line suppressing errors
             }
 
         } else {
-            User.messagePlayer(adminName, plugin.getConfig().getString("teleport-failed"));
+            User.messagePlayer(adminName, Config.teleport_failed);
         }
 
     }
 
 
-    public static void printTicketDetails(String adminName) {
+    public void printTicketDetails(String adminName) {
 
         if (Request.requestStatus(adminName) == 3) {
 
@@ -273,35 +273,35 @@ public class RequestHandler {
 
             String time = new SimpleDateFormat("MM/dd/yy HH:mm").format(new Date(request.getTime()*1000));
 
-            for (String info_message : plugin.getConfig().getStringList("info-message")) {
+            for (String info_message : Config.info_message) {
                 User.messagePlayer(adminName, info_message.replaceAll("<PLAYERNAME>", playerName)
                         .replaceAll("<DETAILS>", details).replaceAll("<TIME>", time));
             }
 
         } else {
 
-            User.messagePlayer(adminName, plugin.getConfig().getString("info-failed"));
+            User.messagePlayer(adminName, Config.info_failed);
 
         }
 
     }
 
 
-    public static void dropTicket(String adminName) {
+    public void dropTicket(String adminName) {
         if (Request.requestStatus(adminName) == 3) {
             Request request = Request.requestInProgress.get(adminName);
-            User.messagePlayer(adminName, plugin.getConfig().getString("drop-message")
+            User.messagePlayer(adminName, Config.drop_message
                     .replaceAll("<PLAYERNAME>", request.getPlayerName()));
-            User.messagePlayer(request.getPlayerName(), plugin.getConfig().getString("drop-notify-player")
+            User.messagePlayer(request.getPlayerName(), Config.drop_notify_player
                     .replaceAll("<ADMINNAME>", adminName));
             Request.removePlayerRequest(request.getPlayerName());
         } else {
-            User.messagePlayer(adminName, plugin.getConfig().getString("drop-failed"));
+            User.messagePlayer(adminName, Config.drop_failed);
         }
     }
 
 
-    public static void redirectTicket(String adminName, String adminRedirectTo) {
+    public void redirectTicket(String adminName, String adminRedirectTo) {
         if (Admin.adminsOnline.contains(adminRedirectTo) && Request.requestStatus(adminRedirectTo) != 3 && Request.requestStatus(adminName) == 3) {
             Request request = Request.requestInProgress.get(adminName);
             Request.requestInProgress.remove(adminName);
@@ -310,25 +310,25 @@ public class RequestHandler {
             String tickets = Integer.toString(Request.requestQueue.size());
             String playerName = request.getPlayerName();
 
-            User.messagePlayer(adminName, plugin.getConfig().getString("redirect-succeeded")
+            User.messagePlayer(adminName, Config.redirect_succeeded
                     .replaceAll("<ADMINNAME>",adminRedirectTo));
 
-            for (String ticket_user_notify : plugin.getConfig().getStringList("ticket-in-progress-notify-player")) {
+            for (String ticket_user_notify : Config.ticket_in_progress_notify_player) {
                 User.messagePlayer(playerName, ticket_user_notify.replaceAll("<ADMINNAME>", adminRedirectTo));
             }
 
-            for (String ticket_staff_notify : plugin.getConfig().getStringList("ticket-in-progress-notify-staff")) {
+            for (String ticket_staff_notify : Config.ticket_in_progress_notify_staff) {
                 Admin.messageAdmins(ticket_staff_notify.replaceAll("<ADMINNAME>", adminRedirectTo)
                         .replaceAll("<PLAYERNAME>", playerName)
                         .replaceAll("<TICKETSREMAIN>", tickets));
             }
 
-            if(plugin.getConfig().getBoolean("ticket-in-progress-trigger-custom-command")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("ticket-in-progress-custom-command")
+            if(Config.ticket_in_progress_trigger_custom_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
                         .replaceAll("<PLAYERNAME>", playerName).replaceAll("<ADMINNAME>", adminRedirectTo));
             }
         } else {
-            User.messagePlayer(adminName, plugin.getConfig().getString("redirect-failed")
+            User.messagePlayer(adminName, Config.redirect_failed
                     .replaceAll("<ADMINNAME>",adminRedirectTo));
         }
     }
@@ -339,13 +339,13 @@ public class RequestHandler {
      * The user is then asked if the help was satisfactory
      */
 
-    public static void closeTicket(String adminName) {
+    public void closeTicket(String adminName) {
         //Get request being handled by staff
         Request request = Request.requestInProgress.remove(adminName);
         
         //Check if there was a request in progress
         if (request == null) {
-            User.messagePlayer(adminName, plugin.getConfig().getString("close-failed"));
+            User.messagePlayer(adminName, Config.close_failed);
             return;
         }
 
@@ -356,23 +356,23 @@ public class RequestHandler {
         Request.requestCompleted.put(request.getPlayerName(), request);
 
         //Message staff that request has been closes
-        User.messagePlayer(adminName, plugin.getConfig().getString("close-succeeded"));
+        User.messagePlayer(adminName, Config.close_succeeded);
 
         //Set automated message for feedback
-        BukkitTask reminder = new ReviewReminder(request.getPlayerName()).runReminder();
+        BukkitTask reminder = new ReviewHandler(plugin, request.getPlayerName()).runReminder();
         Request.reminders.put(request.getPlayerName(), reminder);
     }
 
 
     /**
-     * Closes a request and disposes it. It also give an admin an honor point based on
+     * Closes a request and disposes it. It also gives an admin an honor point based on
      * what the player rated the help received
      */
 
-    public static void requestFeedback(String playerName, Boolean isSatisfactory) {
+    public void requestFeedback(String playerName, Boolean isSatisfactory) {
         //Check if a player has a request in the completed list awaiting a rating
         if (Request.requestStatus(playerName) != 4) {
-            User.messagePlayer(playerName, plugin.getConfig().getString("feedback-not-required"));
+            User.messagePlayer(playerName, Config.feedback_not_required);
             return;
         }
 
@@ -384,14 +384,14 @@ public class RequestHandler {
 
         if (admin == null) {
         	Request.removePlayerRequest(playerName);
-            User.messagePlayer(playerName, plugin.getConfig().getString("feedback-received"));
+            User.messagePlayer(playerName, Config.feedback_received);
         	return;
         }
 
         //Give admin honor point based on ans
         if (isSatisfactory) {
-            Admin360.ds.addRecord(completedRequest, true);
-            User.messagePlayer(completedRequest.getHandledBy(), plugin.getConfig().getString("upvote-rating-notify-staff")
+            plugin.getDataSource().addRecord(completedRequest, true);
+            User.messagePlayer(completedRequest.getHandledBy(), Config.upvote_rating_notify_staff
                     .replaceAll("<PLAYERNAME>", completedRequest.getPlayerName()));
 
             //Fireworks test
@@ -403,18 +403,18 @@ public class RequestHandler {
             fwm.setPower(1);
             fw.setFireworkMeta(fwm);
         } else {
-            Admin360.ds.addRecord(completedRequest, false);
-            User.messagePlayer(completedRequest.getHandledBy(), plugin.getConfig().getString("downvote-rating-notify-staff")
+            plugin.getDataSource().addRecord(completedRequest, false);
+            User.messagePlayer(completedRequest.getHandledBy(), Config.downvote_rating_notify_staff
                     .replaceAll("<PLAYERNAME>", playerName));
         }
 
-        Admin360.completedToday = Admin360.completedToday + 1;
+        Request.completedToday = Request.completedToday + 1;
 
         //Stop the reminders
         Request.reminders.remove(playerName).cancel();
 
         //Send player a message
-        User.messagePlayer(completedRequest.getPlayerName(), plugin.getConfig().getString("feedback-received"));
+        User.messagePlayer(completedRequest.getPlayerName(), Config.feedback_received);
     }
 
 
@@ -422,12 +422,12 @@ public class RequestHandler {
      * Prompts a player to rate a request after an admin has handled it
      */
 
-    public static void promptFeedback(String playerName) {
+    public void promptFeedback(String playerName) {
 
-        User.messagePlayer(playerName, plugin.getConfig().getString("feedback-required"));
+        User.messagePlayer(playerName, Config.feedback_required);
 
-        if (plugin.getConfig().getBoolean("feedback-trigger-custom-command")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("feedback-custom-command")
+        if (Config.feedback_trigger_custom_command) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.feedback_custom_command
                     .replaceAll("<PLAYERNAME>", playerName));
         }
 
@@ -440,11 +440,11 @@ public class RequestHandler {
      * by and admin or any requests that are pending a user feedback
      */
 
-    public static void purgeTicket(String adminName) {
+    public void purgeTicket(String adminName) {
         String amountPurged = Integer.toString(Request.requestQueue.size());
         Request.requestQueue.clear();
 
-        for (String purge_message : plugin.getConfig().getStringList("purge-message")) {
+        for (String purge_message : Config.purge_message) {
             User.messagePlayer(adminName, purge_message
                     .replaceAll("<AMOUNTPURGED>", amountPurged));
         }
@@ -455,24 +455,24 @@ public class RequestHandler {
      * Attempts to cancel a request made my a player
      */
 
-    public static void cancelTicket(String playerName) {
+    public void cancelTicket(String playerName) {
         int requestStatus = Request.requestStatus(playerName);
         switch (requestStatus) {
             case 0:
-                User.messagePlayer(playerName, plugin.getConfig().getString("cancel-failed-no-ticket"));
+                User.messagePlayer(playerName, Config.cancel_failed_no_ticket);
                 return;
             case 1:
                 Request.cancel(playerName);
-                User.messagePlayer(playerName, plugin.getConfig().getString("cancel-succeeded"));
+                User.messagePlayer(playerName, Config.cancel_succeeded);
                 return;
             case 2:
-                User.messagePlayer(playerName, plugin.getConfig().getString("cancel-failed-in-progress"));
+                User.messagePlayer(playerName, Config.cancel_failed_in_progress);
                 return;
             case 3:
-                User.messagePlayer(playerName, plugin.getConfig().getString("cancel-failed-attending"));
+                User.messagePlayer(playerName, Config.cancel_failed_attending);
                 return;
             case 4:
-                User.messagePlayer(playerName, plugin.getConfig().getString("cancel-failed-require-feedback"));
+                User.messagePlayer(playerName, Config.cancel_failed_require_feedback);
                 return;
             default:
                 break;
@@ -484,25 +484,25 @@ public class RequestHandler {
      * Queries and tells the player the position/status of his request
      */
 
-    public static void printTicketStatus(String playerName) {
+    public void printTicketStatus(String playerName) {
         int requestStatus = Request.requestStatus(playerName);
         switch (requestStatus) {
             case 0:
-                User.messagePlayer(playerName, plugin.getConfig().getString("status-no-ticket"));
+                User.messagePlayer(playerName, Config.status_no_ticket);
                 return;
             case 1:
                 int position = Request.getPlayerRequestPosition(playerName);
-                User.messagePlayer(playerName, plugin.getConfig().getString("status-in-queue")
+                User.messagePlayer(playerName, Config.status_in_queue
                         .replaceAll("<POSITION>", Integer.toString(position)));
                 return;
             case 2:
-                User.messagePlayer(playerName, plugin.getConfig().getString("status-in-progress"));
+                User.messagePlayer(playerName, Config.status_in_progress);
                 return;
             case 3:
-                User.messagePlayer(playerName, plugin.getConfig().getString("status-attending"));
+                User.messagePlayer(playerName, Config.status_attending);
                 return;
             case 4:
-                User.messagePlayer(playerName, plugin.getConfig().getString("status-require-feedback"));
+                User.messagePlayer(playerName, Config.status_require_feedback);
                 return;
             default:
                 break;
@@ -515,14 +515,14 @@ public class RequestHandler {
      * Sends the message to the specified player
      */
 
-    public static void printTicketStats(String playerName) {
+    public void printTicketStats(String playerName) {
 
         String inQueue = Integer.toString(Request.requestQueue.size());
         String inProgress = Integer.toString(Request.requestInProgress.size());
         String awaiting = Integer.toString(Request.requestCompleted.size());
-        String completed = Integer.toString(Admin360.completedToday);
-        int total = Admin360.ds.getTotalTicketCount(1);
-        int upVote = Admin360.ds.getTotalTicketCount(2);
+        String completed = Integer.toString(Request.completedToday);
+        int total = plugin.getDataSource().getTotalTicketCount(1);
+        int upVote = plugin.getDataSource().getTotalTicketCount(2);
         int percent;
         if (total == 0 || upVote == 0) {
             percent = 0;
@@ -532,7 +532,7 @@ public class RequestHandler {
         String totalS = Integer.toString(total);
         String percentS = Integer.toString(percent);
 
-        for (String stats_message : plugin.getConfig().getStringList("stats-message")) {
+        for (String stats_message : Config.stats_message) {
         	User.messagePlayer(playerName, stats_message.replaceAll("<AWAITING>", awaiting)
                     .replaceAll("<INPROGRESS>", inProgress).replaceAll("<INQUEUE>", inQueue)
                     .replaceAll("<COMPLETED>", completed).replaceAll("<TOTAL>", totalS)
@@ -543,28 +543,28 @@ public class RequestHandler {
 
 
     //print hptop module
-    public static void printHonorTop(String adminName, int limit) {
-        String[][] honors = Admin360.ds.getTopHonors(limit);
-        for (String leaderboard_title : plugin.getConfig().getStringList("leaderboard-title")) {
+    public void printHonorTop(String adminName, int limit) {
+        String[][] honors = plugin.getDataSource().getTopHonors(limit);
+        for (String leaderboard_title : Config.leaderboard_title) {
             User.messagePlayer(adminName, leaderboard_title);
         }
         for (int i=0;i<limit;i++) {
             if(honors[i][0] != null) {
-                User.messagePlayer(adminName, plugin.getConfig().getString("leaderboard-body")
+                User.messagePlayer(adminName, Config.leaderboard_body
                         .replaceAll("<ADMINNAME>", honors[i][0]).replaceAll("<UPVOTE>", honors[i][1])
                         .replaceAll("<DOWNVOTE>", honors[i][2]).replaceAll("<TOTAL>", honors[i][3])
                         .replaceAll("<PERCENT>", honors[i][4]));
             }
         }
-        for (String leaderboard_footer : plugin.getConfig().getStringList("leaderboard-footer")) {
+        for (String leaderboard_footer : Config.leaderboard_footer) {
             User.messagePlayer(adminName, leaderboard_footer);
         }
     }
 
 
-    public static void printHonorStats(String adminName, String sender) {
-        int upVote = Admin360.ds.getAdminTicketCount(adminName,1);
-        int downVote = Admin360.ds.getAdminTicketCount(adminName,2);
+    public void printHonorStats(String adminName, String sender) {
+        int upVote = plugin.getDataSource().getAdminTicketCount(adminName,1);
+        int downVote = plugin.getDataSource().getAdminTicketCount(adminName,2);
         int total = upVote + downVote;
         int percent;
         if (total == 0 || upVote == 0) {
@@ -576,7 +576,7 @@ public class RequestHandler {
         String downVoteS = Integer.toString(downVote);
         String totalS = Integer.toString(total);
         String percentS = Integer.toString(percent);
-        for (String hpstats_message : plugin.getConfig().getStringList("hpstats-message")) {
+        for (String hpstats_message : Config.hpstats_message) {
             User.messagePlayer(sender, hpstats_message.replaceAll("<UPVOTE>", upVoteS)
                     .replaceAll("<DOWNVOTE>", downVoteS).replaceAll("<TOTAL>", totalS)
                     .replaceAll("<PERCENT>", percentS).replaceAll("<ADMINNAME>", adminName));
@@ -585,27 +585,27 @@ public class RequestHandler {
 
 
     //print history module
-    public static void printHonorHistory(String adminName, int limit) {
-        String[][] history = Admin360.ds.getHistory(limit);
+    public void printHonorHistory(String adminName, int limit) {
+        String[][] history = plugin.getDataSource().getHistory(limit);
         String rating;
-        for (String history_title : plugin.getConfig().getStringList("history-title")) {
+        for (String history_title : Config.history_title) {
             User.messagePlayer(adminName, history_title);
         }
         for (int i=0;i<limit;i++) {
             if(history[i][0] != null) {
                 if (Long.parseLong(history[i][4])==0) {
-                    rating = plugin.getConfig().getString("downvote-indicator");
+                    rating = Config.downvote_indicator;
                 } else {
-                    rating = plugin.getConfig().getString("upvote-indicator");
+                    rating = Config.upvote_indicator;
                 }
-                User.messagePlayer(adminName, plugin.getConfig().getString("history-body")
+                User.messagePlayer(adminName, Config.history_body
                         .replaceAll("<PLAYERNAME>", history[i][0]).replaceAll("<ADMINNAME>", history[i][1])
                         .replaceAll("<DETAILS>", history[i][2])
                         .replaceAll("<TIME>", new SimpleDateFormat("MM/dd/yy HH:mm").format(new Date(Long.parseLong(history[i][3])*1000)))
                         .replaceAll("<RATING>", rating));
             }
         }
-        for (String history_footer : plugin.getConfig().getStringList("history-footer")) {
+        for (String history_footer : Config.history_footer) {
             User.messagePlayer(adminName, history_footer);
         }
     }
