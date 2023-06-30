@@ -1,6 +1,6 @@
 package com.battleasya.Admin360.listener;
 
-import com.battleasya.Admin360.util.Permissions;
+import com.battleasya.Admin360.util.Permission;
 import com.battleasya.Admin360.entities.Admin;
 import com.battleasya.Admin360.entities.Request;
 import com.battleasya.Admin360.entities.User;
@@ -10,12 +10,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerListener implements Listener {
+public class JoinLeaveListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent playerjoinevent){
         Player player = playerjoinevent.getPlayer();
-        if(Permissions.hasPermission(player, Permissions.RESPOND_TICKET, false)){
+        if(User.hasPermission(player, Permission.RESPOND_TICKET, false)){
             Admin.adminsOnline.add(player.getName());
         }
     }
@@ -28,4 +28,5 @@ public class PlayerListener implements Listener {
         Request.requestInProgress.remove(player.getName());
         User.coolDown.remove(player.getName());
     }
+
 }
