@@ -1,10 +1,6 @@
 package com.battleasya.Admin360.util;
 
-import com.battleasya.Admin360.Admin360;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
-public enum Permissions {
+public enum Permission {
     CREATE_TICKET("admin360.player.basic"),
     VIEW_STATUS("admin360.player.status"),
     VIEW_STATS("admin360.player.stats"),
@@ -22,25 +18,13 @@ public enum Permissions {
     RELOAD_CONFIG("admin360.staff.reload");
 
     private final String permissionNode;
-    public static Admin360 plugin = Admin360.getInstance();
 
-    Permissions(String permissionNode) {
+    Permission(String permissionNode) {
         this.permissionNode = permissionNode;
     }
 
-    public String getNode(){
+    public String getString(){
         return this.permissionNode;
-    }
-
-    public static boolean hasPermission(CommandSender player, Permissions permission, Boolean sendMsg){
-        if (!player.hasPermission(permission.getNode())) {
-            if (sendMsg) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.getConfig().getString("no-permission")));
-            }
-            return false;
-        } else {
-            return true;
-        }
     }
 
 }
