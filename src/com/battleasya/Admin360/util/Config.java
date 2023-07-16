@@ -3,6 +3,7 @@ package com.battleasya.Admin360.util;
 import com.battleasya.Admin360.Admin360;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.List;
 
 public class Config {
@@ -103,6 +104,21 @@ public class Config {
         FileConfiguration config = plugin.getConfig();
         version_set = config.isSet("version");
         version_latest = config.getString("version").equalsIgnoreCase(plugin.getDescription().getVersion());
+    }
+
+    public void checkConfig() {
+        if (!Config.version_set || !Config.version_latest) {
+            File configFile = new File(plugin.getDataFolder(), "config.yml");
+            boolean rename = configFile.renameTo(new File(plugin.getDataFolder(), "config_old.yml"));
+            if (rename) {
+                System.out.println("[Admin360-Reloaded] Renamed the old config file to config_old.yml.");
+            } else {
+                System.out.println("[Admin360-Reloaded] Failed to rename the old config file to config_old.yml.");
+            }
+            plugin.saveDefaultConfig();
+        } else {
+            System.out.println("[Admin360-Reloaded] config.yml is at the latest version.");
+        }
     }
 
     /* Load config into memory */

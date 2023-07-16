@@ -11,8 +11,6 @@ import com.battleasya.Admin360.listener.JoinLeaveListener;
 import com.battleasya.Admin360.util.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-
 public class Admin360 extends JavaPlugin {
 
     public DataSource ds;
@@ -24,52 +22,42 @@ public class Admin360 extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        // Setup Default Config if not exists
+        /* Setup Default Config if not exists */
         saveDefaultConfig();
 
-        // Initialise Config instance
+        /* Initialise Config */
         config = new Config(this);
         config.initConfig();
 
-        // Check Config
-        if (!Config.version_set || !Config.version_latest) {
-            File configFile = new File(getDataFolder(), "config.yml");
-            boolean rename = configFile.renameTo(new File(getDataFolder(), "config_old.yml"));
-            if (rename) {
-                System.out.println("[Admin360-Reloaded] Renamed the old config file to config_old.yml.");
-            } else {
-                System.out.println("[Admin360-Reloaded] Failed to rename the old config file to config_old.yml.");
-            }
-            saveDefaultConfig();
-        } else {
-            System.out.println("[Admin360-Reloaded] config.yml is at the latest version.");
-        }
+        /* Check Config */
+        config.checkConfig();
 
+        /* Fetch Config */
         config.fetchConfig();
 
-        // Initialise Command Executor instance
+        /* Initialise Command Executor */
         getCommand("admin360").setExecutor(new B3(this));
         getCommand("ticket").setExecutor(new A3(this));
 
-        // Initialise RequestHandler instance
+        /* Initialise RequestHandler */
         rh = new RequestHandler(this);
 
-        // Initialise DataSource instance
+        /* Initialise DataSource */
         if (Config.useMysql) {
             ds = new MySQL_DataSource();
         } else {
             ds = new SQLite_DataSource();
         }
 
-        // Connect to Database
+        /* Connect to Database */
         ds.connect(Config.host, Config.port, Config.database, Config.username, Config.password);
         ds.setUp(); // build database
         ds.addColumn(); // update database
 
-        // Initialise listeners
+        /* Initialise Listeners */
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
 
-        // Load Admin in list (useful on reloads)
+        /* Load Admin in list (useful on reloads) */
         Admin.refreshAdminList();
         
     }
