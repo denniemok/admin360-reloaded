@@ -24,7 +24,7 @@ public class ReviewHandler extends BukkitRunnable {
      * Schedules the reminder. Player starts receiving messages after executing this
      */
     public BukkitTask runReminder(){
-        int frequency = Config.reminder_frequency*20;
+        int frequency = Config.reminder_frequency * 20;
         return this.runTaskTimer(plugin, 20, frequency);
     }
 
