@@ -1,39 +1,41 @@
-[Spigot Resource Page](https://www.spigotmc.org/resources/admin360-reloaded.28285/) <br>
-View this project on spigotmc.org.
+<br>
+<p align="center"><img src="https://i.imgur.com/xxVOyyN.png"></p>
+<p align="center">Helps reshape player-staff interaction and build healthy community ecosystem.</p>
 
-![](https://img.shields.io/badge/Version-8.1.2b-green) ![](https://img.shields.io/badge/Spigot-1.7+-lightgrey) ![](https://img.shields.io/badge/License-MIT-blue) ![](https://img.shields.io/badge/Language-Java-yellow) <br><br>
-
-<p align="center" width="100%">
-    <img src="https://i.imgur.com/xxVOyyN.png">
+<p align="center">
+    <a href="https://www.spigotmc.org/resources/admin360-reloaded.28285/">Spigot Page</a> •
+    <a href="https://github.com/denniemok/Admin360-Reloaded/releases">Latest Release</a> •
+    <a href="https://github.com/denniemok/Admin360-Reloaded/wiki">User Guide</a> •
+    <a href="https://github.com/denniemok/Admin360-Reloaded/issues">Issue Tracker</a>
 </p>
 
-Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
+<p align="center">
+    <img src="https://img.shields.io/badge/Version-8.1.2b-green"> <img src="https://img.shields.io/badge/Spigot-1.7+-lightgrey"> <img src="https://img.shields.io/badge/License-MIT-blue"> <img src="https://img.shields.io/badge/Language-Java-yellow">
+</p><br>
 
-First released by Vidhu in 2013, Admin360 is a lightweight and yet a very essential community relations tool for server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, the new version also introduces many additional features and QoL changes. <br><br>
+## Introduction
+
+Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem Minecraft server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
+
+[First released](https://dev.bukkit.org/bukkit-plugins/admin360/) by Vidhu in 2013, Admin360 is a lightweight yet a very essential community relations tool for Minecraft server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, but this version also introduces many additional features and QoL changes. <br><br>
 
 ## Components
 
 1. Support Ticket System: _Automated Queuing, Status Queries, Organised Notifications and Informative Statistics_
 2. Honour Point System: _Feedback Collection, Professional Statistics and Competitive Leaderboard_ <br><br>
 
-## Prerequisites
+## Runtime Requirements
 
-- Java 8+
-- SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) Drivers <br>
-(Not to be worried under most circumstances)
-- Permission Plugin (e.g., LuckPerms, PermissionEx, GroupManager, etc.)
-- Spigot 1.7.x/1.8.x/1.9.x/1.10.x/1.11.x/1.12.x/1.13.x/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x/1.19.x/1.20.x <br>
-(Should work on Bukkit, Paper or any of their forks)
-- For versions that support Bukkit 1.6 or earlier, you can download it from the old project page: https://dev.bukkit.org/bukkit-plugins/admin360/ <br><br>
+- Java 8 or above
+- SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) drivers
+- Permission plugin, including LuckPerms, PermissionEx, GroupManager, etc.
+- Spigot 1.7 or above, or equivalent forks, including Bukkit, Paper, etc. <br><br>
 
-## Dependencies
+## Build Dependencies
 
 - Java 8
-- Spigot 1.8.8 API <br><br>
+- Spigot API 1.8.8 R0.1 <br><br>
 
-## Support
-
-Spigot: [Private Conversation](https://www.spigotmc.org/members/jerryui.139798/) <br>
-GitHub: [Issue Tracker](https://github.com/denniemok/Admin360-Reloaded/issues)
+## License
 
 This project is released under [MIT License](https://opensource.org/license/mit/).
