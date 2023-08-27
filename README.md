@@ -1,4 +1,4 @@
-<br><br>
+<br>
 <p align="center"><img src="https://i.imgur.com/xxVOyyN.png"></p>
 <p align="center">Helps reshape player-staff interaction and build healthy community ecosystem.</p>
 
@@ -11,7 +11,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/Version-8.1.2b-green"> <img src="https://img.shields.io/badge/Spigot-1.7+-lightgrey"> <img src="https://img.shields.io/badge/License-MIT-blue"> <img src="https://img.shields.io/badge/Language-Java-yellow">
-</p><br><br>
+</p><br>
 
 ## Introduction
 
