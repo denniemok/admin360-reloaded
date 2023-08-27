@@ -24,7 +24,7 @@ Have you ever been in a situation where many players need help, but there are on
 1. Support Ticket System: _Automated Queuing, Status Queries, Organised Notifications and Informative Statistics_
 2. Honour Point System: _Feedback Collection, Professional Statistics and Competitive Leaderboard_ <br><br>
 
-## Runtime Requirements
+## Runtime Dependencies
 
 - Java 8 or above
 - SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) drivers
