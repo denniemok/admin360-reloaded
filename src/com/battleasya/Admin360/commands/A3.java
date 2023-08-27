@@ -150,8 +150,7 @@ public class A3 implements CommandExecutor {
 
             if (args[0].equalsIgnoreCase("hpstats")) {
                 if (User.hasPermission(sender, Permission.VIEW_HP_STATS, true)) {
-                    String playerName = sender.getName();
-                    plugin.getRequestHandler().printHonorStats(playerName, sender.getName());
+                    plugin.getRequestHandler().printHonorStats(sender.getName(), sender.getName());
                 }
                 return true;
             }
@@ -212,8 +211,7 @@ public class A3 implements CommandExecutor {
 
             if (args[0].equalsIgnoreCase("hpstats")) {
                 if (User.hasPermission(sender, Permission.VIEW_HP_STATS, true)) {
-                    String playerName = args[1];
-                    plugin.getRequestHandler().printHonorStats(playerName, sender.getName());
+                    plugin.getRequestHandler().printHonorStats(args[1], sender.getName());
                 }
                 return true;
             }
