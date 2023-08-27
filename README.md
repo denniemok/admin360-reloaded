@@ -1,15 +1,16 @@
+<br><br>
 <p align="center"><img src="https://i.imgur.com/xxVOyyN.png"></p>
-<p align="center">Helps reshape player-staff interaction and build healthy community ecosystem.</p> <br><br>
+<p align="center">Helps reshape player-staff interaction and build healthy community ecosystem.</p>
 
 <p align="center">
     <a href="https://www.spigotmc.org/resources/admin360-reloaded.28285/">Spigot Page</a> •
     <a href="https://github.com/denniemok/Admin360-Reloaded/wiki">User Guide</a> •
     <a href="https://github.com/denniemok/Admin360-Reloaded/issues">Issue Tracker</a>
-</p> <br>
+</p>
 
 <p align="center">
     <img src="https://img.shields.io/badge/Version-8.1.2b-green"> <img src="https://img.shields.io/badge/Spigot-1.7+-lightgrey"> <img src="https://img.shields.io/badge/License-MIT-blue"> <img src="https://img.shields.io/badge/Language-Java-yellow">
-</p> <br><br>
+</p>
 
 Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
 
