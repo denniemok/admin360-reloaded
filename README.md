@@ -1,4 +1,4 @@
-<br>
+<br><br>
 <p align="center"><img src="https://i.imgur.com/xxVOyyN.png"></p>
 <p align="center">Helps reshape player-staff interaction and build healthy community ecosystem.</p>
 
