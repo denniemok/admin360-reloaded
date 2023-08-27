@@ -6,7 +6,6 @@ bin/
 lib/
 .settings/
 .project
-*.iml
 
 # Compiled source #
 ###################
