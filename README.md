@@ -15,7 +15,7 @@
 
 <hr>
 
-## Introduction
+### Introduction
 
 Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem Minecraft server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
 
@@ -30,7 +30,7 @@ Have you ever been in a situation where many players need help, but there are on
 
 <hr>
 
-## Runtime Dependencies
+### Runtime Dependencies
 
 - Java 8 or above
 - SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) drivers
@@ -39,7 +39,7 @@ Have you ever been in a situation where many players need help, but there are on
 
 <hr>
 
-## Build Dependencies
+### Build Dependencies
 
 - Java 8
 - Spigot API 1.8.8 R0.1 <br>
