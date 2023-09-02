@@ -6,30 +6,31 @@ import org.bukkit.Bukkit;
 import java.sql.*;
 import java.util.logging.Level;
 
-public class MySQL_DataSource implements DataSource {
+public class SQLite implements DataSource {
 
 	private Connection con = null;
 
 	@Override
-	public void connect(String host, String port, String database, String username, String password) {
+	public boolean connect(String host, String port, String database, String username, String password) {
+
 		if (con != null) {
-			return;
+			return true;
 		}
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			Class.forName("org.sqlite.JDBC");
+			con = DriverManager.getConnection("jdbc:sqlite:plugins/Admin360-Reloaded/database.db");
 		} catch (ClassNotFoundException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Couldn't find the MySQL driver.");
-			e.printStackTrace();
-			return;
+			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Couldn't find the SQLite driver.");
+			return false;
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Failed to connect to the MySQL database.");
-			e.printStackTrace();
-			return;
+			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Failed to connect to the SQLite database.");
+			return false;
 		}
 
-		System.out.println("[Admin360-Reloaded] Connected to the MySQL database.");
+		System.out.println("[Admin360-Reloaded] Connected to the SQLite database.");
+		return true;
+
 	}
 
 	@Override
@@ -41,38 +42,36 @@ public class MySQL_DataSource implements DataSource {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to disconnect from the MySQL database.");
-			e.printStackTrace();
+			System.out.println("[Admin360-Reloaded] Failed to disconnect from the SQLite database.");
 			return;
 		}
 
 		con = null;
-		System.out.println("[Admin360-Reloaded] Disconnected from the MySQL database.");
+		System.out.println("[Admin360-Reloaded] Disconnected from the SQLite database.");
 	}
 
 	@Override
 	public void setUp() {
 		Statement st = null;
-
-		try {
-			st = con.createStatement();
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS Honors ("
-					+ "ID_Honor INTEGER PRIMARY KEY AUTO_INCREMENT, "
-					+ "HonorFrom TEXT,"
-					+ "HonorTo TEXT,"
-					+ "Request_TimeStamp NUMERIC DEFAULT 0,"
-					+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
+        
+        try {
+        	st = con.createStatement();
+        	st.executeUpdate("CREATE TABLE IF NOT EXISTS Honors ("
+        			+ "ID_Honor INTEGER PRIMARY KEY AUTOINCREMENT, "
+        			+ "HonorFrom TEXT,"
+        			+ "HonorTo TEXT,"
+        			+ "Request_TimeStamp NUMERIC DEFAULT 0,"
+        			+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
 					+ "Reason TEXT DEFAULT NULL)");
-		} catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to setup the MySQL database.");
-			e.printStackTrace();
+        } catch(SQLException e) {
+			System.out.println("[Admin360-Reloaded] Failed to setup the SQLite database.");
 			close(st);
-			return;
-		} finally {
-			close(st);
-		}
+        	return;
+        } finally {
+        	close(st);
+        }
 
-		System.out.println("[Admin360-Reloaded] Finished setting up the MySQL database.");
+        System.out.println("[Admin360-Reloaded] Finished setting up the SQLite database.");
 	}
 
 	@Override
@@ -94,24 +93,24 @@ public class MySQL_DataSource implements DataSource {
 	}
 	
 	@Override
-	public void addRecord(Request request, boolean upvote){
+	public void addRecord(Request request, boolean upvote) {
 		PreparedStatement pst = null;
 		
 		try {
 			pst = con.prepareStatement("INSERT INTO Honors (HonorFrom, HonorTo, Request_TimeStamp, Honor_TimeStamp, Reason) "
 					+ "VALUES (?, ?, ?, ?, ?)");
 			pst.setString(1, request.getPlayerName());
-			pst.setString(2, request.getHandledBy());
+			pst.setString(2, request.getHandledByName());
 			pst.setLong(3, request.getTime());
 			if (upvote) {
 				pst.setLong(4, System.currentTimeMillis()/1000);
 			} else {
 				pst.setLong(4, 0);
 			}
-			pst.setString(5, request.getReason());
+			pst.setString(5, request.getComment());
 			pst.executeUpdate();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			close(pst);
 		}
@@ -120,6 +119,7 @@ public class MySQL_DataSource implements DataSource {
 
 	@Override
 	public int getAdminTicketCount(String adminName, int situation) {
+
 		int honor = 0;
 		PreparedStatement pst = null;
         ResultSet rs = null;
@@ -135,11 +135,9 @@ public class MySQL_DataSource implements DataSource {
 			}
 			pst.setString(1, adminName);
 			rs = pst.executeQuery();
-			rs.beforeFirst();
-			rs.next();
 			honor = rs.getInt("Total");
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -156,16 +154,15 @@ public class MySQL_DataSource implements DataSource {
 
 		try {
 			if (situation == 1) {
+
 				pst = con.prepareStatement("SELECT COUNT(ID_Honor) AS Total FROM Honors");
 			} else {
 				pst = con.prepareStatement("SELECT COUNT(ID_Honor) AS Total FROM Honors WHERE Honor_TimeStamp != 0");
 			}
 			rs = pst.executeQuery();
-			rs.beforeFirst();
-			rs.next();
 			count = rs.getInt("Total");
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -178,13 +175,13 @@ public class MySQL_DataSource implements DataSource {
 	public boolean resetAdminsHonor(String adminName) {
 		PreparedStatement pst = null;
 		int rowsAffected;
-
+		
 		try {
 			pst = con.prepareStatement("DELETE FROM Honors WHERE honorTo = ?");
 			pst.setString(1, adminName);
 			rowsAffected = pst.executeUpdate();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			close(pst);
 			return false;
 		} finally {
@@ -201,13 +198,12 @@ public class MySQL_DataSource implements DataSource {
         ResultSet rs = null;
         
 		try {
-			pst = con.prepareStatement("SELECT A.HonorTo, IFNULL(j,0) AS UpVote, IFNULL(k,0) AS DownVote, (IFNULL(j,0)+IFNULL(k,0)) AS Total, ROUND(IFNULL(j,0)*100/(IFNULL(j,0)+IFNULL(k,0))) AS Percent "
+			pst = con.prepareStatement("SELECT A.HonorTo, IFNULL(j,0) AS UpVote, IFNULL(k,0) AS DownVote, (IFNULL(j,0)+IFNULL(k,0)) AS Total, (IFNULL(j,0)*100/(IFNULL(j,0)+IFNULL(k,0))) AS Percent "
 					+"FROM (SELECT HonorTo, COUNT(HonorTo) AS j FROM Honors WHERE Honor_TimeStamp != 0 GROUP BY HonorTo) AS A "
 					+"LEFT OUTER JOIN (SELECT HonorTo, COUNT(HonorTo) AS k FROM Honors WHERE Honor_TimeStamp = 0 GROUP BY HonorTo) AS B "
 					+"ON A.HonorTo=B.HonorTo ORDER BY UpVote DESC LIMIT ?");
 			pst.setInt(1, limit);
 			rs = pst.executeQuery();
-			rs.beforeFirst();
 			int i=0;
 			while(rs.next()){
 				honor[i][0] = rs.getString("HonorTo");
@@ -218,7 +214,7 @@ public class MySQL_DataSource implements DataSource {
 				i++;
 			}
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -237,7 +233,6 @@ public class MySQL_DataSource implements DataSource {
 			pst = con.prepareStatement("SELECT HonorFrom, HonorTo, IFNULL(Reason, 'NULL') AS Details, Request_TimeStamp, Honor_TimeStamp FROM Honors ORDER BY Request_TimeStamp DESC LIMIT ?");
 			pst.setInt(1, limit);
 			rs = pst.executeQuery();
-			rs.beforeFirst();
 			int i=0;
 			while(rs.next()){
 				history[i][0] = rs.getString("HonorFrom");
@@ -247,9 +242,9 @@ public class MySQL_DataSource implements DataSource {
 				history[i][4] = rs.getString("Honor_TimeStamp");
 				i++;
 			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
+		} catch(SQLException e){
+			//e.printStackTrace();
+		} finally{
 			close(pst);
 			close(rs);
 		}
@@ -262,7 +257,7 @@ public class MySQL_DataSource implements DataSource {
             try {
                 st.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
@@ -272,7 +267,7 @@ public class MySQL_DataSource implements DataSource {
             try {
                 rs.close();
             } catch (SQLException e) {
-            	e.printStackTrace();
+            	//e.printStackTrace();
             }
         }
     }

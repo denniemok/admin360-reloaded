@@ -1,4 +1,4 @@
-package com.battleasya.Admin360.util;
+package com.battleasya.Admin360.handler;
 
 public enum Permission {
     CREATE_TICKET("admin360.player.basic"),

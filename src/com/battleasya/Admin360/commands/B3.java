@@ -2,8 +2,8 @@ package com.battleasya.Admin360.commands;
 
 import com.battleasya.Admin360.Admin360;
 import com.battleasya.Admin360.entities.User;
-import com.battleasya.Admin360.util.Config;
-import com.battleasya.Admin360.util.Permission;
+import com.battleasya.Admin360.handler.Config;
+import com.battleasya.Admin360.handler.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,25 +29,31 @@ public class B3 implements CommandExecutor {
 
         if (args.length == 1) {
 
-            if (args[0].equalsIgnoreCase("help")) {
-                for (String commands_player : Config.commandListPlayer) {
-                    User.messagePlayer(sender, commands_player);
-                }
-                if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
-                    for (String commands_staff : Config.commandListStaff) {
-                        User.messagePlayer(sender, commands_staff);
-                    }
-                }
-                return true;
-            }
+            switch (args[0].toLowerCase()) {
 
-            if (args[0].equalsIgnoreCase("reload")) {
-                if (User.hasPermission(sender, Permission.RELOAD_CONFIG, true)) {
-                    plugin.reloadConfig();
-                    plugin.getConfig2().fetchConfig();
-                    User.messagePlayer(sender, Config.reloadMessage);
-                }
-                return true;
+                case "info":
+                    printInfo(sender);
+                    return true;
+
+                case "help":
+                    for (String line : Config.playerCommandList) {
+                        User.messagePlayer(sender, line);
+                    }
+                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
+                        for (String line : Config.staffCommandList) {
+                            User.messagePlayer(sender, line);
+                        }
+                    }
+                    return true;
+
+                case "reload":
+                    if (User.hasPermission(sender, Permission.RELOAD_CONFIG, true)) {
+                        plugin.reloadConfig();
+                        plugin.config.fetchConfig();
+                        User.messagePlayer(sender, Config.reloadConfig);
+                    }
+                    return true;
+
             }
 
         }

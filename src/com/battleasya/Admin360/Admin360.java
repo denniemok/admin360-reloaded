@@ -3,12 +3,12 @@ package com.battleasya.Admin360;
 import com.battleasya.Admin360.commands.A3;
 import com.battleasya.Admin360.commands.B3;
 import com.battleasya.Admin360.datasource.DataSource;
-import com.battleasya.Admin360.datasource.MySQL_DataSource;
-import com.battleasya.Admin360.datasource.SQLite_DataSource;
+import com.battleasya.Admin360.datasource.MySQL;
+import com.battleasya.Admin360.datasource.SQLite;
 import com.battleasya.Admin360.entities.Admin;
 import com.battleasya.Admin360.handler.RequestHandler;
-import com.battleasya.Admin360.listener.JoinLeaveListener;
-import com.battleasya.Admin360.util.Config;
+import com.battleasya.Admin360.listener.JoinLeaveEvent;
+import com.battleasya.Admin360.handler.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Admin360 extends JavaPlugin {
@@ -44,21 +44,26 @@ public class Admin360 extends JavaPlugin {
 
         /* Initialise DataSource */
         if (Config.useMysql) {
-            ds = new MySQL_DataSource();
+            ds = new MySQL();
         } else {
-            ds = new SQLite_DataSource();
+            ds = new SQLite();
         }
 
         /* Connect to Database */
-        ds.connect(Config.host, Config.port, Config.database, Config.username, Config.password);
+        boolean ok = ds.connect(Config.host, Config.port, Config.database, Config.username, Config.password);
+
+        if (!ok) {
+            getServer().getPluginManager().disablePlugin(this);
+        }
+
         ds.setUp(); // build database
         ds.addColumn(); // update database
 
         /* Initialise Listeners */
-        getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
+        getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
 
         /* Load Admin in list (useful on reloads) */
-        Admin.refreshAdminList();
+        Admin.refreshList();
         
     }
 
@@ -73,10 +78,6 @@ public class Admin360 extends JavaPlugin {
 
     public DataSource getDataSource() {
         return ds;
-    }
-
-    public Config getConfig2() {
-        return config;
     }
 
 }

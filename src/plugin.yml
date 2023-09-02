@@ -1,9 +1,10 @@
 name: Admin360-Reloaded
 main: com.battleasya.Admin360.Admin360
 version: 8.1.2
-description: An advanced /helpop tool
+api-version: 1.14
 authors: [Vidhu, Dennie]
 website: https://cutt.ly/bjo1zpy
+description: An advanced /helpop tool
 commands:
   ticket:
     description: Admin360 Command

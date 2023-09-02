@@ -1,9 +1,8 @@
 package com.battleasya.Admin360.commands;
 
 import com.battleasya.Admin360.Admin360;
-import com.battleasya.Admin360.util.Config;
-import com.battleasya.Admin360.util.Permission;
-import com.battleasya.Admin360.entities.Request;
+import com.battleasya.Admin360.handler.Config;
+import com.battleasya.Admin360.handler.Permission;
 import com.battleasya.Admin360.entities.User;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,12 +21,12 @@ public class A3 implements CommandExecutor {
     }
 
     public void messageCommandList(CommandSender sender) {
-        for (String commands_player : Config.commandListPlayer) {
-            User.messagePlayer(sender, commands_player);
+        for (String line : Config.playerCommandList) {
+            User.messagePlayer(sender, line);
         }
         if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
-            for (String commands_staff : Config.commandListStaff) {
-                User.messagePlayer(sender, commands_staff);
+            for (String line : Config.staffCommandList) {
+                User.messagePlayer(sender, line);
             }
         }
     }
@@ -35,9 +34,8 @@ public class A3 implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        // block command usage if the sender is not a player
-        if(!(sender instanceof Player)) {
-            User.messagePlayer(sender, Config.isPlayerCheck);
+        if (!(sender instanceof Player)) {
+            User.messagePlayer(sender, "This is a player-only command!");
             return true;
         }
 
@@ -48,211 +46,201 @@ public class A3 implements CommandExecutor {
 
         if (args.length == 1) {
 
-            if (args[0].equalsIgnoreCase("help")) {
-                messageCommandList(sender);
-                return true;
-            }
+            switch (args[0].toLowerCase()) {
 
-            if (args[0].equalsIgnoreCase("create")) {
-                if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
-                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
-                        User.messagePlayer(sender, Config.create_failed_anti_exploit);
-                        return true;
+                case "help":
+                    messageCommandList(sender);
+                    return true;
+
+                case "create":
+                    break;
+
+                case "cancel":
+                    if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
+                        plugin.getRequestHandler().cancelTicket(sender);
                     }
-                    plugin.getRequestHandler().createTicket(sender.getName(), "NULL");
-                }
-                return true;
-            }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("cancel")) {
-                if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
-                    plugin.getRequestHandler().cancelTicket(sender.getName());
-                }
-                return true;
-            }
+                case "status":
+                    if (User.hasPermission(sender, Permission.VIEW_STATUS, true)) {
+                        plugin.getRequestHandler().printTicketStatus(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("status")) {
-                if (User.hasPermission(sender, Permission.VIEW_STATUS, true)) {
-                    plugin.getRequestHandler().printTicketStatus(sender.getName());
-                }
-                return true;
-            }
+                case "stats":
+                    if (User.hasPermission(sender, Permission.VIEW_STATS, true)) {
+                        plugin.getRequestHandler().printTicketStats(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("stats")) {
-                if (User.hasPermission(sender, Permission.VIEW_STATS, true)) {
-                    plugin.getRequestHandler().printTicketStats(sender.getName());
-                }
-                return true;
-            }
+                case "list":
+                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
+                        plugin.getRequestHandler().printQueueList(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("list")) {
-                if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
-                    plugin.getRequestHandler().printQueueList(sender.getName());
-                }
-                return true;
-            }
+                case "next":
+                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
+                        plugin.getRequestHandler().attendTicket(sender, "");
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("next")) {
-                if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
-                    plugin.getRequestHandler().nextTicket(sender.getName());
-                }
-                return true;
-            }
+                case "tp":
+                    if (User.hasPermission(sender, Permission.TELEPORT, true)) {
+                        plugin.getRequestHandler().teleport2Player(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("tp")) {
-                if (User.hasPermission(sender, Permission.TELEPORT, true)) {
-                    plugin.getRequestHandler().teleportPlayer(sender.getName());
-                }
-                return true;
-            }
+                case "info":
+                    if (User.hasPermission(sender, Permission.VIEW_INFO, true)) {
+                        plugin.getRequestHandler().printTicketDetails(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("info")) {
-                if (User.hasPermission(sender, Permission.VIEW_INFO, true)) {
-                    plugin.getRequestHandler().printTicketDetails(sender.getName());
-                }
-                return true;
-            }
+                case "drop":
+                    if (User.hasPermission(sender, Permission.DROP_TICKET, true)) {
+                        plugin.getRequestHandler().dropTicket(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("drop")) {
-                if (User.hasPermission(sender, Permission.DROP_TICKET, true)) {
-                    plugin.getRequestHandler().dropTicket(sender.getName());
-                }
-                return true;
-            }
+                case "close":
+                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
+                        plugin.getRequestHandler().closeTicket(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("close")) {
-                if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
-                    plugin.getRequestHandler().closeTicket(sender.getName());
-                }
-                return true;
-            }
+                case "yes":
+                    if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
+                        plugin.getRequestHandler().giveFeedback(sender, true);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("yes")) {
-                if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
-                    plugin.getRequestHandler().requestFeedback(sender.getName(), true);
-                }
-                return true;
-            }
+                case "no":
+                    if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
+                        plugin.getRequestHandler().giveFeedback(sender, false);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("no")) {
-                if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
-                    plugin.getRequestHandler().requestFeedback(sender.getName(), false);
-                }
-                return true;
-            }
+                case "purge":
+                    if (User.hasPermission(sender, Permission.PURGE_TICKET, true)) {
+                        plugin.getRequestHandler().purgeTicket(sender);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("purge")) {
-                if (User.hasPermission(sender, Permission.PURGE_TICKET, true)) {
-                    plugin.getRequestHandler().purgeTicket(sender.getName());
-                }
-                return true;
-            }
+                case "hpstats":
+                    if (User.hasPermission(sender, Permission.VIEW_HP_STATS, true)) {
+                        plugin.getRequestHandler().printHonorStats(sender, sender.getName());
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("hpstats")) {
-                if (User.hasPermission(sender, Permission.VIEW_HP_STATS, true)) {
-                    plugin.getRequestHandler().printHonorStats(sender.getName(), sender.getName());
-                }
-                return true;
-            }
+                case "hptop":
+                    if (User.hasPermission(sender, Permission.VIEW_HP_TOP, true)) {
+                        plugin.getRequestHandler().printHonorTop(sender, Config.default_leaderboard_output);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("hptop")) {
-                if (User.hasPermission(sender, Permission.VIEW_HP_TOP, true)) {
-                    plugin.getRequestHandler().printHonorTop(sender.getName(), Config.default_leaderboard_output);
-                }
-                return true;
-            }
+                case "history":
+                    if (User.hasPermission(sender, Permission.VIEW_HISTORY, true)) {
+                        plugin.getRequestHandler().printHonorHistory(sender, Config.default_history_output);
+                    }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("history")) {
-                if (User.hasPermission(sender, Permission.VIEW_HISTORY, true)) {
-                    plugin.getRequestHandler().printHonorHistory(sender.getName(), Config.default_history_output);
-                }
-                return true;
             }
 
         }
 
-        //simple commands with 2 arguments
         if (args.length == 2) {
 
-            if (args[0].equalsIgnoreCase("pick")) {
-                if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
-                    plugin.getRequestHandler().pickTicket(sender.getName(), args[1]);
-                }
-                return true;
-            }
+            switch (args[0].toLowerCase()) {
 
-            if (args[0].equalsIgnoreCase("redirect")) {
-                if (User.hasPermission(sender, Permission.REDIRECT_TICKET, true)) {
-                    plugin.getRequestHandler().redirectTicket(sender.getName(), args[1]);
-                }
-                return true;
-            }
+                case "create":
+                    break;
 
-            if (args[0].equalsIgnoreCase("delete")) {
-                if (User.hasPermission(sender, Permission.DELETE_TICKET, true)) {
-                    Request.removePlayerRequest(args[1]);
-                    User.messagePlayer(sender, Config.delete_message
-                            .replaceAll("<PLAYERNAME>", args[1]));
-                }
-                return true;
-            }
-
-            if (args[0].equalsIgnoreCase("hpreset")) {
-                if (User.hasPermission(sender, Permission.RESET_HP_STATS, true)) {
-                    if (plugin.getDataSource().resetAdminsHonor(args[1])) {
-                        User.messagePlayer(sender, Config.reset_hpstats_succeeded
-                                .replaceAll("<ADMINNAME>", args[1]));
-                    } else {
-                        User.messagePlayer(sender, Config.reset_hpstats_failed);
+                case "pick":
+                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
+                        plugin.getRequestHandler().attendTicket(sender, args[1]);
                     }
-                }
-                return true;
-            }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("hpstats")) {
-                if (User.hasPermission(sender, Permission.VIEW_HP_STATS, true)) {
-                    plugin.getRequestHandler().printHonorStats(args[1], sender.getName());
-                }
-                return true;
-            }
-
-            if (args[0].equalsIgnoreCase("hptop")) {
-                if (User.hasPermission(sender, Permission.VIEW_HP_TOP, true)) {
-                    try {
-                        plugin.getRequestHandler().printHonorTop(sender.getName(), Integer.parseInt(args[1]));
-                    } catch (Exception e) {
-                        User.messagePlayer(sender, Config.incorrectSyntax);
+                case "redirect":
+                    if (User.hasPermission(sender, Permission.REDIRECT_TICKET, true)) {
+                        plugin.getRequestHandler().transferTicket(sender, args[1]);
                     }
-                }
-                return true;
-            }
+                    return true;
 
-            if (args[0].equalsIgnoreCase("history")) {
-                if (User.hasPermission(sender, Permission.VIEW_HISTORY, true)) {
-                    try {
-                        plugin.getRequestHandler().printHonorHistory(sender.getName(), Integer.parseInt(args[1]));
-                    } catch (Exception e) {
-                        User.messagePlayer(sender, Config.incorrectSyntax);
+                case "delete":
+                    if (User.hasPermission(sender, Permission.DELETE_TICKET, true)) {
+                        plugin.getRequestHandler().deleteTicket(sender, args[1]);
                     }
-                }
-                return true;
+                    return true;
+
+                case "hpreset":
+                    if (User.hasPermission(sender, Permission.RESET_HP_STATS, true)) {
+                        if (plugin.getDataSource().resetAdminsHonor(args[1])) {
+                            User.messagePlayer(sender, Config.reset_hpstats_succeeded
+                                    .replaceAll("<ADMINNAME>", args[1]));
+                        } else {
+                            User.messagePlayer(sender, Config.reset_hpstats_failed);
+                        }
+                    }
+                    return true;
+
+                case "hpstats":
+                    if (User.hasPermission(sender, Permission.VIEW_HP_STATS, true)) {
+                        plugin.getRequestHandler().printHonorStats(sender, args[1]);
+                    }
+                    return true;
+
+                case "hptop":
+                    if (User.hasPermission(sender, Permission.VIEW_HP_TOP, true)) {
+                        try {
+                            plugin.getRequestHandler().printHonorTop(sender, Integer.parseInt(args[1]));
+                        } catch (Exception e) {
+                            User.messagePlayer(sender, Config.incorrectSyntax);
+                        }
+                    }
+                    return true;
+
+                case "history":
+                    if (User.hasPermission(sender, Permission.VIEW_HISTORY, true)) {
+                        try {
+                            plugin.getRequestHandler().printHonorHistory(sender, Integer.parseInt(args[1]));
+                        } catch (Exception e) {
+                            User.messagePlayer(sender, Config.incorrectSyntax);
+                        }
+                    }
+                    return true;
+
             }
 
         }
 
         if (args[0].equalsIgnoreCase("create")) {
+
             if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
+
                 if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
-                    User.messagePlayer(sender, Config.create_failed_anti_exploit);
+                    User.messagePlayer(sender, Config.create_failed_restricted);
                     return true;
                 }
-                StringBuilder reason = new StringBuilder();
-                for (int i = 1; i < args.length; i++) {
-                    reason.append(" ").append(args[i]);
+
+                StringBuilder comment;
+
+                if (args.length == 1) {
+                    comment = new StringBuilder("NULL");
+                } else {
+                    comment = new StringBuilder(args[1]);
+                    for (int i = 2; i < args.length; i++) {
+                        comment.append(" ").append(args[i]);
+                    }
                 }
-                plugin.getRequestHandler().createTicket(sender.getName(), reason.toString());
+
+                plugin.getRequestHandler().createTicket(sender, comment.toString());
+
             }
+
             return true;
+
         }
 
         User.messagePlayer(sender, Config.incorrectSyntax);

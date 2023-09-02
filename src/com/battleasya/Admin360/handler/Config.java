@@ -1,6 +1,7 @@
-package com.battleasya.Admin360.util;
+package com.battleasya.Admin360.handler;
 
 import com.battleasya.Admin360.Admin360;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -17,43 +18,41 @@ public class Config {
 
     public static boolean version_set;
     public static boolean version_latest;
-
     public static String version;
     public static String noPermission;
     public static String incorrectSyntax;
-    public static String isPlayerCheck;
-    public static String reloadMessage;
+    public static String reloadConfig;
     public static boolean useMysql;
     public static String host;
     public static String port;
     public static String database;
     public static String username;
     public static String password;
-    public static List<String> commandListPlayer;
-    public static List<String> commandListStaff;
-    public static boolean useCooldown;
-    public static int cooldownTimer;
+    public static List<String> playerCommandList;
+    public static List<String> staffCommandList;
+    public static boolean cooldownEnable;
+    public static int cooldownInterval;
     public static String cooldownMessage;
-    public static boolean staffOnlineRequired;
-    public static String createFailedNoStaff;
-    public static String createFailedInQueue;
-    public static String createFailedInProgress;
-    public static String create_failed_require_feedback;
-    public static String create_failed_anti_exploit;
-    public static List<String> create_succeeded;
-    public static boolean ticket_created_trigger_custom_command;
-    public static String ticket_created_custom_command;
-    public static List<String> ticket_created_notify_staff;
+    public static boolean check_staff_availability;
+    public static String create_failed_no_staff;
+    public static String create_failed_in_queue;
+    public static String create_failed_in_progress;
+    public static String create_failed_await_feedback;
+    public static String create_failed_restricted;
+    public static List<String> create_succeeded_notify_player;
+    public static boolean create_succeeded_trigger_enable;
+    public static String create_succeeded_trigger_command;
+    public static List<String> create_succeeded_notify_staff;
     public static String cancel_failed_no_ticket;
     public static String cancel_failed_in_progress;
     public static String cancel_failed_attending;
-    public static String cancel_failed_require_feedback;
-    public static String cancel_succeeded;
+    public static String cancel_failed_await_feedback;
+    public static String cancel_succeeded_notify_player;
     public static String status_no_ticket;
     public static String status_in_queue;
     public static String status_in_progress;
     public static String status_attending;
-    public static String status_require_feedback;
+    public static String status_await_feedback;
     public static List<String> stats_message;
     public static String list_message;
     public static String next_failed_no_ticket;
@@ -101,24 +100,34 @@ public class Config {
 
     /* Init checking */
     public void initConfig() {
+
         FileConfiguration config = plugin.getConfig();
+
         version_set = config.isSet("version");
         version_latest = config.getString("version").equalsIgnoreCase(plugin.getDescription().getVersion());
+
     }
 
     public void checkConfig() {
-        if (!Config.version_set || !Config.version_latest) {
+
+        if (!version_set || !version_latest) {
+
             File configFile = new File(plugin.getDataFolder(), "config.yml");
+
             boolean rename = configFile.renameTo(new File(plugin.getDataFolder(), "config_old.yml"));
+
             if (rename) {
-                System.out.println("[Admin360-Reloaded] Renamed the old config file to config_old.yml.");
+                Bukkit.getLogger().info("[Admin360-Reloaded] Renamed the old config file to config_old.yml.");
             } else {
-                System.out.println("[Admin360-Reloaded] Failed to rename the old config file to config_old.yml.");
+                Bukkit.getLogger().severe("[Admin360-Reloaded] Failed to rename the old config file to config_old.yml.");
             }
+
             plugin.saveDefaultConfig();
+
         } else {
-            System.out.println("[Admin360-Reloaded] config.yml is at the latest version.");
+            Bukkit.getLogger().info("[Admin360-Reloaded] config.yml is at the latest version.");
         }
+
     }
 
     /* Load config into memory */
@@ -128,50 +137,48 @@ public class Config {
 
         version = config.getString("version");
 
-        noPermission = config.getString("no-permission");
-        incorrectSyntax = config.getString("incorrect-syntax");
-        isPlayerCheck = config.getString("is-player-check");
-        reloadMessage = config.getString("reload-message");
+        noPermission = config.getString("general.no-permission");
+        incorrectSyntax = config.getString("general.incorrect-syntax");
+        reloadConfig = config.getString("general.reload-config");
 
-        useMysql = config.getBoolean("use-mysql");
-        host = config.getString("host");
-        port = config.getString("port");
-        database = config.getString("database");
-        username = config.getString("username");
-        password = config.getString("password");
+        useMysql = config.getBoolean("datasource.mysql");
+        host = config.getString("datasource.host");
+        port = config.getString("datasource.port");
+        database = config.getString("datasource.database");
+        username = config.getString("datasource.username");
+        password = config.getString("datasource.password");
 
-        commandListPlayer = config.getStringList("command-list-player");
-        commandListStaff = config.getStringList("command-list-staff");
+        playerCommandList = config.getStringList("help.player-commands");
+        staffCommandList = config.getStringList("help.staff-commands");
 
-        useCooldown = config.getBoolean("use-cooldown");
-        cooldownTimer = config.getInt("cooldown-timer");
-        cooldownMessage = config.getString("cooldown-message");
+        cooldownEnable = config.getBoolean("create.cooldown.enable");
+        cooldownInterval = config.getInt("create.cooldown.interval");
+        cooldownMessage = config.getString("create.cooldown.message");
 
-        staffOnlineRequired = config.getBoolean("staff-online-required");
-        createFailedNoStaff = config.getString("create-failed-no-staff");
+        check_staff_availability = config.getBoolean("create.check-staff-availability");
 
-        createFailedInQueue = config.getString("create-failed-in-queue");
-        createFailedInProgress = config.getString("create-failed-in-progress");
-        create_failed_require_feedback = config.getString("create-failed-require-feedback");
-        create_failed_anti_exploit = config.getString("create-failed-anti-exploit");
+        create_failed_no_staff = config.getString("create.failed.message.no-staff");
+        create_failed_in_queue = config.getString("create.failed.message.in-queue");
+        create_failed_in_progress = config.getString("create.failed.message.in-progress");
+        create_failed_await_feedback = config.getString("create.failed.message.await-feedback");
+        create_failed_restricted = config.getString("create.failed.message.restricted");
 
-        create_succeeded = config.getStringList("create-succeeded");
-        ticket_created_trigger_custom_command = config.getBoolean("ticket-created-trigger-custom-command");
-        ticket_created_custom_command = config.getString("ticket-created-custom-command");
+        create_succeeded_notify_player = config.getStringList("create.succeeded.message.notify-player");
+        create_succeeded_notify_staff = config.getStringList("create.succeeded.message.notify-staff");
+        create_succeeded_trigger_enable = config.getBoolean("create.succeeded.trigger.enable");
+        create_succeeded_trigger_command = config.getString("create.succeeded.trigger.command");
 
-        ticket_created_notify_staff = config.getStringList("ticket-created-notify-staff");
+        cancel_failed_no_ticket = config.getString("cancel.failed.message.no-ticket");
+        cancel_failed_in_progress = config.getString("cancel.failed.message.in-progress");
+        cancel_failed_attending = config.getString("cancel.failed.message.attending");
+        cancel_failed_await_feedback = config.getString("cancel.failed.message.await-feedback");
+        cancel_succeeded_notify_player = config.getString("cancel.succeeded.message.notify-player");
 
-        cancel_failed_no_ticket = config.getString("cancel-failed-no-ticket");
-        cancel_failed_in_progress = config.getString("cancel-failed-in-progress");
-        cancel_failed_attending = config.getString("cancel-failed-attending");
-        cancel_failed_require_feedback = config.getString("cancel-failed-require-feedback");
-        cancel_succeeded = config.getString("cancel-succeeded");
-
-        status_no_ticket = config.getString("status-no-ticket");
-        status_in_queue = config.getString("status-in-queue");
-        status_in_progress = config.getString("status-in-progress");
-        status_attending = config.getString("status-attending");
-        status_require_feedback = config.getString("status-require-feedback");
+        status_no_ticket = config.getString("status.message.no-ticket");
+        status_in_queue = config.getString("status.message.in-queue");
+        status_in_progress = config.getString("status.message.in-progress");
+        status_attending = config.getString("status.message.attending");
+        status_await_feedback = config.getString("status.message.await-feedback");
 
         stats_message = config.getStringList("stats-message");
 

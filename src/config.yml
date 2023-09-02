@@ -4,32 +4,27 @@
 # +------------------------------------------------------+ #
 ############################################################
 
-# Version 8.1.2
-# Tested on Spigot 1.8.8, 1.12.2, 1.16.5
-
-# Config version = Plugin version.
 # Do not change this unless you know what you're doing.
 # This is for the plugin to check whether we should generate a new config for you.
-version: '8.1.2'
+version: '9.1.0'
 
 # Whenever there's an update available, read the upgrade procedures as instructed on our spigot project page.
-# If there are any changes made to this config, for example, if we've added several new settings or messages,
-# you may have to compare the changes of the new and old config. And, it takes time to apply your old settings
-# especially when the update is big.
+# If there are any changes made to this config, for example, if we've added several new options or messages,
+# you will have to compare and apply the changes on your own.
 
-# Since version 7.1.0, the plugin will auto-rename the old config file into "config_old.yml" on server restart.
-# This is to make sure that everything works even if we reworked the config file (which is something I always do).
-# But remember to delete the "config_old.yml" after you've migrated all the changes.
-# If not, it may break this auto-rename feature on future updates.
+# Since 7.1.0, the plugin will auto-rename the old config file into "config_old.yml" on server restart.
+# This is to make sure everything works properly especially after a big update.
+# You should have deleted the "config_old.yml" after migrated all the changes.
+# Don't just leave it there as it may break the auto-rename function on future updates.
 
-# As you can see, the comments can be lengthy because we want to explain everything to you.
-# If you do spend time reading through this, then you will know how the plugin works.
-# If you want to disable some messages, simply make it an empty line using ''.
-# All default messages contain all the placeholders that can be used. You can remove it or duplicate it.
-# However, placeholders will only work in that particular message.
+# As you can see, the comments can be a bit lengthy here because we want to explain everything to you.
+# If you do spend time reading through these messages, you will have a good sense of how the plugin works.
 
-# We welcome users who want to share their version of translation to everyone else.
-# Contact us so that we can make your translation official.
+# If you want to disable a message, simply makes it an empty line using ''.
+# All messages, by default, contain all the placeholders that can be used on that particular message.
+# You can remove it or duplicate it.
+
+# We welcome users to provide feedback.
 # Project : https://www.spigotmc.org/resources/admin360-reloaded.28285/
 # Support : https://github.com/denniemok/Admin360-Reloaded/issues
 # Authors : Vidhu, Dennie
@@ -42,27 +37,31 @@ version: '8.1.2'
 # +------------------------------------------------------+ #
 ############################################################
 
-no-permission: '&f[&6ADMIN360&f] &c&nAccess Denied&7 You do not have permission to use this command.'
-incorrect-syntax: '&f[&6ADMIN360&f] &c&nIncorrect Syntax&7 Use &6/admin360 &7to display a list of commands.'
-is-player-check: '&f[&6ADMIN360&f] &c&nAccess Denied&7 This is a player-only command.'
-reload-message: '&f[&6ADMIN360&f] &7The config file has been reloaded successfully.'
+general:
+  message:
+    no-permission: '&f[&6ADMIN360&f] &c&nAccess Denied&7 You do not have permission to use this command.'
+    incorrect-syntax: '&f[&6ADMIN360&f] &c&nIncorrect Syntax&7 Use &6/admin360 &7to display a list of commands.'
+    reload-config: '&f[&6ADMIN360&f] &7The config file has been reloaded successfully.'
 
 # Database
 # You MUST restart your server if you've changed the database settings and if you want the changes to apply.
-# Admin360 will use SQLite if use-mysql is set to false.
+# Admin360 will use SQLite if mysql is set to false.
 # Drivers that we use: SQLite (org.sqlite.jdbc) and MYSQL (com.mysql.jdbc)
 # Your hosting provider should have these installed by default. If you're running your server on Windows, SQLite is preferred.
-# The other options such as host, port, database, username and password will only be valid if use-mysql is true.
-use-mysql: false
-host: 'localhost'
-port: '3306'
-database: 'database'
-username: 'user'
-password: 'password'
+# The other options such as host, port, database, username and password will only be valid if mysql is true.
+datasource:
+  mysql: false
+  host: 'localhost'
+  port: '3306'
+  database: 'database'
+  username: 'user'
+  password: 'password'
 
 # Help Section: Player Commands
 # This message supports multiple lines.
-command-list-player:
+help:
+
+  player-commands:
   - ''
   - '&7&m------------&r &6ADMIN360 &7&m------------'
   - '&6/ticket create [details] &f- &7Open a ticket.'
@@ -75,9 +74,9 @@ command-list-player:
   - '&7&m---------------------------------'
   - ''
 
-# Help Section: Staff Commands
-# This message supports multiple lines.
-command-list-staff:
+  # Help Section: Staff Commands
+  # This message supports multiple lines.
+  staff-commands:
   - ''
   - '&7&m------------&r &6ADMIN360 &7&m------------'
   - '&fStep 1'
@@ -125,39 +124,40 @@ command-list-staff:
 
 # After a ticket is opened, your staff (with permission "admin360.staff.basic") will be notified.
 
-# We impose a command cool-down to avoid spamming issues.
-# The unit of cooldown-timer is expressed in seconds.
-use-cooldown: true
-cooldown-timer: 60
-cooldown-message: '&f[&6ADMIN360&f] &7Please wait for &6<SECONDSLEFT>s&7 before opening another ticket.'
+create:
 
-# Check if any staff members are currently available.
-# If this is set to true, players will not be allowed to open a new ticket if there is no staff in the server.
-# How do we determine between a player and a staff? Staff are those who have the permission "admin360.staff.basic".
-staff-online-required: true
-create-failed-no-staff: '&f[&6ADMIN360&f] &c&nCreate Failed&7 There are no staff currently available.'
+  cooldown:
+    enable: true
+    interval: 60 # in seconds
+    message: '&f[&6ADMIN360&f] &7Please wait for &6<SECONDSLEFT>s&7 before opening another ticket.'
 
-create-failed-in-queue: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a ticket opened. (&fTips: &6/ticket status&7)'
-create-failed-in-progress: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You have another ticket in progress.(&fTips: &6/ticket status&7)'
-create-failed-require-feedback: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
-create-failed-anti-exploit: '&f[&6ADMIN360&f] &c&nCreate Failed&7 Members of the staff team are not allowed to open a ticket to avoid exploits.'
+  # Check if any staff members are currently available.
+  # If this is set to true, players will not be allowed to open a new ticket if there is no staff in the server.
+  # How do we determine between a player and a staff? Staff are those who have the permission "admin360.staff.basic".
+  check-staff-availability: true
 
-# This message supports multiple lines.
-create-succeeded:
-  - '&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7). Use &6/ticket status &7to check your progress.'
-# Do you want to run a custom command right after a ticket is opened? Default example using title-manager.
-# Change this to true if you want to use this option.
-ticket-created-trigger-custom-command: false
-ticket-created-custom-command: 'tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)'
+  failed:
+    message:
+      no-staff: '&f[&6ADMIN360&f] &c&nCreate Failed&7 We cannot handle your request at the moment.'
+      in-queue: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a pending ticket. (&fTips: &6/ticket status&7)'
+      in-progress: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a ticket in progress.(&fTips: &6/ticket status&7)'
+      await-feedback: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a ticket that requires your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
+      restricted: '&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for members of the staff team.'
 
-# Notify your staff when there is a ticket created.
-# This message supports multiple lines.
-ticket-created-notify-staff:
-  - ''
-  - '&f[&6ADMIN360&f] &6<PLAYERNAME> &copened a &a&lNEW &cticket.'
-  - '&f[&6ADMIN360&f] &cDetails: &f<DETAILS>'
-  - '&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)'
-  - ''
+  succeeded:
+    message:
+      notify-player:
+      - '&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7). Use &6/ticket status &7to check your progress.'
+      notify-staff:
+      - ''
+      - '&f[&6ADMIN360&f] &6<PLAYERNAME> &copened a &a&lNEW &cticket.'
+      - '&f[&6ADMIN360&f] &cDetails: &f<DETAILS>'
+      - '&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)'
+      - ''
+    # Run a custom command after a ticket is opened. Default example using title-manager.
+    trigger:
+      enable: false
+      command: 'tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)'
 
 
 
@@ -176,11 +176,16 @@ ticket-created-notify-staff:
 # cancel-failed-require-feedback : You cannot cancel your request because you still haven't given us feedback.
 # cancel-succeeded : You have cancelled your submitted request successfully.
 
-cancel-failed-no-ticket: '&f[&6ADMIN360&f] &c&nCancel Failed&7 Do you need help? (&fTips: &6/ticket create [details]&7)'
-cancel-failed-in-progress: '&f[&6ADMIN360&f] &c&nCancel Failed&7 A staff is attending your help-request. (&fTips: &6/ticket status&7)'
-cancel-failed-attending: '&f[&6ADMIN360&f] &c&nCancel Failed&7 Members of the staff team do not need this function.'
-cancel-failed-require-feedback: '&f[&6ADMIN360&f] &c&nCancel Failed&7 You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
-cancel-succeeded: '&f[&6ADMIN360&f] &7You have removed your ticket from the queue successfully.'
+cancel:
+  failed:
+    message:
+      no-ticket: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You don't have any active requests. (&fTips: &6/ticket create [details]&7)"
+      in-progress: '&f[&6ADMIN360&f] &c&nCancel Failed&7 You cannot cancel an in-progress request. (&fTips: &6/ticket status&7)'
+      attending: '&f[&6ADMIN360&f] &c&nCancel Failed&7 This feature has been disabled for members of the staff team.'
+      await-feedback: '&f[&6ADMIN360&f] &c&nCancel Failed&7 You have a ticket that requires your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
+  succeeded:
+    message:
+      notify-player: '&f[&6ADMIN360&f] &7You have successfully cancelled your request.'
 
 
 
@@ -199,11 +204,13 @@ cancel-succeeded: '&f[&6ADMIN360&f] &7You have removed your ticket from the queu
 # status-attending : You are a staff, and you are currently attending a case.
 # status-require-feedback : Your ticket is closed, but you still haven't given us feedback.
 
-status-no-ticket: '&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)'
-status-in-queue: '&f[&6ADMIN360&f] &7Your ticket is now in position &6<POSITION> &7of the queue.'
-status-in-progress: '&f[&6ADMIN360&f] &7Your ticket is now in progress. A staff will contact you soon.'
-status-attending: '&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)'
-status-require-feedback: '&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
+status:
+  message:
+    no-ticket: '&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)'
+    in-queue: '&f[&6ADMIN360&f] &7Your ticket is now in position &6<POSITION> &7of the queue.'
+    in-progress: '&f[&6ADMIN360&f] &7Your ticket is now in progress. A staff will contact you soon.'
+    attending: '&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)'
+    await-feedback: '&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
 
 
 
