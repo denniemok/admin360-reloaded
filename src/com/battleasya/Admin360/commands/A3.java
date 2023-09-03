@@ -24,7 +24,7 @@ public class A3 implements CommandExecutor {
         for (String line : Config.playerCommandList) {
             User.messagePlayer(sender, line);
         }
-        if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
+        if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
             for (String line : Config.staffCommandList) {
                 User.messagePlayer(sender, line);
             }
@@ -74,14 +74,14 @@ public class A3 implements CommandExecutor {
                     return true;
 
                 case "list":
-                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
-                        plugin.getRequestHandler().printQueueList(sender);
+                    if (User.hasPermission(sender, Permission.ATTEND_TICKET, true)) {
+                        plugin.getRequestHandler().printPendingList(sender);
                     }
                     return true;
 
                 case "next":
-                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
-                        plugin.getRequestHandler().attendTicket(sender, "");
+                    if (User.hasPermission(sender, Permission.ATTEND_TICKET, true)) {
+                        plugin.getRequestHandler().attendTicket(sender, null);
                     }
                     return true;
 
@@ -93,7 +93,7 @@ public class A3 implements CommandExecutor {
 
                 case "info":
                     if (User.hasPermission(sender, Permission.VIEW_INFO, true)) {
-                        plugin.getRequestHandler().printTicketDetails(sender);
+                        plugin.getRequestHandler().printTicketInfo(sender);
                     }
                     return true;
 
@@ -104,7 +104,7 @@ public class A3 implements CommandExecutor {
                     return true;
 
                 case "close":
-                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
+                    if (User.hasPermission(sender, Permission.ATTEND_TICKET, true)) {
                         plugin.getRequestHandler().closeTicket(sender);
                     }
                     return true;
@@ -123,7 +123,7 @@ public class A3 implements CommandExecutor {
 
                 case "purge":
                     if (User.hasPermission(sender, Permission.PURGE_TICKET, true)) {
-                        plugin.getRequestHandler().purgeTicket(sender);
+                        plugin.getRequestHandler().purgeTicket(sender, "pending");
                     }
                     return true;
 
@@ -156,21 +156,27 @@ public class A3 implements CommandExecutor {
                 case "create":
                     break;
 
-                case "pick":
-                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, true)) {
+                case "select":
+                    if (User.hasPermission(sender, Permission.ATTEND_TICKET, true)) {
                         plugin.getRequestHandler().attendTicket(sender, args[1]);
                     }
                     return true;
 
-                case "redirect":
-                    if (User.hasPermission(sender, Permission.REDIRECT_TICKET, true)) {
+                case "transfer":
+                    if (User.hasPermission(sender, Permission.TRANSFER_TICKET, true)) {
                         plugin.getRequestHandler().transferTicket(sender, args[1]);
                     }
                     return true;
 
-                case "delete":
-                    if (User.hasPermission(sender, Permission.DELETE_TICKET, true)) {
-                        plugin.getRequestHandler().deleteTicket(sender, args[1]);
+                case "purge":
+                    if (User.hasPermission(sender, Permission.PURGE_TICKET, true)) {
+                        plugin.getRequestHandler().purgeTicket(sender, args[1]);
+                    }
+                    return true;
+
+                case "remove":
+                    if (User.hasPermission(sender, Permission.REMOVE_TICKET, true)) {
+                        plugin.getRequestHandler().removeTicket(sender, args[1]);
                     }
                     return true;
 
@@ -219,7 +225,7 @@ public class A3 implements CommandExecutor {
 
             if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
 
-                if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
+                if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
                     User.messagePlayer(sender, Config.create_failed_restricted);
                     return true;
                 }
@@ -227,7 +233,7 @@ public class A3 implements CommandExecutor {
                 StringBuilder comment;
 
                 if (args.length == 1) {
-                    comment = new StringBuilder("NULL");
+                    comment = new StringBuilder();
                 } else {
                     comment = new StringBuilder(args[1]);
                     for (int i = 2; i < args.length; i++) {

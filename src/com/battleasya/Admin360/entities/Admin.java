@@ -34,7 +34,7 @@ public class Admin {
     public static void refreshList() {
         Collection<? extends Player> playerList = Bukkit.getOnlinePlayers();
         for (Player player : playerList) {
-            if (User.hasPermission(player, Permission.RESPOND_TICKET, false)) {
+            if (User.hasPermission(player, Permission.ATTEND_TICKET, false)) {
                 Admin.addAdmin(player.getUniqueId());
             }
         }
@@ -48,8 +48,8 @@ public class Admin {
         adminList.add(adminID);
     }
 
-    public static boolean isListEmpty() {
-        return adminList.isEmpty();
+    public static boolean isAvailable() {
+        return !adminList.isEmpty();
     }
 
     public static boolean isAdmin(UUID adminID) {

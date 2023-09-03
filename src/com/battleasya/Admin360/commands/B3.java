@@ -39,7 +39,7 @@ public class B3 implements CommandExecutor {
                     for (String line : Config.playerCommandList) {
                         User.messagePlayer(sender, line);
                     }
-                    if (User.hasPermission(sender, Permission.RESPOND_TICKET, false)) {
+                    if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
                         for (String line : Config.staffCommandList) {
                             User.messagePlayer(sender, line);
                         }

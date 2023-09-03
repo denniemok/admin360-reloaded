@@ -67,8 +67,8 @@ help:
   - '&6/ticket create [details] &f- &7Open a ticket.'
   - '&6/ticket cancel &f- &7Cancel your ticket.'
   - '&6/ticket status &f- &7Query ticket status.'
-  - '&6/ticket stats &f- &7View ticket statistics.'
-  - '&6/ticket help &f- &7Print command list.'
+  - '&6/ticket stats &f- &7View overall statistics.'
+  - '&6/ticket help &f- &7Display command list.'
   - '&b/admin360 &f- &7Display plugin info.'
   - '&7*&fParameters: [Optional] <Compulsory>'
   - '&7&m---------------------------------'
@@ -81,18 +81,19 @@ help:
   - '&7&m------------&r &6ADMIN360 &7&m------------'
   - '&fStep 1'
   - '&6/ticket list &f- &7View the ticket list.'
-  - '&6/ticket pick <name> &f- &7Pick up a ticket.'
+  - '&6/ticket select <name> &f- &7Select a ticket.'
   - '&6/ticket next &f- &7Proceed to the next ticket.'
   - '&fStep 2'
   - '&6/ticket tp &f- &7Teleport to the player.'
   - '&6/ticket info &f- &7View the ticket details.'
   - '&fStep 3'
-  - '&6/ticket redirect <name> &f- &7Redirect a ticket.'
+  - '&6/ticket transfer <name> &f- &7Redirect a ticket.'
   - '&6/ticket drop &f- &7Drop and abandon a ticket.'
   - '&6/ticket close &f- &7Done-mark a ticket.'
   - '&fRemoval'
-  - '&6/ticket purge &f- &7Purge all queuing tickets.'
-  - '&6/ticket delete <name> &f- &7Delete a ticket.'
+  - '&6/ticket purge [stage] &f- &7Purge all tickets in a stage.'
+  - '&6/ticket remove <name> &f- &7Remove from all stages.'
+  - "[stage]: pending, attending, awaiting"
   - '&fHonors'
   - '&6/ticket hpstats [name] &f- &7View HP stats.'
   - '&6/ticket hptop [#] &f- &7View HP leaderboard.'
@@ -155,7 +156,7 @@ create:
       - '&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)'
       - ''
     # Run a custom command after a ticket is opened. Default example using title-manager.
-    trigger:
+    trigger: # for player-only
       enable: false
       command: 'tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)'
 
@@ -259,9 +260,10 @@ stats-message:
 # Your staff in the server (with permission "admin360.staff.basic") will be notified when the status of a ticket has
 # changed. The player who created the ticket will also be informed.
 
-list-message: '&f[&6ADMIN360&f] &6&l<INDEX> &7[&f<TIME>&7] &f<PLAYERNAME> &7: <DETAILS>'
+list-message: '&f[&6ADMIN360&f] &6&l<INDEX> &7[&f<DATETIME>&7] &f<PLAYERNAME> &7: <DETAILS>'
 
 next-failed-no-ticket: '&f[&6ADMIN360&f] &c&nNext Failed&7 There are no tickets at the moment.'
+next-failed-not-exist: "&f[&6ADMIN360&f] &c&nNext Failed&7 That person does not have an opened request."
 next-failed-attending: '&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one.'
 
 # Do you want Admin360 to teleport your staff to the target player by default?
@@ -316,7 +318,7 @@ info-message:
   - ''
   - '&f[&6ADMIN360&f]     &6Name: &f<PLAYERNAME>'
   - '&f[&6ADMIN360&f]     &6Details: &f<DETAILS>'
-  - '&f[&6ADMIN360&f]     &6Time: &f<TIME>'
+  - '&f[&6ADMIN360&f]     &6Time: &f<DATETIME>'
   - ''
 
 
@@ -421,12 +423,15 @@ downvote-rating-notify-staff: '&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your
 
 # This message supports multiple lines.
 purge-message:
-  - ''
-  - '&f[&6ADMIN360&f]     &fPurged &c<AMOUNTPURGED> &fpending ticket(s).'
-  - ''
+  - ""
+  - "&f[&6ADMIN360&f]     &fPurged &c<AMOUNTPURGED> &fpending ticket(s)."
+  - ""
 
 #This message is used for /ticket delete and /ticket abandon.
-delete-message: '&f[&6ADMIN360&f] &6<PLAYERNAME>&7''s ticket has been removed successfully.'
+delete:
+  message:
+    succeeded: "&f[&6ADMIN360&f] &6<PLAYERNAME>&7's ticket has been removed successfully."
+    failed: "&f[&6ADMIN360&f] &7Failed to delete &6<PLAYERNAME>&7's ticket."
 
 
 

@@ -1,5 +1,6 @@
 package com.battleasya.Admin360.listener;
 
+import com.battleasya.Admin360.entities.Review;
 import com.battleasya.Admin360.handler.Permission;
 import com.battleasya.Admin360.entities.Admin;
 import com.battleasya.Admin360.entities.Request;
@@ -19,7 +20,7 @@ public class JoinLeaveEvent implements Listener {
 
         Player player = event.getPlayer();
 
-        if (User.hasPermission(player, Permission.RESPOND_TICKET, false)){
+        if (User.hasPermission(player, Permission.ATTEND_TICKET, false)){
             Admin.addAdmin(player.getUniqueId());
         }
 
@@ -34,7 +35,9 @@ public class JoinLeaveEvent implements Listener {
         Admin.removeAdmin(playerID);
 
         Request.removePlayer(playerID);
-        User.removePlayer(playerID);
+        // User.removePlayer(playerID);
+
+        Review.removePlayer(playerID);
 
     }
 

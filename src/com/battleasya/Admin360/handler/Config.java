@@ -56,6 +56,7 @@ public class Config {
     public static List<String> stats_message;
     public static String list_message;
     public static String next_failed_no_ticket;
+    public static String next_failed_not_exist;
     public static String next_failed_attending;
     public static boolean use_auto_teleport;
     public static List<String> ticket_in_progress_notify_player;
@@ -83,7 +84,8 @@ public class Config {
     public static String upvote_rating_notify_staff;
     public static String downvote_rating_notify_staff;
     public static List<String> purge_message;
-    public static String delete_message;
+    public static String delete_succeeded;
+    public static String delete_failed;
     public static List<String> hpstats_message;
     public static int default_leaderboard_output;
     public static List<String> leaderboard_title;
@@ -185,6 +187,7 @@ public class Config {
         list_message = config.getString("list-message");
 
         next_failed_no_ticket = config.getString("next-failed-no-ticket");
+        next_failed_not_exist = config.getString("next-failed-not-exist");
         next_failed_attending = config.getString("next-failed-attending");
 
         use_auto_teleport = config.getBoolean("use-auto-teleport");
@@ -225,7 +228,8 @@ public class Config {
         downvote_rating_notify_staff = config.getString("downvote-rating-notify-staff");
 
         purge_message = config.getStringList("purge-message");
-        delete_message = config.getString("delete-message");
+        delete_succeeded = config.getString("delete.message.succeeded");
+        delete_failed = config.getString("delete.message.failed");
 
         hpstats_message = config.getStringList("hpstats-message");
         default_leaderboard_output = config.getInt("default-leaderboard-output");

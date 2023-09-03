@@ -1,5 +1,6 @@
 package com.battleasya.Admin360;
 
+import com.battleasya.Admin360.bstats.Metrics;
 import com.battleasya.Admin360.commands.A3;
 import com.battleasya.Admin360.commands.B3;
 import com.battleasya.Admin360.datasource.DataSource;
@@ -18,6 +19,8 @@ public class Admin360 extends JavaPlugin {
     public Config config;
 
     public RequestHandler rh;
+
+    public static int version;
 
     @Override
     public void onEnable() {
@@ -64,6 +67,17 @@ public class Admin360 extends JavaPlugin {
 
         /* Load Admin in list (useful on reloads) */
         Admin.refreshList();
+
+        /* register bstats */
+        new Metrics(this, 19710);
+        getLogger().info("Starting Metrics. Opt-out using the global bStats config.");
+
+        /* e.g. 1.20.1-R0.1-SNAPSHOT */
+        try {
+            version = Integer.parseInt(getServer().getBukkitVersion().split("-")[0].split("\\.")[1]);
+        } catch (Exception e) {
+            version = 8;
+        }
         
     }
 
@@ -78,6 +92,10 @@ public class Admin360 extends JavaPlugin {
 
     public DataSource getDataSource() {
         return ds;
+    }
+
+    public static int getServerVersion() {
+        return version;
     }
 
 }

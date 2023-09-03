@@ -3,6 +3,7 @@ package com.battleasya.Admin360.handler;
 import com.battleasya.Admin360.Admin360;
 import com.battleasya.Admin360.entities.Admin;
 import com.battleasya.Admin360.entities.Request;
+import com.battleasya.Admin360.entities.Review;
 import com.battleasya.Admin360.entities.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -21,25 +22,24 @@ public class RequestHandler {
 
     private final Admin360 plugin;
 
-    /* RequestHandler Constructor */
+    /** RequestHandler Constructor */
     public RequestHandler(Admin360 plugin) {
         this.plugin = plugin;
     }
 
-    /**
-     * Adds a player to queue with a comment they specify
-     */
+    /** Adds Request to Queue */
     public void createTicket(CommandSender sender, String comment) {
 
         String playerName = sender.getName();
         UUID playerID = ((Player) sender).getUniqueId();
 
-        if (Config.check_staff_availability && Admin.isListEmpty()) {
+        // check staff availability
+        if (Config.check_staff_availability && Admin.isAvailable()) {
             User.messagePlayer(sender, Config.create_failed_no_staff);
             return;
         }
 
-        // Check user status
+        // check user status
         switch (Request.getStatus(playerID)) {
             case 1:
                 User.messagePlayer(sender, Config.create_failed_in_queue);
@@ -52,54 +52,68 @@ public class RequestHandler {
                 return;
         }
 
-        // Get number of seconds from wherever you want
+        // check cooldown status
         if (Config.cooldownEnable){
-            long secondsLeft = User.inCooldown(playerID, Config.cooldownInterval);
-            if (secondsLeft != -1) { // in cooldown
+            long secondsLeft = User.inCooldown(playerID, Config.cooldownInterval, plugin);
+            if (secondsLeft != -1) { // still in cooldown
+                String secondsLeft2S = String.valueOf(secondsLeft);
                 User.messagePlayer(sender, Config.cooldownMessage
-                        .replaceAll("<SECONDSLEFT>", String.valueOf(secondsLeft)));
+                        .replaceAll("<SECONDSLEFT>", secondsLeft2S));
                 return;
             }
         }
 
+        // create request
         Request request = new Request(playerID, playerName, comment);
         Request.addToPending(request); // add to queue
 
-        // Notify user about request
-        String positionInQueue = Integer.toString(Request.requestPending.size());
+        String positionInPending = Integer.toString(Request.getPendingSize());
 
+        // notify user
         for (String message : Config.create_succeeded_notify_player) {
             User.messagePlayer(sender, message
-                    .replaceAll("<POSITION>", positionInQueue));
+                    .replaceAll("<POSITION>", positionInPending));
         }
 
-        if (Config.create_succeeded_trigger_enable) {
-        	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.create_succeeded_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<POSITION>", positionInQueue));
-        }
-
+        // notify staff
         for (String message : Config.create_succeeded_notify_staff) {
             Admin.messageAdmins(message
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<TICKETSREMAIN>", positionInQueue));
+                    .replaceAll("<TICKETSREMAIN>", positionInPending));
+        }
+
+        // trigger custom commands
+        if (Config.create_succeeded_trigger_enable) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.create_succeeded_trigger_command
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<POSITION>", positionInPending));
         }
 
     }
 
 
-    public void printQueueList(CommandSender admin) {
+    public void printPendingList(CommandSender admin) {
 
         int i = 1;
 
+        // loop through each Request in Pending List
         for (Request request : Request.requestPending) {
+
+            String index = Integer.toString(i);
+            String playerName = request.getPlayerName();
+            String comment = request.getComment();
+            String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
+                    .format(new Date(request.getTime() * 1000));
+
             User.messagePlayer(admin, Config.list_message
-                    .replaceAll("<INDEX>", Integer.toString(i))
-                    .replaceAll("<PLAYERNAME>", request.getPlayerName())
-                    .replaceAll("<DETAILS>", request.getComment())
-                    .replaceAll("<TIME>", new SimpleDateFormat("MM/dd/yy HH:mm").format(new Date(request.getTime() * 1000))));
+                    .replaceAll("<INDEX>", index)
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<DETAILS>", comment)
+                    .replaceAll("<DATETIME>", datetime));
+
             i++;
+
         }
 
     }
@@ -109,10 +123,13 @@ public class RequestHandler {
 
         String adminName = admin.getName();
         UUID adminID = ((Player) admin).getUniqueId();
-        UUID playerID = null;
 
-        // This must go first to avoid problems
-        if (Request.isAttending(adminID)) {
+        Player player;
+
+        Request request;
+
+        // this must go first to avoid problems
+        if (Request.inAttending(adminID)) {
             User.messagePlayer(admin, Config.next_failed_attending);
             return;
         }
@@ -122,77 +139,67 @@ public class RequestHandler {
             return;
         }
 
-        if (playerName.isEmpty()) {
+        // next
+        if (playerName == null) {
 
-            //Get Objects to work with
-            Request request = Request.getHeadOfPending(); // removes head of queue
+            // removes from head of queue
+            request = Request.getHeadOfPending();
 
-            playerName = request.getPlayerName(); // get real name
-            playerID = request.getPlayerID();
+            // player should exist because request exists
+            player = Bukkit.getPlayer(request.getPlayerID());
 
-            //Set the staff who honored the request
-            request.setHandledBy(adminName);
-            request.setHandledBy(adminID);
-
-            //Move request to in progress list
-            Request.requestAttending.put(adminID, request);
-
+        // select
         } else {
 
-            // whether request exists
-            int k = 0;
+            // check if player is online
+            player = Bukkit.getPlayer(playerName);
 
-            for (Request request : Request.requestPending) {
-                if (request.getPlayerName().equalsIgnoreCase(playerName)) {
-                    playerName = request.getPlayerName(); // get real name
-                    playerID = request.getPlayerID();
-                    request.setHandledBy(adminName);
-                    request.setHandledBy(adminID);
-                    Request.requestAttending.put(adminID, request);
-                    Request.requestPending.remove(request);
-                    k = 1;
-                    break;
-                }
-            }
-
-            // cannot find request
-            if (k == 0) {
-                User.messagePlayer(admin, Config.next_failed_no_ticket);
+            if (player == null) {
+                User.messagePlayer(admin, Config.next_failed_not_exist);
                 return;
             }
 
+            // check if request exists
+            request = Request.getRequestPending(player.getUniqueId());
+
+            if (request == null) {
+                User.messagePlayer(admin, Config.next_failed_not_exist);
+                return;
+            }
+
+            Request.removeFromPending(request);
+
         }
 
-        Player player = Bukkit.getPlayer(playerID);
+        playerName = request.getPlayerName(); // get real name
 
-        if (player == null) {
-            Request.removePlayer(playerID);
-            User.removePlayer(playerID);
-            Request.removeAdmin(playerID); // remove previous assignment
-            return;
-        }
+        // set the staff who honored the request
+        request.setHandledBy(adminName);
+        request.setHandledBy(adminID);
 
-        // Teleport admin to player
+        // migrate Request to Attending List
+        Request.addToAttending(adminID, request);
+
+        // teleport admin to player
         if (Config.use_auto_teleport) {
             try {
                 ((Player) admin).teleport(player);
                 User.messagePlayer(admin, Config.teleport_succeeded
                         .replaceAll("<PLAYERNAME>", playerName));
             } catch (Exception e) {
-                plugin.getLogger().severe("An error occurred when trying to teleport " + adminName + " to " + playerName + ".");
                 User.messagePlayer(admin, Config.teleport_failed);
-                return;
             }
         }
 
-        // Message to the respective player and staff team
-        String ticketsRemain = Integer.toString(Request.requestPending.size());
+        String ticketsRemain = Integer.toString(Request.getPendingSize());
 
+        // notify user
         for (String message : Config.ticket_in_progress_notify_player) {
             User.messagePlayer(player, message
                     .replaceAll("<ADMINNAME>", adminName));
         }
 
+        // notify staff
         for (String message : Config.ticket_in_progress_notify_staff) {
             Admin.messageAdmins(message
                     .replaceAll("<ADMINNAME>", adminName)
@@ -200,6 +207,7 @@ public class RequestHandler {
                     .replaceAll("<TICKETSREMAIN>", ticketsRemain));
         }
 
+        // trigger custom commands
         if (Config.ticket_in_progress_trigger_custom_command) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
                     .replaceAll("<PLAYERNAME>", playerName)
@@ -211,149 +219,147 @@ public class RequestHandler {
 
     public void teleport2Player(CommandSender admin) {
 
-        String adminName = admin.getName();
         UUID adminID = ((Player) admin).getUniqueId();
 
-        // Check if a staff is already handling a player
-        if (Request.isAttending(adminID)) {
+        // check if a staff is already handling a player
+        if (!Request.inAttending(adminID)) {
+            User.messagePlayer(admin, Config.teleport_failed);
+            return;
+        }
 
-            Request request = Request.getRequestAttending(adminID);
+        Request request = Request.getRequestAttending(adminID);
 
-            String playerName = request.getPlayerName();
-            UUID playerID = request.getPlayerID();
+        String playerName = request.getPlayerName();
+        UUID playerID = request.getPlayerID();
 
-            try {
-                ((Player) admin).teleport(Bukkit.getPlayer(playerID));
-                User.messagePlayer(admin, Config.teleport_succeeded
-                        .replaceAll("<PLAYERNAME>", playerName));
-            } catch (Exception e) {
-                plugin.getLogger().severe("An error occurred when trying to teleport " + adminName + " to " + playerName + ".");
-                User.messagePlayer(admin, Config.teleport_failed);
-            }
-
-        } else {
+        try {
+            ((Player) admin).teleport(Bukkit.getPlayer(playerID));
+            User.messagePlayer(admin, Config.teleport_succeeded
+                    .replaceAll("<PLAYERNAME>", playerName));
+        } catch (Exception e) {
             User.messagePlayer(admin, Config.teleport_failed);
         }
 
     }
 
 
-    public void printTicketDetails(CommandSender admin) {
+    public void printTicketInfo(CommandSender admin) {
 
         UUID adminID = ((Player) admin).getUniqueId();
 
-        if (Request.isAttending(adminID)) {
-
-            Request request = Request.getRequestAttending(adminID);
-
-            String comment = request.getComment();
-            String playerName = request.getPlayerName();
-
-            String time = new SimpleDateFormat("MM/dd/yy HH:mm")
-                    .format(new Date(request.getTime()*1000));
-
-            for (String message : Config.info_message) {
-                User.messagePlayer(admin, message
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<DETAILS>", comment)
-                        .replaceAll("<TIME>", time));
-            }
-
-        } else {
-
+        if (!Request.inAttending(adminID)) {
             User.messagePlayer(admin, Config.info_failed);
+            return;
+        }
 
+        Request request = Request.getRequestAttending(adminID);
+
+        String playerName = request.getPlayerName();
+        String comment = request.getComment();
+        String time = new SimpleDateFormat("MM/dd/yy HH:mm")
+                .format(new Date(request.getTime() * 1000));
+
+        for (String message : Config.info_message) {
+            User.messagePlayer(admin, message
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<DETAILS>", comment)
+                    .replaceAll("<DATETIME>", time));
         }
 
     }
 
 
-    public void dropTicket(CommandSender sender) {
+    public void dropTicket(CommandSender admin) {
 
-        String adminName = sender.getName();
-        UUID adminID = ((Player) sender).getUniqueId();
+        String adminName = admin.getName();
+        UUID adminID = ((Player) admin).getUniqueId();
 
-        if (Request.isAttending(adminID)) {
-
-            Request request = Request.getRequestAttending(adminID);
-
-            String playerName = request.getPlayerName();
-            UUID playerID = request.getPlayerID();
-
-            User.messagePlayer(sender, Config.drop_message
-                    .replaceAll("<PLAYERNAME>", playerName));
-
-            Player player = Bukkit.getPlayer(playerID);
-
-            assert player != null;
-
-            User.messagePlayer(player, Config.drop_notify_player
-                    .replaceAll("<ADMINNAME>", adminName));
-
-            Request.removePlayer(playerID);
-
-        } else {
-            User.messagePlayer(sender, Config.drop_failed);
+        if (!Request.inAttending(adminID)) {
+            User.messagePlayer(admin, Config.drop_failed);
+            return;
         }
+
+        Request request = Request.removeFromAttending(adminID);
+
+        String playerName = request.getPlayerName();
+        UUID playerID = request.getPlayerID();
+
+        User.messagePlayer(admin, Config.drop_message
+                .replaceAll("<PLAYERNAME>", playerName));
+
+        // try to inform the player
+        Player player = Bukkit.getPlayer(playerID);
+
+        User.messagePlayer(player, Config.drop_notify_player
+                .replaceAll("<ADMINNAME>", adminName));
+
     }
 
 
-    public void transferTicket(CommandSender sender, String admin2Name) {
+    public void transferTicket(CommandSender admin1, String admin2Name) {
 
-        UUID admin1ID = ((Player) sender).getUniqueId();
+        UUID admin1ID = ((Player) admin1).getUniqueId();
 
+        // check admin1 status
+        if (!Request.inAttending(admin1ID)) {
+            User.messagePlayer(admin1, Config.redirect_failed
+                    .replaceAll("<ADMINNAME>",admin2Name));
+            return;
+        }
+
+        // check if admin2 is online
         Player admin2 = Bukkit.getPlayer(admin2Name);
 
         if (admin2 == null) {
+            User.messagePlayer(admin1, Config.redirect_failed
+                    .replaceAll("<ADMINNAME>",admin2Name));
             return;
         }
 
         admin2Name = admin2.getName(); // get real name
-
         UUID admin2ID = admin2.getUniqueId();
 
-        if (Admin.isAdmin(admin2ID) && Request.isAttending(admin1ID) && !Request.isAttending(admin2ID)) {
-
-            Request request = Request.getRequestAttending(admin1ID);
-
-            request.setHandledBy(admin2Name);
-            request.setHandledBy(admin2ID);
-
-            Request.requestAttending.remove(admin1ID);
-            Request.requestAttending.put(admin2ID, request);
-
-            String tickets = Integer.toString(Request.requestPending.size());
-            String playerName = request.getPlayerName();
-
-            Player player = Bukkit.getPlayer(request.getPlayerID());
-
-            assert player != null;
-
-            User.messagePlayer(sender, Config.redirect_succeeded
+        // check if admin2 is admin or if admin2 is attending
+        if (!Admin.isAdmin(admin2ID) || Request.inAttending(admin2ID)) {
+            User.messagePlayer(admin1, Config.redirect_failed
                     .replaceAll("<ADMINNAME>",admin2Name));
-
-            for (String message : Config.ticket_in_progress_notify_player) {
-                User.messagePlayer(player, message
-                        .replaceAll("<ADMINNAME>", admin2Name));
-            }
-
-            for (String message : Config.ticket_in_progress_notify_staff) {
-                Admin.messageAdmins(message
-                        .replaceAll("<ADMINNAME>", admin2Name)
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<TICKETSREMAIN>", tickets));
-            }
-
-            if (Config.ticket_in_progress_trigger_custom_command) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<ADMINNAME>", admin2Name));
-            }
-
-        } else {
-            User.messagePlayer(sender, Config.redirect_failed
-                    .replaceAll("<ADMINNAME>",admin2Name));
+            return;
         }
+
+        Request request = Request.removeFromAttending(admin1ID);
+
+        request.setHandledBy(admin2Name);
+        request.setHandledBy(admin2ID);
+
+        Request.addToAttending(admin2ID, request);
+
+        String playerName = request.getPlayerName();
+        UUID playerID = request.getPlayerID();
+        Player player = Bukkit.getPlayer(playerID);
+
+        String ticketsRemain = Integer.toString(Request.getPendingSize());
+
+        User.messagePlayer(admin1, Config.redirect_succeeded
+                .replaceAll("<ADMINNAME>",admin2Name));
+
+        for (String message : Config.ticket_in_progress_notify_player) {
+            User.messagePlayer(player, message
+                    .replaceAll("<ADMINNAME>", admin2Name));
+        }
+
+        for (String message : Config.ticket_in_progress_notify_staff) {
+            Admin.messageAdmins(message
+                    .replaceAll("<ADMINNAME>", admin2Name)
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<TICKETSREMAIN>", ticketsRemain));
+        }
+
+        if (Config.ticket_in_progress_trigger_custom_command) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<ADMINNAME>", admin2Name));
+        }
+
     }
 
 
@@ -362,30 +368,32 @@ public class RequestHandler {
      * The user is then asked if the help was satisfactory
      */
 
-    public void closeTicket(CommandSender sender) {
+    public void closeTicket(CommandSender admin) {
 
-        UUID adminID = ((Player) sender).getUniqueId();
+        UUID adminID = ((Player) admin).getUniqueId();
 
-        if (!Request.isAttending(adminID)) {
-            User.messagePlayer(sender, Config.close_failed);
+        // Make sure admin is not attending other requests
+        if (!Request.inAttending(adminID)) {
+            User.messagePlayer(admin, Config.close_failed);
             return;
         }
 
-        //Get request being handled by staff
-        Request request = Request.requestAttending.remove(adminID);
+        // Get and remove Request from Attending List
+        Request request = Request.removeFromAttending(adminID);
 
+        // Get player uuid
         UUID playerID = request.getPlayerID();
 
-        //Move request to Completed request queue
-        Request.requestAwaiting.put(playerID, request);
+        // Add Request to Awaiting List
+        Request.addToAwaiting(playerID, request);
 
-        //Message staff that request has been closes
-        User.messagePlayer(sender, Config.close_succeeded);
+        // Notify admin of a successful operation
+        User.messagePlayer(admin, Config.close_succeeded);
 
-        //Set automated message for feedback
+        // Set review scheduler
         if (Config.show_reminder) {
-            BukkitTask reminder = new ReviewHandler(plugin, playerID).runReminder();
-            Request.reviewReminder.put(playerID, reminder);
+            BukkitTask reminder = new Review(plugin, playerID).runReminder();
+            Review.add2Reminder(playerID, reminder);
         } else {
             promptFeedback(playerID);
         }
@@ -403,40 +411,42 @@ public class RequestHandler {
         String playerName = sender.getName();
         UUID playerID = ((Player) sender).getUniqueId();
 
-        // Check if a player has a request in the completed list awaiting a rating
-        if (!Request.isCompleted(playerID)) {
+        // check if a player has a request in the completed list awaiting a rating
+        if (!Request.inAwaiting(playerID)) {
             User.messagePlayer(sender, Config.feedback_not_required);
             return;
         }
 
-        // Remove request from completed request list
-        Request completedRequest = Request.requestAwaiting.remove(playerID);
+        // remove request from completed request list
+        Request completedRequest = Request.removeFromAwaiting(playerID);
 
-        Request.completedToday += 1;
+        // stop the reminders
+        Review.removePlayer(playerID);
 
-        // Stop the reminders
-        Request.reviewReminder.remove(playerID).cancel();
+        // increment counter
+        Request.addCompletedToday();
 
         // add to database
         plugin.getDataSource().addRecord(completedRequest, isSatisfactory);
 
-        //Send player a message
+        // send player a message
         User.messagePlayer(sender, Config.feedback_received);
 
         // check if admin is online
+        // this must be kept because we did not remove from Awaiting after admin log out
         Player admin = Bukkit.getPlayer(completedRequest.getHandledByID());
 
         if (admin == null) {
             return;
         }
 
-        // Give admin honor point based on ans
+        // give admin honor point based on ans
         if (isSatisfactory) {
 
             User.messagePlayer(admin, Config.upvote_rating_notify_staff
                     .replaceAll("<PLAYERNAME>", playerName));
 
-            // Fireworks
+            // fireworks
             Firework fw = admin.getWorld().spawn(admin.getLocation(), Firework.class);
             FireworkMeta fwm = fw.getFireworkMeta();
             FireworkEffect effect = FireworkEffect.builder().trail(true).withColor(Color.LIME).with(FireworkEffect.Type.CREEPER).build();
@@ -480,17 +490,32 @@ public class RequestHandler {
     }
 
 
-    /**
-     * Removes all requests from the request queue
-     * NOTE:This doesn't remove any requests that are being handled
-     * by and admin or any requests that are pending a user feedback
-     */
+    /** Removes Requests from Lists */
 
-    public void purgeTicket(CommandSender sender) {
+    public void purgeTicket(CommandSender sender, String option) {
 
-        String amountPurged = Integer.toString(Request.requestPending.size());
+        String amountPurged;
 
-        Request.requestPending.clear();
+        switch (option.toLowerCase()) {
+
+            case "pending":
+                amountPurged = Integer.toString(Request.getPendingSize());
+                Request.clearPendingList();
+                break;
+            case "attending":
+                amountPurged = Integer.toString(Request.getAttendingSize());
+                Request.clearAttendingList();
+                break;
+            case "awaiting":
+                amountPurged = Integer.toString(Request.getAwaitingSize());
+                Request.clearAwaitingList();
+                Review.clearReminderList();
+                break;
+            default:
+                User.messagePlayer(sender, Config.incorrectSyntax);
+                return;
+
+        }
 
         for (String message : Config.purge_message) {
             User.messagePlayer(sender, message
@@ -499,21 +524,25 @@ public class RequestHandler {
 
     }
 
-    public void deleteTicket(CommandSender sender, String playerName) {
+    public void removeTicket(CommandSender sender, String playerName) {
 
+        // Validate playerName
         Player player = Bukkit.getPlayer(playerName);
+        UUID playerID;
 
         if (player == null) {
+            User.messagePlayer(sender, Config.delete_failed
+                    .replaceAll("<PLAYERNAME>", playerName));
             return;
         }
 
-        playerName = player.getName(); // get real name
-
-        UUID playerID = player.getUniqueId();
+        playerName = player.getName(); // get the correct name
+        playerID = player.getUniqueId();
 
         Request.removePlayer(playerID);
+        Review.removePlayer(playerID);
 
-        User.messagePlayer(sender, Config.delete_message
+        User.messagePlayer(sender, Config.delete_succeeded
                 .replaceAll("<PLAYERNAME>", playerName));
 
     }
@@ -535,7 +564,7 @@ public class RequestHandler {
                 User.messagePlayer(sender, Config.cancel_failed_no_ticket);
                 return;
             case 1:
-                Request.cancel(playerID);
+                Request.removeFromPending(playerID);
                 User.messagePlayer(sender, Config.cancel_succeeded_notify_player);
                 return;
             case 2:
@@ -592,10 +621,10 @@ public class RequestHandler {
 
     public void printTicketStats(CommandSender sender) {
 
-        String inQueue = Integer.toString(Request.requestPending.size());
-        String inProgress = Integer.toString(Request.requestAttending.size());
-        String awaiting = Integer.toString(Request.requestAwaiting.size());
-        String completed = Integer.toString(Request.completedToday);
+        String pending = Integer.toString(Request.getPendingSize());
+        String attending = Integer.toString(Request.getAttendingSize());
+        String awaiting = Integer.toString(Request.getAwaitingSize());
+        String completed = Integer.toString(Request.getCompletedToday());
 
         int total = plugin.getDataSource().getTotalTicketCount(1);
         int upVote = plugin.getDataSource().getTotalTicketCount(2);
@@ -612,8 +641,8 @@ public class RequestHandler {
 
         for (String message : Config.stats_message) {
         	User.messagePlayer(sender, message.replaceAll("<AWAITING>", awaiting)
-                    .replaceAll("<INPROGRESS>", inProgress)
-                    .replaceAll("<INQUEUE>", inQueue)
+                    .replaceAll("<INPROGRESS>", attending)
+                    .replaceAll("<INQUEUE>", pending)
                     .replaceAll("<COMPLETED>", completed)
                     .replaceAll("<TOTAL>", totalS)
                     .replaceAll("<PERCENT>", percentS));
