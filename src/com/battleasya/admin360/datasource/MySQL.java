@@ -1,12 +1,18 @@
 package com.battleasya.admin360.datasource;
 
+import com.battleasya.admin360.Admin360;
 import com.battleasya.admin360.entities.Request;
-import org.bukkit.Bukkit;
 
 import java.sql.*;
-import java.util.logging.Level;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class MySQL implements DataSource {
+
+	private final Admin360 plugin;
+
+	public MySQL(Admin360 plugin) {
+		this.plugin = plugin;
+	}
 
 	private Connection con = null;
 
@@ -21,20 +27,23 @@ public class MySQL implements DataSource {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 		} catch (ClassNotFoundException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Couldn't find the MySQL driver.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the MySQL driver.");
+			e.printStackTrace();
 			return false;
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Failed to connect to the MySQL database.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the MySQL database.");
+			e.printStackTrace();
 			return false;
 		}
 
-		System.out.println("[Admin360-Reloaded] Connected to the MySQL database.");
+		plugin.getLogger().info("[Admin360-Reloaded] Connected to the MySQL database.");
 		return true;
 
 	}
 
 	@Override
 	public void disconnect() {
+
 		if (con == null) {
 			return;
 		}
@@ -42,13 +51,14 @@ public class MySQL implements DataSource {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to disconnect from the MySQL database.");
-			//e.printStackTrace();
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to disconnect from the MySQL database.");
+			e.printStackTrace();
 			return;
 		}
 
 		con = null;
-		System.out.println("[Admin360-Reloaded] Disconnected from the MySQL database.");
+		plugin.getLogger().info("[Admin360-Reloaded] Disconnected from the MySQL database.");
+
 	}
 
 	@Override
@@ -65,33 +75,15 @@ public class MySQL implements DataSource {
 					+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
 					+ "Reason TEXT DEFAULT NULL)");
 		} catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to setup the MySQL database.");
-			//e.printStackTrace();
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the MySQL database.");
+			e.printStackTrace();
 			close(st);
 			return;
 		} finally {
 			close(st);
 		}
 
-		System.out.println("[Admin360-Reloaded] Finished setting up the MySQL database.");
-	}
-
-	@Override
-	public void addColumn() {
-		Statement st = null;
-
-		try {
-			st = con.createStatement();
-			st.executeUpdate("ALTER TABLE Honors ADD COLUMN Reason TEXT DEFAULT NULL");
-		} catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] The database structure is at the latest version.");
-			close(st);
-			return;
-		} finally {
-			close(st);
-		}
-
-		System.out.println("[Admin360-Reloaded] Finished updating the database structure.");
+		plugin.getLogger().info("[Admin360-Reloaded] Finished setting up the MySQL database.");
 	}
 	
 	@Override
@@ -112,7 +104,7 @@ public class MySQL implements DataSource {
 			pst.setString(5, request.getComment());
 			pst.executeUpdate();
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 		}
@@ -140,7 +132,7 @@ public class MySQL implements DataSource {
 			rs.next();
 			honor = rs.getInt("Total");
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -166,7 +158,7 @@ public class MySQL implements DataSource {
 			rs.next();
 			count = rs.getInt("Total");
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -185,7 +177,7 @@ public class MySQL implements DataSource {
 			pst.setString(1, adminName);
 			rowsAffected = pst.executeUpdate();
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			close(pst);
 			return false;
 		} finally {
@@ -219,7 +211,7 @@ public class MySQL implements DataSource {
 				i++;
 			}
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -249,7 +241,7 @@ public class MySQL implements DataSource {
 				i++;
 			}
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -263,7 +255,7 @@ public class MySQL implements DataSource {
             try {
                 st.close();
             } catch (SQLException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
@@ -273,7 +265,7 @@ public class MySQL implements DataSource {
             try {
                 rs.close();
             } catch (SQLException e) {
-            	//e.printStackTrace();
+            	e.printStackTrace();
             }
         }
     }

@@ -139,9 +139,9 @@ public class Config {
 
         version = config.getString("version");
 
-        noPermission = config.getString("general.no-permission");
-        incorrectSyntax = config.getString("general.incorrect-syntax");
-        reloadConfig = config.getString("general.reload-config");
+        noPermission = config.getString("general.message.no-permission");
+        incorrectSyntax = config.getString("general.message.incorrect-syntax");
+        reloadConfig = config.getString("general.message.reload-config");
 
         useMysql = config.getBoolean("datasource.mysql");
         host = config.getString("datasource.host");
@@ -150,8 +150,8 @@ public class Config {
         username = config.getString("datasource.username");
         password = config.getString("datasource.password");
 
-        playerCommandList = config.getStringList("help.player-commands");
-        staffCommandList = config.getStringList("help.staff-commands");
+        playerCommandList = config.getStringList("help.message.player-commands");
+        staffCommandList = config.getStringList("help.message.staff-commands");
 
         cooldownEnable = config.getBoolean("create.cooldown.enable");
         cooldownInterval = config.getInt("create.cooldown.interval");
@@ -160,56 +160,59 @@ public class Config {
         check_staff_availability = config.getBoolean("create.check-staff-availability");
 
         create_failed_no_staff = config.getString("create.failed.message.no-staff");
-        create_failed_in_queue = config.getString("create.failed.message.in-queue");
-        create_failed_in_progress = config.getString("create.failed.message.in-progress");
-        create_failed_await_feedback = config.getString("create.failed.message.await-feedback");
+        create_failed_in_queue = config.getString("create.failed.message.pending");
+        create_failed_in_progress = config.getString("create.failed.message.attending");
+        create_failed_await_feedback = config.getString("create.failed.message.completing");
         create_failed_restricted = config.getString("create.failed.message.restricted");
 
         create_succeeded_notify_player = config.getStringList("create.succeeded.message.notify-player");
         create_succeeded_notify_staff = config.getStringList("create.succeeded.message.notify-staff");
+
         create_succeeded_trigger_enable = config.getBoolean("create.succeeded.trigger.enable");
         create_succeeded_trigger_command = config.getString("create.succeeded.trigger.command");
 
         cancel_failed_no_ticket = config.getString("cancel.failed.message.no-ticket");
-        cancel_failed_in_progress = config.getString("cancel.failed.message.in-progress");
-        cancel_failed_attending = config.getString("cancel.failed.message.attending");
-        cancel_failed_await_feedback = config.getString("cancel.failed.message.await-feedback");
-        cancel_succeeded_notify_player = config.getString("cancel.succeeded.message.notify-player");
+        cancel_failed_in_progress = config.getString("cancel.failed.message.attending");
+        cancel_failed_await_feedback = config.getString("cancel.failed.message.completing");
+        cancel_failed_attending = config.getString("cancel.failed.message.restricted");
+        cancel_succeeded_notify_player = config.getString("cancel.succeeded.message");
 
         status_no_ticket = config.getString("status.message.no-ticket");
-        status_in_queue = config.getString("status.message.in-queue");
-        status_in_progress = config.getString("status.message.in-progress");
-        status_attending = config.getString("status.message.attending");
-        status_await_feedback = config.getString("status.message.await-feedback");
+        status_in_queue = config.getString("status.message.pending");
+        status_in_progress = config.getString("status.message.attending");
+        status_await_feedback = config.getString("status.message.completing");
+        status_attending = config.getString("status.message.restricted");
 
-        stats_message = config.getStringList("stats-message");
+        stats_message = config.getStringList("stats.message");
 
-        list_message = config.getString("list-message");
+        list_message = config.getString("list.message");
 
-        next_failed_no_ticket = config.getString("next-failed-no-ticket");
-        next_failed_not_exist = config.getString("next-failed-not-exist");
-        next_failed_attending = config.getString("next-failed-attending");
+        use_auto_teleport = config.getBoolean("attend.auto-teleport");
 
-        use_auto_teleport = config.getBoolean("use-auto-teleport");
+        next_failed_no_ticket = config.getString("attend.failed.message.no-ticket");
+        next_failed_not_exist = config.getString("attend.failed.message.not-exist");
+        next_failed_attending = config.getString("attend.failed.message.attending");
 
-        ticket_in_progress_notify_player = config.getStringList("ticket-in-progress-notify-player");
-        ticket_in_progress_trigger_custom_command = config.getBoolean("ticket-in-progress-trigger-custom-command");
-        ticket_in_progress_custom_command = config.getString("ticket-in-progress-custom-command");
+        ticket_in_progress_notify_player = config.getStringList("attend.succeeded.message.notify-player");
+        ticket_in_progress_notify_staff = config.getStringList("attend.succeeded.message.notify-staff");
 
-        ticket_in_progress_notify_staff = config.getStringList("ticket-in-progress-notify-staff");
+        ticket_in_progress_trigger_custom_command = config.getBoolean("attend.succeeded.trigger.enable");
+        ticket_in_progress_custom_command = config.getString("attend.succeeded.trigger.command");
 
-        teleport_failed = config.getString("teleport-failed");
-        teleport_succeeded = config.getString("teleport-succeeded");
 
-        info_failed = config.getString("info-failed");
-        info_message = config.getStringList("info-message");
 
-        redirect_failed = config.getString("redirect-failed");
-        redirect_succeeded = config.getString("redirect-succeeded");
+        teleport_failed = config.getString("teleport.failed.message");
+        teleport_succeeded = config.getString("teleport.succeeded.message");
 
-        drop_failed = config.getString("drop-failed");
-        drop_message = config.getString("drop-message");
-        drop_notify_player = config.getString("drop-notify-player");
+        info_failed = config.getString("info.failed.message");
+        info_message = config.getStringList("info.succeeded.message");
+
+        redirect_failed = config.getString("transfer.failed.message");
+        redirect_succeeded = config.getString("transfer.succeeded.message");
+
+        drop_failed = config.getString("drop.failed.message");
+        drop_message = config.getString("drop.succeeded.message.notify-handler");
+        drop_notify_player = config.getString("drop.succeeded.message.notify-player");
 
         close_failed = config.getString("close-failed");
         close_succeeded = config.getString("close-succeeded");

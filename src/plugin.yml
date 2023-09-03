@@ -8,7 +8,7 @@ description: An advanced /helpop tool.
 commands:
   ticket:
     description: Admin360 Command
-    aliases: [request, helpme, helpop]
+    aliases: [request, helpop]
   admin360:
     description: Admin360 Command
 permissions:

@@ -47,20 +47,21 @@ public class Admin360 extends JavaPlugin {
 
         /* Initialise DataSource */
         if (Config.useMysql) {
-            ds = new MySQL();
+            ds = new MySQL(this);
         } else {
-            ds = new SQLite();
+            ds = new SQLite(this);
         }
 
         /* Connect to Database */
-        boolean ok = ds.connect(Config.host, Config.port, Config.database, Config.username, Config.password);
+        boolean ok = ds.connect(Config.host, Config.port, Config.database
+                , Config.username, Config.password);
 
         if (!ok) {
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         ds.setUp(); // build database
-        ds.addColumn(); // update database
 
         /* Initialise Listeners */
         getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);

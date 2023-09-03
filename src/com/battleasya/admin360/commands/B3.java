@@ -36,12 +36,12 @@ public class B3 implements CommandExecutor {
                     return true;
 
                 case "help":
-                    for (String line : Config.playerCommandList) {
-                        User.messagePlayer(sender, line);
+                    for (String message : Config.playerCommandList) {
+                        User.messagePlayer(sender, message);
                     }
                     if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
-                        for (String line : Config.staffCommandList) {
-                            User.messagePlayer(sender, line);
+                        for (String message : Config.staffCommandList) {
+                            User.messagePlayer(sender, message);
                         }
                     }
                     return true;

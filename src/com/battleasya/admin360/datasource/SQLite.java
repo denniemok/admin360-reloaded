@@ -1,12 +1,18 @@
 package com.battleasya.admin360.datasource;
 
+import com.battleasya.admin360.Admin360;
 import com.battleasya.admin360.entities.Request;
-import org.bukkit.Bukkit;
 
 import java.sql.*;
-import java.util.logging.Level;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class SQLite implements DataSource {
+
+	private final Admin360 plugin;
+
+	public SQLite(Admin360 plugin) {
+		this.plugin = plugin;
+	}
 
 	private Connection con = null;
 
@@ -21,20 +27,23 @@ public class SQLite implements DataSource {
 			Class.forName("org.sqlite.JDBC");
 			con = DriverManager.getConnection("jdbc:sqlite:plugins/Admin360-Reloaded/database.db");
 		} catch (ClassNotFoundException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Couldn't find the SQLite driver.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the SQLite driver.");
+			e.printStackTrace();
 			return false;
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Failed to connect to the SQLite database.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the SQLite database.");
+			e.printStackTrace();
 			return false;
 		}
 
-		System.out.println("[Admin360-Reloaded] Connected to the SQLite database.");
+		plugin.getLogger().info("[Admin360-Reloaded] Connected to the SQLite database.");
 		return true;
 
 	}
 
 	@Override
 	public void disconnect() {
+
 		if (con == null) {
 			return;
 		}
@@ -42,12 +51,14 @@ public class SQLite implements DataSource {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to disconnect from the SQLite database.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to disconnect from the SQLite database.");
+			e.printStackTrace();
 			return;
 		}
 
 		con = null;
-		System.out.println("[Admin360-Reloaded] Disconnected from the SQLite database.");
+		plugin.getLogger().info("[Admin360-Reloaded] Disconnected from the SQLite database.");
+
 	}
 
 	@Override
@@ -64,32 +75,16 @@ public class SQLite implements DataSource {
         			+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
 					+ "Reason TEXT DEFAULT NULL)");
         } catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to setup the SQLite database.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the SQLite database.");
+			e.printStackTrace();
 			close(st);
         	return;
         } finally {
         	close(st);
         }
 
-        System.out.println("[Admin360-Reloaded] Finished setting up the SQLite database.");
-	}
+		plugin.getLogger().info("[Admin360-Reloaded] Finished setting up the SQLite database.");
 
-	@Override
-	public void addColumn() {
-		Statement st = null;
-
-		try {
-			st = con.createStatement();
-			st.executeUpdate("ALTER TABLE Honors ADD COLUMN Reason TEXT DEFAULT NULL");
-		} catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] The database structure is at the latest version.");
-			close(st);
-			return;
-		} finally {
-			close(st);
-		}
-
-		System.out.println("[Admin360-Reloaded] Finished updating the database structure.");
 	}
 	
 	@Override
@@ -110,7 +105,7 @@ public class SQLite implements DataSource {
 			pst.setString(5, request.getComment());
 			pst.executeUpdate();
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 		}
@@ -126,7 +121,6 @@ public class SQLite implements DataSource {
         
 		try {
 			if (situation == 1) {
-
 				pst = con.prepareStatement("SELECT COUNT(ID_Honor) AS Total FROM Honors "
 						+ "WHERE Honor_TimeStamp != 0 AND HonorTo = ?");
 			} else {
@@ -137,7 +131,7 @@ public class SQLite implements DataSource {
 			rs = pst.executeQuery();
 			honor = rs.getInt("Total");
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -162,7 +156,7 @@ public class SQLite implements DataSource {
 			rs = pst.executeQuery();
 			count = rs.getInt("Total");
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
@@ -173,6 +167,7 @@ public class SQLite implements DataSource {
 
 	@Override
 	public boolean resetAdminsHonor(String adminName) {
+
 		PreparedStatement pst = null;
 		int rowsAffected;
 		
@@ -181,7 +176,7 @@ public class SQLite implements DataSource {
 			pst.setString(1, adminName);
 			rowsAffected = pst.executeUpdate();
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			close(pst);
 			return false;
 		} finally {
@@ -189,6 +184,7 @@ public class SQLite implements DataSource {
 		}
 
 		return rowsAffected >= 1;
+
 	}
 
 	@Override
@@ -214,17 +210,19 @@ public class SQLite implements DataSource {
 				i++;
 			}
 		} catch(SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			close(pst);
 			close(rs);
 		}
 		
 		return honor;
+
 	}
 
 	@Override
 	public String[][] getHistory(int limit) {
+
 		String[][] history = new String[limit][5];
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -234,7 +232,7 @@ public class SQLite implements DataSource {
 			pst.setInt(1, limit);
 			rs = pst.executeQuery();
 			int i=0;
-			while(rs.next()){
+			while (rs.next()){
 				history[i][0] = rs.getString("HonorFrom");
 				history[i][1] = rs.getString("HonorTo");
 				history[i][2] = rs.getString("Details");
@@ -243,7 +241,7 @@ public class SQLite implements DataSource {
 				i++;
 			}
 		} catch(SQLException e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally{
 			close(pst);
 			close(rs);
@@ -257,7 +255,7 @@ public class SQLite implements DataSource {
             try {
                 st.close();
             } catch (SQLException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
@@ -267,7 +265,7 @@ public class SQLite implements DataSource {
             try {
                 rs.close();
             } catch (SQLException e) {
-            	//e.printStackTrace();
+            	e.printStackTrace();
             }
         }
     }

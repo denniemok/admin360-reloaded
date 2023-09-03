@@ -21,12 +21,12 @@ public class A3 implements CommandExecutor {
     }
 
     public void messageCommandList(CommandSender sender) {
-        for (String line : Config.playerCommandList) {
-            User.messagePlayer(sender, line);
+        for (String message : Config.playerCommandList) {
+            User.messagePlayer(sender, message);
         }
         if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
-            for (String line : Config.staffCommandList) {
-                User.messagePlayer(sender, line);
+            for (String message : Config.staffCommandList) {
+                User.messagePlayer(sender, message);
             }
         }
     }
