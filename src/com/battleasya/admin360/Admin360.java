@@ -30,13 +30,14 @@ public class Admin360 extends JavaPlugin {
 
         /* Initialise Config */
         config = new Config(this);
-        config.initConfig();
+
+        getConfiguration().initConfig();
 
         /* Check Config */
-        config.checkConfig();
+        getConfiguration().checkConfig();
 
         /* Fetch Config */
-        config.fetchConfig();
+        getConfiguration().fetchConfig();
 
         /* Initialise Command Executor */
         getCommand("admin360").setExecutor(new B3(this));
@@ -53,15 +54,17 @@ public class Admin360 extends JavaPlugin {
         }
 
         /* Connect to Database */
-        boolean ok = ds.connect(Config.host, Config.port, Config.database
+        boolean ok = getDataSource().connect(Config.host, Config.port, Config.database
                 , Config.username, Config.password);
 
         if (!ok) {
+            getDataSource().disconnect();
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        ds.setUp(); // build database
+        /* Setup Database */
+        getDataSource().setUp();
 
         /* Initialise Listeners */
         getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
@@ -93,6 +96,10 @@ public class Admin360 extends JavaPlugin {
 
     public DataSource getDataSource() {
         return ds;
+    }
+
+    public Config getConfiguration() {
+        return config;
     }
 
     public static int getServerVersion() {

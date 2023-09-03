@@ -27,7 +27,7 @@ version: '9.1.0'
 # We welcome users to provide feedback.
 # Project : https://www.spigotmc.org/resources/28285/
 # Support : https://github.com/denniemok/Admin360-Reloaded/issues
-# Authors : Dennie
+# Authors : Dennie, Vidhu
 
 
 
@@ -139,11 +139,11 @@ create:
       completing: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a completing ticket that awaits your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
       restricted: '&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for members of the staff team.'
 
-  succeeded:
+  passed:
     message:
       notify-player:
       - '&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7). Use &6/ticket status &7to check your progress.'
-      notify-staff:
+      notify-staff: # all staff
       - ''
       - '&f[&6ADMIN360&f] &6<PLAYERNAME> &copened a &a&lNEW &cticket.'
       - '&f[&6ADMIN360&f] &cDetails: &f<DETAILS>'
@@ -178,7 +178,7 @@ cancel:
       attending: '&f[&6ADMIN360&f] &c&nCancel Failed&7 You cannot cancel an in-progress request. (&fTips: &6/ticket status&7)'
       completing: '&f[&6ADMIN360&f] &c&nCancel Failed&7 You have a ticket that requires your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
       restricted: '&f[&6ADMIN360&f] &c&nCancel Failed&7 This feature has been disabled for members of the staff team.'
-  succeeded:
+  passed:
     message: '&f[&6ADMIN360&f] &7You have successfully cancelled your request.'
 
 
@@ -201,8 +201,8 @@ cancel:
 status:
   message:
     no-ticket: '&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)'
-    pending: '&f[&6ADMIN360&f] &7Your ticket is now in position &6<POSITION> &7of the queue.'
-    attending: '&f[&6ADMIN360&f] &7Your ticket is now in progress. A staff will contact you soon.'
+    pending: '&f[&6ADMIN360&f] &7Your pending ticket is now in queue position &6<POSITION> &7.'
+    attending: '&f[&6ADMIN360&f] &7We are now processing your ticket. A staff will contact you soon.'
     completing: '&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
     restricted: '&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)'
 
@@ -266,14 +266,14 @@ attend:
   failed:
     message:
       no-ticket: '&f[&6ADMIN360&f] &c&nNext Failed&7 There are no tickets at the moment.'
-      not-exist: "&f[&6ADMIN360&f] &c&nNext Failed&7 That person does not have an opened request."
-      attending: '&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one.'
+      target-not-exist: "&f[&6ADMIN360&f] &c&nNext Failed&7 That person does not have an opened request."
+      already-attending: '&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one.'
 
-  succeeded:
+  passed:
     message:
       notify-player:
       - '&f[&6ADMIN360&f] &6<ADMINNAME> &7is now reviewing your request.'
-      notify-staff:
+      notify-staff: # all staff
       - ''
       - '&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c''s ticket.'
       - '&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)'
@@ -298,7 +298,7 @@ attend:
 teleport:
   failed:
     message: '&f[&6ADMIN360&f] &c&nTeleport Failed&7 This function is disabled at the moment.'
-  succeeded:
+  passed:
     message: '&f[&6ADMIN360&f] &7You have been teleported to &6<PLAYERNAME>&7.'
 
 
@@ -316,7 +316,7 @@ teleport:
 info:
   failed:
     message: '&f[&6ADMIN360&f] &c&nView-Info Failed&7 This function is disabled at the moment.'
-  succeeded:
+  passed:
     message:
     - ''
     - '&f[&6ADMIN360&f]     &6Name: &f<PLAYERNAME>'
@@ -340,7 +340,7 @@ info:
 transfer:
   failed:
     message: '&f[&6ADMIN360&f] &c&nRedirect Failed&7 This ticket cannot be redirected to &6<ADMINNAME>&7.'
-  succeeded:
+  passed:
     message: '&f[&6ADMIN360&f] &7You have redirected this ticket to &6<ADMINNAME>&7.'
 
 
@@ -357,7 +357,7 @@ transfer:
 drop:
   failed:
     message: '&f[&6ADMIN360&f] &c&nDrop Failed&7 You cannot use this function at the moment.'
-  succeeded:
+  passed:
     message:
       notify-handler: '&f[&6ADMIN360&f] &7You have cancelled &6<PLAYERNAME>&7''s ticket.'
       notify-player: '&f[&6ADMIN360&f] &7Your ticket has been cancelled by &6<ADMINNAME>&7.'
@@ -376,7 +376,7 @@ drop:
 close:
   failed:
     message: '&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending any request at the moment.'
-  succeeded:
+  passed:
     message: '&f[&6ADMIN360&f] &7You have closed this ticket successfully.'
 
 
@@ -394,29 +394,36 @@ close:
 # After a player has made a review, the ticket details will be stored as a record in the database.
 # If not, then the database will not store anything. The details will only be kept in RAM.
 
-# Set this to true if you want to remind your players to give feedback after their tickets are closed.
-show-reminder: true
+review:
 
-# If the above option (show-reminder) is set to true,
-# a timed message (feedback-required) with an interval (reminder-frequency) measured in seconds
-# will be set to remind your players to give feedback. This option can be disturbing for
-# your players if you set the frequency to some low values.
-# But sometimes, more annoying = more effective :)
-reminder-frequency: 20
+  reminder:
+    # Set this to true if you want to periodically remind your players to review the service they have received.
+    enable: false
+    # If the above option is set to true,
+    # a timed prompt with an interval measured in seconds
+    # will be set to remind your players to give feedback. This option can be disturbing for
+    # your players if you set the frequency to some low values.
+    # But sometimes, more annoying = more effective :)
+    interval: 20
 
-feedback-required: '&f[&6ADMIN360&f] &7We have completed your request. Are you satisfied with our service? [&a/ticket yes&7, &c/ticket no&7].'
-# Do you want to run a custom command if the player needs to give a review? Default example using chest-command.
-# This can work really well with some plugins that opens a GUI with buttons triggering /ticket yes and /ticket no.
-# Change this to true if you want to use this option.
-feedback-trigger-custom-command: false
-feedback-custom-command: 'chestcommands open feedback.yml <PLAYERNAME>'
+  # prompt message will be sent at least once regardless of whether reminder is enabled or not
+  prompt:
+    message: '&f[&6ADMIN360&f] &7We have completed your request. Are you satisfied with our service? [&a/ticket yes&7, &c/ticket no&7].'
+    # Do you want to run a custom command if the player needs to give a review? Default example using chest-command.
+    # This can work really well with some plugins that opens a GUI with buttons triggering /ticket yes and /ticket no.
+    # Change this to true if you want to use this option.
+    trigger:
+      enable: false
+      command: 'chestcommands open feedback.yml <PLAYERNAME>'
 
-feedback-not-required: '&f[&6ADMIN360&f] &7You are not required to give us feedback at the moment.'
-feedback-received: '&f[&6ADMIN360&f] &7Thank you for your feedback. We are looking forward to serving you again.'
-
-# If you do not want your staff to know who actually votes for them, simply remove the placeholder.
-upvote-rating-notify-staff: '&f[&6ADMIN360&f] &6<PLAYERNAME> &elikes &7your service. [&f1&a▲&7]'
-downvote-rating-notify-staff: '&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your service. [&f1&c▼&7]'
+  # If you do not want your staff to know who actually votes for them, simply remove the placeholder.
+  failed:
+    message: '&f[&6ADMIN360&f] &7You are not required to give us feedback at the moment.'
+  passed:
+    message:
+      received: '&f[&6ADMIN360&f] &7Thank you for your feedback. We are looking forward to serving you again.'
+      upvote-notify-handler: '&f[&6ADMIN360&f] &6<PLAYERNAME> &elikes &7your service. [&f1&a▲&7]'
+      downvote-notify-handler: '&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your service. [&f1&c▼&7]'
 
 
 
@@ -435,16 +442,18 @@ downvote-rating-notify-staff: '&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your
 # However, you cannot delete a completed ticket.
 
 # This message supports multiple lines.
-purge-message:
+purge:
+  message:
   - ""
-  - "&f[&6ADMIN360&f]     &fPurged &c<AMOUNTPURGED> &fpending ticket(s)."
+  - "&f[&6ADMIN360&f]     &fPurged &c<AMOUNT> &f<TYPE> ticket(s)."
   - ""
 
 #This message is used for /ticket delete and /ticket abandon.
-delete:
-  message:
-    succeeded: "&f[&6ADMIN360&f] &6<PLAYERNAME>&7's ticket has been removed successfully."
-    failed: "&f[&6ADMIN360&f] &7Failed to delete &6<PLAYERNAME>&7's ticket."
+remove:
+  failed:
+    message: "&f[&6ADMIN360&f] &6<PLAYERNAME>&7's ticket has been removed successfully."
+  passed:
+    message: "&f[&6ADMIN360&f] &6<PLAYERNAME>&7's ticket has been removed successfully."
 
 
 
@@ -460,7 +469,8 @@ delete:
 # and "admin360.staff.hpreset".
 
 # This message supports multiple lines.
-hpstats-message:
+hpstats:
+  message:
   - ''
   - '&f[&6ADMIN360&f]     &6<ADMINNAME>&f''s Statistics'
   - '&f[&6ADMIN360&f]     &a<UPVOTE> &fupvote(s) &a▲'
@@ -469,28 +479,29 @@ hpstats-message:
   - '&f[&6ADMIN360&f]     &b<PERCENT>% &fsatisfaction &a▲'
   - ''
 
-# Set the number of records shown in hptop.
-default-leaderboard-output: 5
+hptop:
 
-# This message supports multiple lines.
-leaderboard-title:
-  - ''
-  - '&7&m-------------&r &6LEADERBOARD &7&m-------------'
-  - '         &7[ &a▲&fUpvote  &c▼&fDownvote  &a▲&c▼&fTotal &7]'
-  - ''
+  # Set the number of records shown in hptop.
+  default-limit: 5
 
-# hptop body message
-leaderboard-body: '           &6<ADMINNAME>&7: &f<UPVOTE>&a▲ &f<DOWNVOTE>&c▼ &f<TOTAL>&a▲&c▼ &f<PERCENT>%&a▲'
+  message:
+    title:
+    - ''
+    - '&7&m-------------&r &6LEADERBOARD &7&m-------------'
+    - '         &7[ &a▲&fUpvote  &c▼&fDownvote  &a▲&c▼&fTotal &7]'
+    - ''
+    body: '           &6<ADMINNAME>&7: &f<UPVOTE>&a▲ &f<DOWNVOTE>&c▼ &f<TOTAL>&a▲&c▼ &f<PERCENT>%&a▲'
+    footer:
+    - ''
+    - '&7&m--------------------------------------'
+    - ''
 
-# This message supports multiple lines.
-leaderboard-footer:
-  - ''
-  - '&7&m--------------------------------------'
-  - ''
-
-# Names are stored in the database with case preserved. Case-sensitive for name inputs.
-reset-hpstats-failed: '&f[&6ADMIN360&f] &c&nReset Failed&7 Player not found. Names are case-sensitive.'
-reset-hpstats-succeeded: '&f[&6ADMIN360&f] &7You have reset &6<ADMINNAME>&7''s stats successfully.'
+hpreset:
+  failed:
+    message: '&f[&6ADMIN360&f] &c&nReset Failed&7 Player not found. Names are case-sensitive.'
+  passed:
+    message: '&f[&6ADMIN360&f] &7You have reset &6<ADMINNAME>&7''s stats successfully.'
+  # Names are stored in the database with case preserved. Case-sensitive for name inputs.
 
 
 
@@ -509,27 +520,26 @@ reset-hpstats-succeeded: '&f[&6ADMIN360&f] &7You have reset &6<ADMINNAME>&7''s s
 # in other stages (in queue, in progress, awaiting feedback) will not be stored in the database.
 # They will only be stored temporarily in RAM.
 
-# Set the number of records shown in history.
-default-history-output: 5
+history:
 
-# This message supports multiple lines.
-history-title:
-  - ''
-  - '&7&m-----------------&r &6HISTORY &7&m-----------------'
-  - '     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]'
-  - ''
+  # Set the number of records shown in history.
+  default-limit: 5
 
-# History body message
-#<TIME> is the time that the player opened the ticket.
-history-body: '&7[&f<TIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>'
-upvote-indicator: '&a▲'
-downvote-indicator: '&c▼'
+  upvote-indicator: '&a▲'
+  downvote-indicator: '&c▼'
 
-# This message supports multiple lines.
-history-footer:
-  - ''
-  - '&7&m------------------------------------------'
-  - ''
+  message:
+    title:
+    - ''
+    - '&7&m-----------------&r &6HISTORY &7&m-----------------'
+    - '     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]'
+    - ''
+    #<TIME> is the time that the player opened the ticket.
+    body: '&7[&f<TIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>'
+    footer:
+      - ''
+      - '&7&m------------------------------------------'
+      - ''
 
 
 
@@ -541,6 +551,6 @@ history-footer:
 
 # End of file. You're done with the configuration. Congratulations!
 
-# Project : https://www.spigotmc.org/resources/admin360-reloaded.28285/
+# Project : https://www.spigotmc.org/resources/28285/
 # Support : https://github.com/denniemok/Admin360-Reloaded/issues
-# Authors : Vidhu, Dennie
+# Authors : Dennie, Vidhu

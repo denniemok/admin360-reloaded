@@ -49,7 +49,7 @@ public class B3 implements CommandExecutor {
                 case "reload":
                     if (User.hasPermission(sender, Permission.RELOAD_CONFIG, true)) {
                         plugin.reloadConfig();
-                        plugin.config.fetchConfig();
+                        plugin.getConfiguration().fetchConfig();
                         User.messagePlayer(sender, Config.reloadConfig);
                     }
                     return true;
@@ -67,7 +67,7 @@ public class B3 implements CommandExecutor {
 
         User.messagePlayer(sender, "");
         User.messagePlayer(sender, "&f[&6ADMIN360&f] Version: &7" + plugin.getDescription().getVersion());
-        User.messagePlayer(sender, "&f[&6ADMIN360&f] Authors: &7" + plugin.getDescription().getAuthors().get(0));
+        User.messagePlayer(sender, "&f[&6ADMIN360&f] Authors: &7" + plugin.getDescription().getAuthors().toString());
         User.messagePlayer(sender, "&f[&6ADMIN360&f] Project: &7" + plugin.getDescription().getWebsite());
         User.messagePlayer(sender, "");
 

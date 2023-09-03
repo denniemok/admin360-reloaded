@@ -2,7 +2,7 @@ name: Admin360-Reloaded
 main: com.battleasya.admin360.Admin360
 version: 9.1.0
 api-version: 1.14
-authors: [Dennie]
+authors: [Dennie, Vidhu]
 website: https://www.spigotmc.org/resources/28285/
 description: An advanced /helpop tool.
 commands:
@@ -20,12 +20,12 @@ permissions:
         default: op
         children:
           admin360.staff.basic: true
-          admin360.staff.tp: true
+          admin360.staff.teleport: true
           admin360.staff.info: true
-          admin360.staff.redirect: true
+          admin360.staff.transfer: true
           admin360.staff.drop: true
           admin360.staff.purge: true
-          admin360.staff.delete: true
+          admin360.staff.remove: true
           admin360.staff.hpstats: true
           admin360.staff.hptop: true
           admin360.staff.history: true

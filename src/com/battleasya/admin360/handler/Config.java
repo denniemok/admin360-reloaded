@@ -165,17 +165,18 @@ public class Config {
         create_failed_await_feedback = config.getString("create.failed.message.completing");
         create_failed_restricted = config.getString("create.failed.message.restricted");
 
-        create_succeeded_notify_player = config.getStringList("create.succeeded.message.notify-player");
-        create_succeeded_notify_staff = config.getStringList("create.succeeded.message.notify-staff");
+        create_succeeded_notify_player = config.getStringList("create.passed.message.notify-player");
+        create_succeeded_notify_staff = config.getStringList("create.passed.message.notify-staff");
 
-        create_succeeded_trigger_enable = config.getBoolean("create.succeeded.trigger.enable");
-        create_succeeded_trigger_command = config.getString("create.succeeded.trigger.command");
+        create_succeeded_trigger_enable = config.getBoolean("create.passed.trigger.enable");
+        create_succeeded_trigger_command = config.getString("create.passed.trigger.command");
 
         cancel_failed_no_ticket = config.getString("cancel.failed.message.no-ticket");
         cancel_failed_in_progress = config.getString("cancel.failed.message.attending");
         cancel_failed_await_feedback = config.getString("cancel.failed.message.completing");
         cancel_failed_attending = config.getString("cancel.failed.message.restricted");
-        cancel_succeeded_notify_player = config.getString("cancel.succeeded.message");
+
+        cancel_succeeded_notify_player = config.getString("cancel.passed.message");
 
         status_no_ticket = config.getString("status.message.no-ticket");
         status_in_queue = config.getString("status.message.pending");
@@ -193,63 +194,66 @@ public class Config {
         next_failed_not_exist = config.getString("attend.failed.message.not-exist");
         next_failed_attending = config.getString("attend.failed.message.attending");
 
-        ticket_in_progress_notify_player = config.getStringList("attend.succeeded.message.notify-player");
-        ticket_in_progress_notify_staff = config.getStringList("attend.succeeded.message.notify-staff");
+        ticket_in_progress_notify_player = config.getStringList("attend.passed.message.notify-player");
+        ticket_in_progress_notify_staff = config.getStringList("attend.passed.message.notify-staff");
 
-        ticket_in_progress_trigger_custom_command = config.getBoolean("attend.succeeded.trigger.enable");
-        ticket_in_progress_custom_command = config.getString("attend.succeeded.trigger.command");
-
-
+        ticket_in_progress_trigger_custom_command = config.getBoolean("attend.passed.trigger.enable");
+        ticket_in_progress_custom_command = config.getString("attend.passed.trigger.command");
 
         teleport_failed = config.getString("teleport.failed.message");
-        teleport_succeeded = config.getString("teleport.succeeded.message");
+        teleport_succeeded = config.getString("teleport.passed.message");
 
         info_failed = config.getString("info.failed.message");
-        info_message = config.getStringList("info.succeeded.message");
+        info_message = config.getStringList("info.passed.message");
 
         redirect_failed = config.getString("transfer.failed.message");
-        redirect_succeeded = config.getString("transfer.succeeded.message");
+        redirect_succeeded = config.getString("transfer.passed.message");
 
         drop_failed = config.getString("drop.failed.message");
-        drop_message = config.getString("drop.succeeded.message.notify-handler");
-        drop_notify_player = config.getString("drop.succeeded.message.notify-player");
+        drop_message = config.getString("drop.passed.message.notify-handler");
+        drop_notify_player = config.getString("drop.passed.message.notify-player");
 
-        close_failed = config.getString("close-failed");
-        close_succeeded = config.getString("close-succeeded");
+        close_failed = config.getString("close.failed.message");
+        close_succeeded = config.getString("close.passed.message");
 
-        show_reminder = config.getBoolean("show-reminder");
-        reminder_frequency = config.getInt("reminder-frequency");
+        show_reminder = config.getBoolean("review.reminder.enable");
+        reminder_frequency = config.getInt("review.reminder.interval");
 
-        feedback_required = config.getString("feedback-required");
-        feedback_trigger_custom_command = config.getBoolean("feedback-trigger-custom-command");
-        feedback_custom_command = config.getString("feedback-custom-command");
+        feedback_required = config.getString("review.prompt.message");
 
-        feedback_not_required = config.getString("feedback-not-required");
-        feedback_received = config.getString("feedback-received");
+        feedback_trigger_custom_command = config.getBoolean("review.prompt.trigger.enable");
+        feedback_custom_command = config.getString("review.prompt.trigger.command");
 
-        upvote_rating_notify_staff = config.getString("upvote-rating-notify-staff");
-        downvote_rating_notify_staff = config.getString("downvote-rating-notify-staff");
+        feedback_not_required = config.getString("review.failed.message");
+        feedback_received = config.getString("review.passed.message.received");
 
-        purge_message = config.getStringList("purge-message");
-        delete_succeeded = config.getString("delete.message.succeeded");
-        delete_failed = config.getString("delete.message.failed");
+        upvote_rating_notify_staff = config.getString("review.passed.message.upvote-notify-handler");
+        downvote_rating_notify_staff = config.getString("review.passed.message.downvote-notify-handler");
 
-        hpstats_message = config.getStringList("hpstats-message");
-        default_leaderboard_output = config.getInt("default-leaderboard-output");
+        purge_message = config.getStringList("purge.message");
 
-        leaderboard_title = config.getStringList("leaderboard-title");
-        leaderboard_body = config.getString("leaderboard-body");
-        leaderboard_footer = config.getStringList("leaderboard-footer");
+        delete_failed = config.getString("remove.failed.message");
+        delete_succeeded = config.getString("remove.passed.message");
 
-        reset_hpstats_failed = config.getString("reset-hpstats-failed");
-        reset_hpstats_succeeded = config.getString("reset-hpstats-succeeded");
+        hpstats_message = config.getStringList("hpstats.message");
 
-        default_history_output = config.getInt("default-history-output");
-        history_title = config.getStringList("history-title");
-        history_body = config.getString("history-body");
-        upvote_indicator = config.getString("upvote-indicator");
-        downvote_indicator = config.getString("downvote-indicator");
-        history_footer = config.getStringList("history-footer");
+        default_leaderboard_output = config.getInt("hptop.default-limit");
+
+        leaderboard_title = config.getStringList("hptop.message.title");
+        leaderboard_body = config.getString("hptop.message.body");
+        leaderboard_footer = config.getStringList("hptop.message.footer");
+
+        reset_hpstats_failed = config.getString("hpreset.failed.message");
+        reset_hpstats_succeeded = config.getString("hpreset.passed.message");
+
+        default_history_output = config.getInt("history.default-limit");
+
+        history_title = config.getStringList("history.message.title");
+        history_body = config.getString("history.message.body");
+        history_footer = config.getStringList("history.message.footer");
+
+        upvote_indicator = config.getString("history.upvote-indicator");
+        downvote_indicator = config.getString("history.downvote-indicator");
 
     }
 

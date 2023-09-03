@@ -495,8 +495,9 @@ public class RequestHandler {
     public void purgeTicket(CommandSender sender, String option) {
 
         String amountPurged;
+        option = option.toLowerCase();
 
-        switch (option.toLowerCase()) {
+        switch (option) {
 
             case "pending":
                 amountPurged = Integer.toString(Request.getPndLstSize());
@@ -519,7 +520,8 @@ public class RequestHandler {
 
         for (String message : Config.purge_message) {
             User.messagePlayer(sender, message
-                    .replaceAll("<AMOUNTPURGED>", amountPurged));
+                    .replaceAll("<AMOUNT>", amountPurged)
+                    .replaceAll("<TYPE>", option));
         }
 
     }
