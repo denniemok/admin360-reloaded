@@ -203,7 +203,7 @@ status:
   player:
     message:
       no-ticket: "&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)"
-      pending: "&f[&6ADMIN360&f] &7Your pending ticket is now in queue position &6<POSITION> &7."
+      pending: "&f[&6ADMIN360&f] &7Your ticket is now &6pending &7in queue position &6<POSITION>&7."
       attending: "&f[&6ADMIN360&f] &7We are now processing your ticket. A staff will contact you soon."
       completing: "&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
   staff:
@@ -235,7 +235,7 @@ stats:
   - "&f[&6ADMIN360&f]     &e<INPROGRESS> &fticket(s) in progress."
   - "&f[&6ADMIN360&f]     &a<AWAITING> &fticket(s) awaiting feedback."
   - "&f[&6ADMIN360&f]     &b<COMPLETED> &fticket(s) completed today."
-  - "&f[&6ADMIN360&f]     &d<TOTAL> &ftotal ticket(s) &7(&f<PERCENT>%&a▲&7)"
+  - "&f[&6ADMIN360&f]     &d<TOTAL> &ftotal ticket(s) &7(&f<PERCENT>%&a+&7)"
   - ""
 
 
@@ -427,8 +427,8 @@ review:
   passed:
     message:
       received: "&f[&6ADMIN360&f] &7Thank you for your feedback. We are looking forward to serving you again."
-      upvote-notify-handler: "&f[&6ADMIN360&f] &6<PLAYERNAME> &elikes &7your service. [&f1&a▲&7]"
-      downvote-notify-handler: "&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your service. [&f1&c▼&7]"
+      upvote-notify-handler: "&f[&6ADMIN360&f] &6<PLAYERNAME> &elikes &7your service. [&f1&a+&7]"
+      downvote-notify-handler: "&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your service. [&f1&c-&7]"
 
 
 
@@ -478,10 +478,10 @@ hpstats:
   message:
   - ""
   - "&f[&6ADMIN360&f]     &6<ADMINNAME>&f's Statistics"
-  - "&f[&6ADMIN360&f]     &a<UPVOTE> &fupvote(s) &a▲"
-  - "&f[&6ADMIN360&f]     &c<DOWNVOTE> &fdownvote(s) &c▼"
-  - "&f[&6ADMIN360&f]     &e<TOTAL> &ftotal ticket(s) &a▲&c▼"
-  - "&f[&6ADMIN360&f]     &b<PERCENT>% &fsatisfaction &a▲"
+  - "&f[&6ADMIN360&f]     &a<UPVOTE> &fupvote(s) &a+"
+  - "&f[&6ADMIN360&f]     &c<DOWNVOTE> &fdownvote(s) &c-"
+  - "&f[&6ADMIN360&f]     &e<TOTAL> &ftotal ticket(s) &a+&c-"
+  - "&f[&6ADMIN360&f]     &b<PERCENT>% &fsatisfaction &a+"
   - ""
 
 hptop:
@@ -493,9 +493,9 @@ hptop:
     title:
     - ""
     - "&7&m-------------&r &6LEADERBOARD &7&m-------------"
-    - "         &7[ &a▲&fUpvote  &c▼&fDownvote  &a▲&c▼&fTotal &7]"
+    - "         &7[ &a+&fUpvote  &c-&fDownvote  &a+&c-&fTotal &7]"
     - ""
-    body: "           &6<ADMINNAME>&7: &f<UPVOTE>&a▲ &f<DOWNVOTE>&c▼ &f<TOTAL>&a▲&c▼ &f<PERCENT>%&a▲"
+    body: "           &6<ADMINNAME>&7: &f<UPVOTE>&a+ &f<DOWNVOTE>&c- &f<TOTAL>&a+&c- &f<PERCENT>%&a+"
     footer:
     - ""
     - "&7&m--------------------------------------"
@@ -530,8 +530,8 @@ history:
   # Set the number of records shown in history.
   default-limit: 5
 
-  upvote-indicator: "&a▲"
-  downvote-indicator: "&c▼"
+  upvote-indicator: "&a+"
+  downvote-indicator: "&c-"
 
   message:
     title:

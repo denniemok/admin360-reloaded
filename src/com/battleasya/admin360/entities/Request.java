@@ -91,19 +91,13 @@ public class Request {
      * 0: No request present
      * 1: Request is currently queued
      * 2: Request is being honored by admins
-     * 3: Admin is already honoring a request
-     * 4: Request is completed and awaiting review
+     * 3: Request is completed and awaiting review
      */
     public static int getStatus(UUID playerID) {
 
-        // check keys in requestAttending
-        if (inAtdLst(playerID)) {
-            return 3;
-        }
-
         // check keys in requestCompleting
         if (inCptLst(playerID)) {
-            return 4;
+            return 3;
         }
 
         // check elements in requestPending

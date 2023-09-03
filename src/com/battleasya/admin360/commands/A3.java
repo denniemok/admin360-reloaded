@@ -56,6 +56,10 @@ public class A3 implements CommandExecutor {
                     break;
 
                 case "cancel":
+                    if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
+                        User.messagePlayer(sender, Config.cancel_failed_restricted);
+                        return true;
+                    }
                     if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
                         plugin.getRequestHandler().cancelTicket(sender);
                     }
@@ -223,12 +227,13 @@ public class A3 implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("create")) {
 
-            if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
+            // admin restriction
+            if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
+                User.messagePlayer(sender, Config.create_failed_restricted);
+                return true;
+            }
 
-                if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
-                    User.messagePlayer(sender, Config.create_failed_restricted);
-                    return true;
-                }
+            if (User.hasPermission(sender, Permission.CREATE_TICKET, true)) {
 
                 StringBuilder comment;
 

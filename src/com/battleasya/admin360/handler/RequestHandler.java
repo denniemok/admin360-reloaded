@@ -34,7 +34,7 @@ public class RequestHandler {
         UUID playerID = ((Player) sender).getUniqueId();
 
         // check staff availability
-        if (Config.check_staff_availability && Admin.isAvailable()) {
+        if (Config.check_staff_availability && !Admin.isAvailable()) {
             User.messagePlayer(sender, Config.create_failed_no_staff);
             return;
         }
@@ -47,7 +47,7 @@ public class RequestHandler {
             case 2:
                 User.messagePlayer(sender, Config.create_failed_attending);
                 return;
-            case 4:
+            case 3:
                 User.messagePlayer(sender, Config.create_failed_completing);
                 return;
         }
@@ -572,9 +572,6 @@ public class RequestHandler {
                 User.messagePlayer(sender, Config.cancel_failed_attending);
                 return;
             case 3:
-                User.messagePlayer(sender, Config.cancel_failed_restricted);
-                return;
-            case 4:
                 User.messagePlayer(sender, Config.cancel_failed_completing);
 
         }
@@ -612,7 +609,7 @@ public class RequestHandler {
             case 2:
                 User.messagePlayer(sender, Config.status_attending);
                 return;
-            case 4:
+            case 3:
                 User.messagePlayer(sender, Config.status_completing);
 
         }
