@@ -50,7 +50,7 @@ general:
 datasource:
   mysql: false
   host: "localhost"
-  port: "3306""
+  port: "3306"
   database: "database"
   username: "user"
   password: "password"
