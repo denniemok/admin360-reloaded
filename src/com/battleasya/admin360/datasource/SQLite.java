@@ -17,10 +17,10 @@ public class SQLite implements DataSource {
 	private Connection con = null;
 
 	@Override
-	public boolean connect(String host, String port, String database, String username, String password) {
+	public void connect(String host, String port, String database, String username, String password) {
 
 		if (con != null) {
-			return true;
+			return;
 		}
 
 		try {
@@ -29,15 +29,18 @@ public class SQLite implements DataSource {
 		} catch (ClassNotFoundException e) {
 			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the SQLite driver.");
 			e.printStackTrace();
-			return false;
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
+			return;
 		} catch (SQLException e) {
 			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the SQLite database.");
 			e.printStackTrace();
-			return false;
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
+			return;
 		}
 
 		plugin.getLogger().info("[Admin360-Reloaded] Connected to the SQLite database.");
-		return true;
 
 	}
 
@@ -78,6 +81,8 @@ public class SQLite implements DataSource {
 			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the SQLite database.");
 			e.printStackTrace();
 			close(st);
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
         	return;
         } finally {
         	close(st);

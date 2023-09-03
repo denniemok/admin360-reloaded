@@ -43,6 +43,9 @@ public class Admin360 extends JavaPlugin {
         getCommand("admin360").setExecutor(new B3(this));
         getCommand("ticket").setExecutor(new A3(this));
 
+        /* Initialise Listeners */
+        getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
+
         /* Initialise RequestHandler */
         rh = new RequestHandler(this);
 
@@ -54,20 +57,11 @@ public class Admin360 extends JavaPlugin {
         }
 
         /* Connect to Database */
-        boolean ok = getDataSource().connect(Config.ds_host, Config.ds_port, Config.ds_database
+        getDataSource().connect(Config.ds_host, Config.ds_port, Config.ds_database
                 , Config.ds_username, Config.ds_password);
-
-        if (!ok) {
-            getDataSource().disconnect();
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
 
         /* Setup Database */
         getDataSource().setUp();
-
-        /* Initialise Listeners */
-        getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
 
         /* Load Admin in list (useful on reloads) */
         Admin.refreshAdmLst();

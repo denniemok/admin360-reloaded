@@ -4,7 +4,7 @@ import com.battleasya.admin360.entities.Request;
 
 public interface DataSource {
 	
-	boolean connect(String host, String port, String database, String username, String password);
+	void connect(String host, String port, String database, String username, String password);
 
 	void disconnect();
 

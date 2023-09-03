@@ -18,12 +18,12 @@ public class MySQL implements DataSource {
 	private Connection con = null;
 
 	@Override
-	public boolean connect(String host, String port, String database, String username, String password) {
+	public void connect(String host, String port, String database, String username, String password) {
 
 		String options = Config.ds_options;
 
 		if (con != null) {
-			return true;
+			return;
 		}
 
 		try {
@@ -32,15 +32,18 @@ public class MySQL implements DataSource {
 		} catch (ClassNotFoundException e) {
 			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the MySQL driver.");
 			e.printStackTrace();
-			return false;
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
+			return;
 		} catch (SQLException e) {
 			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the MySQL database.");
 			e.printStackTrace();
-			return false;
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
+			return;
 		}
 
 		plugin.getLogger().info("[Admin360-Reloaded] Connected to the MySQL database.");
-		return true;
 
 	}
 
@@ -81,6 +84,8 @@ public class MySQL implements DataSource {
 			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the MySQL database.");
 			e.printStackTrace();
 			close(st);
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		} finally {
 			close(st);
