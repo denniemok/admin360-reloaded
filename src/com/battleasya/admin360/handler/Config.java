@@ -78,7 +78,7 @@ public class Config {
     public static String close_passed;
     public static boolean review_reminder_enable;
     public static int review_reminder_interval;
-    public static String review_prompt;
+    public static List<String> review_prompt;
     public static boolean review_prompt_trigger_enable;
     public static String review_prompt_trigger_command;
     public static String review_failed;
@@ -223,7 +223,7 @@ public class Config {
         review_reminder_enable = config.getBoolean("review.reminder.enable");
         review_reminder_interval = config.getInt("review.reminder.interval");
 
-        review_prompt = config.getString("review.prompt.message");
+        review_prompt = config.getStringList("review.prompt.message");
 
         review_prompt_trigger_enable = config.getBoolean("review.prompt.trigger.enable");
         review_prompt_trigger_command = config.getString("review.prompt.trigger.command");

@@ -72,7 +72,8 @@ public class RequestHandler {
         // notify user
         for (String message : Config.create_passed_notify_player) {
             User.messagePlayer(sender, message
-                    .replaceAll("<POSITION>", positionInPending));
+                    .replaceAll("<POSITION>", positionInPending)
+                    .replaceAll("<DETAILS>", comment));
         }
 
         // notify staff
@@ -87,7 +88,8 @@ public class RequestHandler {
         if (Config.create_passed_trigger_enable) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.create_passed_trigger_command
                     .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<POSITION>", positionInPending));
+                    .replaceAll("<POSITION>", positionInPending)
+                    .replaceAll("<DETAILS>", comment));
         }
 
     }
@@ -371,6 +373,7 @@ public class RequestHandler {
     public void closeTicket(CommandSender admin) {
 
         UUID adminID = ((Player) admin).getUniqueId();
+        String adminName = admin.getName();
 
         // Make sure admin is not attending other requests
         if (!Request.inAtdLst(adminID)) {
@@ -392,10 +395,10 @@ public class RequestHandler {
 
         // Set review scheduler
         if (Config.review_reminder_enable) {
-            BukkitTask reminder = new Review(plugin, playerID).runReminder();
+            BukkitTask reminder = new Review(plugin, playerID, adminName).runReminder();
             Review.addToRmdLst(playerID, reminder);
         } else {
-            promptFeedback(playerID);
+            promptFeedback(playerID, adminName);
         }
 
     }
@@ -468,7 +471,7 @@ public class RequestHandler {
      * Prompts a player to rate a request after an admin has handled it
      */
 
-    public boolean promptFeedback(UUID playerID) {
+    public boolean promptFeedback(UUID playerID, String adminName) {
 
         Player player = Bukkit.getPlayer(playerID);
 
@@ -478,11 +481,15 @@ public class RequestHandler {
 
         String playerName = player.getName();
 
-        User.messagePlayer(player, Config.review_prompt);
+        for (String message : Config.review_prompt) {
+            User.messagePlayer(player, message
+                    .replaceAll("<ADMINNAME>", adminName));
+        }
 
         if (Config.review_prompt_trigger_enable) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.review_prompt_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName));
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<ADMINNAME>", adminName));
         }
 
         return true;

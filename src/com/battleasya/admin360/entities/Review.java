@@ -13,6 +13,8 @@ public class Review extends BukkitRunnable {
 
     private final UUID playerID;
 
+    private final String adminName;
+
     private final Admin360 plugin;
 
     /* Collection of Review Reminders which prompt the users to rate the service */
@@ -21,9 +23,10 @@ public class Review extends BukkitRunnable {
     /**
      * Creates a new reminder for the specified player name
      */
-    public Review(Admin360 plugin, UUID playerID) {
+    public Review(Admin360 plugin, UUID playerID, String adminName) {
         this.plugin = plugin;
         this.playerID = playerID;
+        this.adminName = adminName;
     }
 
     /**
@@ -36,7 +39,7 @@ public class Review extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!plugin.getRequestHandler().promptFeedback(playerID)) {
+        if (!plugin.getRequestHandler().promptFeedback(playerID, adminName)) {
             this.cancel();
         }
     }

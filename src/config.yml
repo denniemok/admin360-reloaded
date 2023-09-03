@@ -143,17 +143,20 @@ create:
   passed:
     message:
       notify-player:
-      - "&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7). Use &6/ticket status &7to check your progress."
+      - "&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7)."
+      - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
+      - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to check your progress."
       notify-staff: # all staff
       - ""
       - "&f[&6ADMIN360&f] &6<PLAYERNAME> &copened a &a&lNEW &cticket."
       - "&f[&6ADMIN360&f] &cDetails: &f<DETAILS>"
       - "&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)"
       - ""
-    # Run a custom command after a ticket is opened. Default example using title-manager.
+    # Run a console command after a ticket is opened. Default example using title-manager.
     trigger: # for player-only
       enable: false
       command: "tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)"
+      # <DETAILS> also available for trigger command
 
 
 
@@ -277,7 +280,8 @@ attend:
   passed:
     message:
       notify-player:
-      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now reviewing your request."
+      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has been assigned to your request."
+      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now processing your request."
       notify-staff: # all staff
       - ""
       - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c's ticket."
@@ -413,13 +417,15 @@ review:
 
   # prompt message will be sent at least once regardless of whether reminder is enabled or not
   prompt:
-    message: "&f[&6ADMIN360&f] &7We have completed your request. Are you satisfied with our service? [&a/ticket yes&7, &c/ticket no&7]."
+    message:
+    - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has completed your request. Are you satisfied with our service?"
+    - "&f[&6ADMIN360&f] &7Are you satisfied with &6<ADMINNAME>&7's service? [&a/ticket yes&7, &c/ticket no&7]"
     # Do you want to run a custom command if the player needs to give a review? Default example using chest-command.
     # This can work really well with some plugins that opens a GUI with buttons triggering /ticket yes and /ticket no.
     # Change this to true if you want to use this option.
     trigger:
       enable: false
-      command: "chestcommands open feedback.yml <PLAYERNAME>"
+      command: "chestcommands open feedback.yml <PLAYERNAME>" # <ADMINNAME> also available
 
   # If you do not want your staff to know who actually votes for them, simply remove the placeholder.
   failed:
