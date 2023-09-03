@@ -1,7 +1,7 @@
-package com.battleasya.Admin360.entities;
+package com.battleasya.admin360.entities;
 
-import com.battleasya.Admin360.Admin360;
-import com.battleasya.Admin360.handler.Config;
+import com.battleasya.admin360.Admin360;
+import com.battleasya.admin360.handler.Config;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 

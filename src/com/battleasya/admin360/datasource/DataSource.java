@@ -1,6 +1,6 @@
-package com.battleasya.Admin360.datasource;
+package com.battleasya.admin360.datasource;
 
-import com.battleasya.Admin360.entities.Request;
+import com.battleasya.admin360.entities.Request;
 
 public interface DataSource {
 	

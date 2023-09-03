@@ -1,9 +1,9 @@
-package com.battleasya.Admin360.commands;
+package com.battleasya.admin360.commands;
 
-import com.battleasya.Admin360.Admin360;
-import com.battleasya.Admin360.handler.Config;
-import com.battleasya.Admin360.handler.Permission;
-import com.battleasya.Admin360.entities.User;
+import com.battleasya.admin360.Admin360;
+import com.battleasya.admin360.handler.Config;
+import com.battleasya.admin360.handler.Permission;
+import com.battleasya.admin360.entities.User;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

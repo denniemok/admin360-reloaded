@@ -1,4 +1,4 @@
-package com.battleasya.Admin360.entities;
+package com.battleasya.admin360.entities;
 
 import java.util.*;
 

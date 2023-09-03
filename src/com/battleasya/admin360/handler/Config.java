@@ -1,6 +1,6 @@
-package com.battleasya.Admin360.handler;
+package com.battleasya.admin360.handler;
 
-import com.battleasya.Admin360.Admin360;
+import com.battleasya.admin360.Admin360;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 

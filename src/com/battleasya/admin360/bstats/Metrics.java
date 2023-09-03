@@ -1,4 +1,4 @@
-package com.battleasya.Admin360.bstats;
+package com.battleasya.admin360.bstats;
 
 /*
  * This Metrics class was auto-generated and can be copied into your project if you are

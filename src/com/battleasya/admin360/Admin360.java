@@ -1,15 +1,15 @@
-package com.battleasya.Admin360;
+package com.battleasya.admin360;
 
-import com.battleasya.Admin360.bstats.Metrics;
-import com.battleasya.Admin360.commands.A3;
-import com.battleasya.Admin360.commands.B3;
-import com.battleasya.Admin360.datasource.DataSource;
-import com.battleasya.Admin360.datasource.MySQL;
-import com.battleasya.Admin360.datasource.SQLite;
-import com.battleasya.Admin360.entities.Admin;
-import com.battleasya.Admin360.handler.RequestHandler;
-import com.battleasya.Admin360.listener.JoinLeaveEvent;
-import com.battleasya.Admin360.handler.Config;
+import com.battleasya.admin360.bstats.Metrics;
+import com.battleasya.admin360.commands.A3;
+import com.battleasya.admin360.commands.B3;
+import com.battleasya.admin360.datasource.DataSource;
+import com.battleasya.admin360.datasource.MySQL;
+import com.battleasya.admin360.datasource.SQLite;
+import com.battleasya.admin360.entities.Admin;
+import com.battleasya.admin360.handler.RequestHandler;
+import com.battleasya.admin360.listener.JoinLeaveEvent;
+import com.battleasya.admin360.handler.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Admin360 extends JavaPlugin {

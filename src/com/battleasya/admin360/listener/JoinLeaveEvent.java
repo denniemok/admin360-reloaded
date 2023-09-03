@@ -1,10 +1,10 @@
-package com.battleasya.Admin360.listener;
+package com.battleasya.admin360.listener;
 
-import com.battleasya.Admin360.entities.Review;
-import com.battleasya.Admin360.handler.Permission;
-import com.battleasya.Admin360.entities.Admin;
-import com.battleasya.Admin360.entities.Request;
-import com.battleasya.Admin360.entities.User;
+import com.battleasya.admin360.entities.Review;
+import com.battleasya.admin360.handler.Permission;
+import com.battleasya.admin360.entities.Admin;
+import com.battleasya.admin360.entities.Request;
+import com.battleasya.admin360.entities.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

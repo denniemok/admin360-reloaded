@@ -1,8 +1,8 @@
-package com.battleasya.Admin360.entities;
+package com.battleasya.admin360.entities;
 
-import com.battleasya.Admin360.Admin360;
-import com.battleasya.Admin360.handler.Config;
-import com.battleasya.Admin360.handler.Permission;
+import com.battleasya.admin360.Admin360;
+import com.battleasya.admin360.handler.Config;
+import com.battleasya.admin360.handler.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,10 +30,6 @@ public class User {
         }
     }
 
-    public static void removePlayer(UUID playerID) {
-        cooldownList.remove(playerID);
-    }
-
     public static long inCooldown(UUID playerID, int duration, Admin360 plugin) {
 
         if (User.cooldownList.containsKey(playerID)) {
@@ -44,6 +40,8 @@ public class User {
             if (secondsLeft > 0) { // still in cool down
                 return secondsLeft;
             }
+
+            return 0;
 
         }
 

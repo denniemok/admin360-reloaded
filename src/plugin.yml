@@ -1,9 +1,9 @@
 name: Admin360-Reloaded
-main: com.battleasya.Admin360.Admin360
-version: 8.1.2
+main: com.battleasya.admin360.Admin360
+version: 9.1.0
 api-version: 1.14
-authors: [Vidhu, Dennie]
-website: https://cutt.ly/bjo1zpy
+authors: [Dennie]
+website: https://www.spigotmc.org/resources/28285/
 description: An advanced /helpop tool.
 commands:
   ticket:

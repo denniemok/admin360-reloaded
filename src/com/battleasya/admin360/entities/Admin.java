@@ -1,6 +1,6 @@
-package com.battleasya.Admin360.entities;
+package com.battleasya.admin360.entities;
 
-import com.battleasya.Admin360.handler.Permission;
+import com.battleasya.admin360.handler.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

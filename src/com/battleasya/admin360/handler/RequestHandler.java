@@ -1,10 +1,10 @@
-package com.battleasya.Admin360.handler;
+package com.battleasya.admin360.handler;
 
-import com.battleasya.Admin360.Admin360;
-import com.battleasya.Admin360.entities.Admin;
-import com.battleasya.Admin360.entities.Request;
-import com.battleasya.Admin360.entities.Review;
-import com.battleasya.Admin360.entities.User;
+import com.battleasya.admin360.Admin360;
+import com.battleasya.admin360.entities.Admin;
+import com.battleasya.admin360.entities.Request;
+import com.battleasya.admin360.entities.Review;
+import com.battleasya.admin360.entities.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
