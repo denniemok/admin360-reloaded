@@ -3,20 +3,41 @@ package com.battleasya.admin360.entities;
 import com.battleasya.admin360.Admin360;
 import com.battleasya.admin360.handler.Config;
 import com.battleasya.admin360.handler.Permission;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User {
 
     public static HashMap<UUID, Long> cooldownList = new HashMap<>();
 
-    /* overloading method */
     public static void messagePlayer(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+        player.sendMessage(translate(message));
+    }
+
+    public static String translate(String message) {
+
+        /* HEX code support starts at 1.16 */
+        if (Admin360.getServerVersion() >= 16) {
+
+            Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+            Matcher matcher = pattern.matcher(message);
+
+            while (matcher.find()) {
+                String color = message.substring(matcher.start(), matcher.end());
+                message = message.replace(color, ChatColor.of(color).toString());
+                matcher = pattern.matcher(message);
+            }
+
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', message);
+
     }
 
     public static boolean hasPermission(CommandSender sender, Permission permission, Boolean sendMessage) {
