@@ -2,6 +2,7 @@ package com.battleasya.admin360.datasource;
 
 import com.battleasya.admin360.Admin360;
 import com.battleasya.admin360.entities.Request;
+import com.battleasya.admin360.handler.Config;
 
 import java.sql.*;
 
@@ -19,13 +20,15 @@ public class MySQL implements DataSource {
 	@Override
 	public boolean connect(String host, String port, String database, String username, String password) {
 
+		String options = Config.ds_options;
+
 		if (con != null) {
 			return true;
 		}
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + options, username, password);
 		} catch (ClassNotFoundException e) {
 			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the MySQL driver.");
 			e.printStackTrace();

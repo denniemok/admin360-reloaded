@@ -47,15 +47,15 @@ public class Admin360 extends JavaPlugin {
         rh = new RequestHandler(this);
 
         /* Initialise DataSource */
-        if (Config.useMysql) {
+        if (Config.ds_mysql) {
             ds = new MySQL(this);
         } else {
             ds = new SQLite(this);
         }
 
         /* Connect to Database */
-        boolean ok = getDataSource().connect(Config.host, Config.port, Config.database
-                , Config.username, Config.password);
+        boolean ok = getDataSource().connect(Config.ds_host, Config.ds_port, Config.ds_database
+                , Config.ds_username, Config.ds_password);
 
         if (!ok) {
             getDataSource().disconnect();

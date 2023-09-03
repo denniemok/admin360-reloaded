@@ -54,6 +54,7 @@ datasource:
   database: 'database'
   username: 'user'
   password: 'password'
+  options: "?autoReconnect=true&verifyServerCertificate=false&useSSL=false"
 
 
 help:
@@ -199,12 +200,16 @@ cancel:
 # status-require-feedback : Your ticket is closed, but you still haven't given us feedback.
 
 status:
-  message:
-    no-ticket: '&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)'
-    pending: '&f[&6ADMIN360&f] &7Your pending ticket is now in queue position &6<POSITION> &7.'
-    attending: '&f[&6ADMIN360&f] &7We are now processing your ticket. A staff will contact you soon.'
-    completing: '&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
-    restricted: '&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)'
+  player:
+    message:
+      no-ticket: '&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)'
+      pending: '&f[&6ADMIN360&f] &7Your pending ticket is now in queue position &6<POSITION> &7.'
+      attending: '&f[&6ADMIN360&f] &7We are now processing your ticket. A staff will contact you soon.'
+      completing: '&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
+  staff:
+    message:
+      attending: '&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)'
+      not-attending: "&f[&6ADMIN360&f] &7You are not attending any tickets at the moment. (&fTips: &6/ticket next&7)"
 
 
 
@@ -266,8 +271,8 @@ attend:
   failed:
     message:
       no-ticket: '&f[&6ADMIN360&f] &c&nNext Failed&7 There are no tickets at the moment.'
-      target-not-exist: "&f[&6ADMIN360&f] &c&nNext Failed&7 That person does not have an opened request."
-      already-attending: '&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one.'
+      not-exist: "&f[&6ADMIN360&f] &c&nNext Failed&7 That person does not have an opened request."
+      attending: '&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one.'
 
   passed:
     message:

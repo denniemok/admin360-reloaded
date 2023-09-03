@@ -36,11 +36,11 @@ public class B3 implements CommandExecutor {
                     return true;
 
                 case "help":
-                    for (String message : Config.playerCommandList) {
+                    for (String message : Config.player_command_list) {
                         User.messagePlayer(sender, message);
                     }
                     if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
-                        for (String message : Config.staffCommandList) {
+                        for (String message : Config.staff_command_list) {
                             User.messagePlayer(sender, message);
                         }
                     }
@@ -50,7 +50,7 @@ public class B3 implements CommandExecutor {
                     if (User.hasPermission(sender, Permission.RELOAD_CONFIG, true)) {
                         plugin.reloadConfig();
                         plugin.getConfiguration().fetchConfig();
-                        User.messagePlayer(sender, Config.reloadConfig);
+                        User.messagePlayer(sender, Config.reload_config);
                     }
                     return true;
 
@@ -58,7 +58,7 @@ public class B3 implements CommandExecutor {
 
         }
 
-        User.messagePlayer(sender, Config.incorrectSyntax);
+        User.messagePlayer(sender, Config.incorrect_syntax);
         return true;
 
     }

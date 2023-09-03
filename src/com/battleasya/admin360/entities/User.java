@@ -24,7 +24,7 @@ public class User {
             return true;
         } else {
             if (sendMessage) {
-                messagePlayer(sender, Config.noPermission);
+                messagePlayer(sender, Config.no_permission);
             }
             return false;
         }

@@ -21,11 +21,11 @@ public class A3 implements CommandExecutor {
     }
 
     public void messageCommandList(CommandSender sender) {
-        for (String message : Config.playerCommandList) {
+        for (String message : Config.player_command_list) {
             User.messagePlayer(sender, message);
         }
         if (User.hasPermission(sender, Permission.ATTEND_TICKET, false)) {
-            for (String message : Config.staffCommandList) {
+            for (String message : Config.staff_command_list) {
                 User.messagePlayer(sender, message);
             }
         }
@@ -135,13 +135,13 @@ public class A3 implements CommandExecutor {
 
                 case "hptop":
                     if (User.hasPermission(sender, Permission.VIEW_HP_TOP, true)) {
-                        plugin.getRequestHandler().printHonorTop(sender, Config.default_leaderboard_output);
+                        plugin.getRequestHandler().printHonorTop(sender, Config.hptop_default_limit);
                     }
                     return true;
 
                 case "history":
                     if (User.hasPermission(sender, Permission.VIEW_HISTORY, true)) {
-                        plugin.getRequestHandler().printHonorHistory(sender, Config.default_history_output);
+                        plugin.getRequestHandler().printHonorHistory(sender, Config.history_default_limit);
                     }
                     return true;
 
@@ -183,10 +183,10 @@ public class A3 implements CommandExecutor {
                 case "hpreset":
                     if (User.hasPermission(sender, Permission.RESET_HP_STATS, true)) {
                         if (plugin.getDataSource().resetAdminsHonor(args[1])) {
-                            User.messagePlayer(sender, Config.reset_hpstats_succeeded
+                            User.messagePlayer(sender, Config.hpreset_passed
                                     .replaceAll("<ADMINNAME>", args[1]));
                         } else {
-                            User.messagePlayer(sender, Config.reset_hpstats_failed);
+                            User.messagePlayer(sender, Config.hpreset_failed);
                         }
                     }
                     return true;
@@ -202,7 +202,7 @@ public class A3 implements CommandExecutor {
                         try {
                             plugin.getRequestHandler().printHonorTop(sender, Integer.parseInt(args[1]));
                         } catch (Exception e) {
-                            User.messagePlayer(sender, Config.incorrectSyntax);
+                            User.messagePlayer(sender, Config.incorrect_syntax);
                         }
                     }
                     return true;
@@ -212,7 +212,7 @@ public class A3 implements CommandExecutor {
                         try {
                             plugin.getRequestHandler().printHonorHistory(sender, Integer.parseInt(args[1]));
                         } catch (Exception e) {
-                            User.messagePlayer(sender, Config.incorrectSyntax);
+                            User.messagePlayer(sender, Config.incorrect_syntax);
                         }
                     }
                     return true;
@@ -249,7 +249,7 @@ public class A3 implements CommandExecutor {
 
         }
 
-        User.messagePlayer(sender, Config.incorrectSyntax);
+        User.messagePlayer(sender, Config.incorrect_syntax);
         return true;
 
     }

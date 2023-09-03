@@ -42,22 +42,22 @@ public class RequestHandler {
         // check user status
         switch (Request.getStatus(playerID)) {
             case 1:
-                User.messagePlayer(sender, Config.create_failed_in_queue);
+                User.messagePlayer(sender, Config.create_failed_pending);
                 return;
             case 2:
-                User.messagePlayer(sender, Config.create_failed_in_progress);
+                User.messagePlayer(sender, Config.create_failed_attending);
                 return;
             case 4:
-                User.messagePlayer(sender, Config.create_failed_await_feedback);
+                User.messagePlayer(sender, Config.create_failed_completing);
                 return;
         }
 
         // check cooldown status
-        if (Config.cooldownEnable){
-            long secondsLeft = User.inCooldown(playerID, Config.cooldownInterval, plugin);
+        if (Config.create_cooldown_enable){
+            long secondsLeft = User.inCooldown(playerID, Config.create_cooldown_interval, plugin);
             if (secondsLeft != -1) { // still in cooldown
                 String secondsLeft2S = String.valueOf(secondsLeft);
-                User.messagePlayer(sender, Config.cooldownMessage
+                User.messagePlayer(sender, Config.create_cooldown_message
                         .replaceAll("<SECONDSLEFT>", secondsLeft2S));
                 return;
             }
@@ -70,13 +70,13 @@ public class RequestHandler {
         String positionInPending = Integer.toString(Request.getPndLstSize());
 
         // notify user
-        for (String message : Config.create_succeeded_notify_player) {
+        for (String message : Config.create_passed_notify_player) {
             User.messagePlayer(sender, message
                     .replaceAll("<POSITION>", positionInPending));
         }
 
         // notify staff
-        for (String message : Config.create_succeeded_notify_staff) {
+        for (String message : Config.create_passed_notify_staff) {
             Admin.messageAdmins(message
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
@@ -84,8 +84,8 @@ public class RequestHandler {
         }
 
         // trigger custom commands
-        if (Config.create_succeeded_trigger_enable) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.create_succeeded_trigger_command
+        if (Config.create_passed_trigger_enable) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.create_passed_trigger_command
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<POSITION>", positionInPending));
         }
@@ -130,12 +130,12 @@ public class RequestHandler {
 
         // this must go first to avoid problems
         if (Request.inAtdLst(adminID)) {
-            User.messagePlayer(admin, Config.next_failed_attending);
+            User.messagePlayer(admin, Config.attend_failed_attending);
             return;
         }
 
         if (Request.isPndLstEmpty()) {
-            User.messagePlayer(admin, Config.next_failed_no_ticket);
+            User.messagePlayer(admin, Config.attend_failed_no_ticket);
             return;
         }
 
@@ -155,7 +155,7 @@ public class RequestHandler {
             player = Bukkit.getPlayer(playerName);
 
             if (player == null) {
-                User.messagePlayer(admin, Config.next_failed_not_exist);
+                User.messagePlayer(admin, Config.attend_failed_not_exist);
                 return;
             }
 
@@ -163,7 +163,7 @@ public class RequestHandler {
             request = Request.getPndRequest(player.getUniqueId());
 
             if (request == null) {
-                User.messagePlayer(admin, Config.next_failed_not_exist);
+                User.messagePlayer(admin, Config.attend_failed_not_exist);
                 return;
             }
 
@@ -184,7 +184,7 @@ public class RequestHandler {
         if (Config.use_auto_teleport) {
             try {
                 ((Player) admin).teleport(player);
-                User.messagePlayer(admin, Config.teleport_succeeded
+                User.messagePlayer(admin, Config.teleport_passed
                         .replaceAll("<PLAYERNAME>", playerName));
             } catch (Exception e) {
                 User.messagePlayer(admin, Config.teleport_failed);
@@ -194,13 +194,13 @@ public class RequestHandler {
         String ticketsRemain = Integer.toString(Request.getPndLstSize());
 
         // notify user
-        for (String message : Config.ticket_in_progress_notify_player) {
+        for (String message : Config.attend_passed_notify_player) {
             User.messagePlayer(player, message
                     .replaceAll("<ADMINNAME>", adminName));
         }
 
         // notify staff
-        for (String message : Config.ticket_in_progress_notify_staff) {
+        for (String message : Config.attend_passed_notify_staff) {
             Admin.messageAdmins(message
                     .replaceAll("<ADMINNAME>", adminName)
                     .replaceAll("<PLAYERNAME>", playerName)
@@ -208,8 +208,8 @@ public class RequestHandler {
         }
 
         // trigger custom commands
-        if (Config.ticket_in_progress_trigger_custom_command) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
+        if (Config.attend_passed_trigger_enable) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.attend_passed_trigger_command
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<ADMINNAME>", adminName));
         }
@@ -234,7 +234,7 @@ public class RequestHandler {
 
         try {
             ((Player) admin).teleport(Bukkit.getPlayer(playerID));
-            User.messagePlayer(admin, Config.teleport_succeeded
+            User.messagePlayer(admin, Config.teleport_passed
                     .replaceAll("<PLAYERNAME>", playerName));
         } catch (Exception e) {
             User.messagePlayer(admin, Config.teleport_failed);
@@ -259,7 +259,7 @@ public class RequestHandler {
         String time = new SimpleDateFormat("MM/dd/yy HH:mm")
                 .format(new Date(request.getTimestamp() * 1000));
 
-        for (String message : Config.info_message) {
+        for (String message : Config.info_passed) {
             User.messagePlayer(admin, message
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
@@ -284,13 +284,13 @@ public class RequestHandler {
         String playerName = request.getPlayerName();
         UUID playerID = request.getPlayerID();
 
-        User.messagePlayer(admin, Config.drop_message
+        User.messagePlayer(admin, Config.drop_passed_notify_handler
                 .replaceAll("<PLAYERNAME>", playerName));
 
         // try to inform the player
         Player player = Bukkit.getPlayer(playerID);
 
-        User.messagePlayer(player, Config.drop_notify_player
+        User.messagePlayer(player, Config.drop_passed_notify_player
                 .replaceAll("<ADMINNAME>", adminName));
 
     }
@@ -302,7 +302,7 @@ public class RequestHandler {
 
         // check admin1 status
         if (!Request.inAtdLst(admin1ID)) {
-            User.messagePlayer(admin1, Config.redirect_failed
+            User.messagePlayer(admin1, Config.transfer_failed
                     .replaceAll("<ADMINNAME>",admin2Name));
             return;
         }
@@ -311,7 +311,7 @@ public class RequestHandler {
         Player admin2 = Bukkit.getPlayer(admin2Name);
 
         if (admin2 == null) {
-            User.messagePlayer(admin1, Config.redirect_failed
+            User.messagePlayer(admin1, Config.transfer_failed
                     .replaceAll("<ADMINNAME>",admin2Name));
             return;
         }
@@ -321,7 +321,7 @@ public class RequestHandler {
 
         // check if admin2 is admin or if admin2 is attending
         if (!Admin.isAdmin(admin2ID) || Request.inAtdLst(admin2ID)) {
-            User.messagePlayer(admin1, Config.redirect_failed
+            User.messagePlayer(admin1, Config.transfer_failed
                     .replaceAll("<ADMINNAME>",admin2Name));
             return;
         }
@@ -339,23 +339,23 @@ public class RequestHandler {
 
         String ticketsRemain = Integer.toString(Request.getPndLstSize());
 
-        User.messagePlayer(admin1, Config.redirect_succeeded
+        User.messagePlayer(admin1, Config.transfer_passed
                 .replaceAll("<ADMINNAME>",admin2Name));
 
-        for (String message : Config.ticket_in_progress_notify_player) {
+        for (String message : Config.attend_passed_notify_player) {
             User.messagePlayer(player, message
                     .replaceAll("<ADMINNAME>", admin2Name));
         }
 
-        for (String message : Config.ticket_in_progress_notify_staff) {
+        for (String message : Config.attend_passed_notify_staff) {
             Admin.messageAdmins(message
                     .replaceAll("<ADMINNAME>", admin2Name)
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<TICKETSREMAIN>", ticketsRemain));
         }
 
-        if (Config.ticket_in_progress_trigger_custom_command) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.ticket_in_progress_custom_command
+        if (Config.attend_passed_trigger_enable) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.attend_passed_trigger_command
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<ADMINNAME>", admin2Name));
         }
@@ -388,10 +388,10 @@ public class RequestHandler {
         Request.addToCptLst(playerID, request);
 
         // Notify admin of a successful operation
-        User.messagePlayer(admin, Config.close_succeeded);
+        User.messagePlayer(admin, Config.close_passed);
 
         // Set review scheduler
-        if (Config.show_reminder) {
+        if (Config.review_reminder_enable) {
             BukkitTask reminder = new Review(plugin, playerID).runReminder();
             Review.addToRmdLst(playerID, reminder);
         } else {
@@ -413,7 +413,7 @@ public class RequestHandler {
 
         // check if a player has a request in the completed list awaiting a rating
         if (!Request.inCptLst(playerID)) {
-            User.messagePlayer(sender, Config.feedback_not_required);
+            User.messagePlayer(sender, Config.review_failed);
             return;
         }
 
@@ -430,7 +430,7 @@ public class RequestHandler {
         plugin.getDataSource().addRecord(completedRequest, isSatisfactory);
 
         // send player a message
-        User.messagePlayer(sender, Config.feedback_received);
+        User.messagePlayer(sender, Config.review_received);
 
         // check if admin is online
         // this must be kept because we did not remove from Awaiting after admin log out
@@ -443,7 +443,7 @@ public class RequestHandler {
         // give admin honor point based on ans
         if (isSatisfactory) {
 
-            User.messagePlayer(admin, Config.upvote_rating_notify_staff
+            User.messagePlayer(admin, Config.review_upvote_notify_handler
                     .replaceAll("<PLAYERNAME>", playerName));
 
             // fireworks
@@ -456,7 +456,7 @@ public class RequestHandler {
 
         } else {
 
-            User.messagePlayer(admin, Config.downvote_rating_notify_staff
+            User.messagePlayer(admin, Config.review_downvote_notify_handler
                     .replaceAll("<PLAYERNAME>", playerName));
 
         }
@@ -478,10 +478,10 @@ public class RequestHandler {
 
         String playerName = player.getName();
 
-        User.messagePlayer(player, Config.feedback_required);
+        User.messagePlayer(player, Config.review_prompt);
 
-        if (Config.feedback_trigger_custom_command) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.feedback_custom_command
+        if (Config.review_prompt_trigger_enable) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.review_prompt_trigger_command
                     .replaceAll("<PLAYERNAME>", playerName));
         }
 
@@ -513,7 +513,7 @@ public class RequestHandler {
                 Review.clearRmdLst();
                 break;
             default:
-                User.messagePlayer(sender, Config.incorrectSyntax);
+                User.messagePlayer(sender, Config.incorrect_syntax);
                 return;
 
         }
@@ -534,7 +534,7 @@ public class RequestHandler {
         UUID playerID;
 
         if (player == null) {
-            User.messagePlayer(sender, Config.delete_failed
+            User.messagePlayer(sender, Config.remove_failed
                     .replaceAll("<PLAYERNAME>", playerName));
             return;
         }
@@ -545,7 +545,7 @@ public class RequestHandler {
         Request.removePlayer(playerID);
         Review.removePlayer(playerID);
 
-        User.messagePlayer(sender, Config.delete_succeeded
+        User.messagePlayer(sender, Config.remove_passed
                 .replaceAll("<PLAYERNAME>", playerName));
 
     }
@@ -566,16 +566,16 @@ public class RequestHandler {
                 return;
             case 1:
                 Request.removeFromPndLst(playerID);
-                User.messagePlayer(sender, Config.cancel_succeeded_notify_player);
+                User.messagePlayer(sender, Config.cancel_passed_notify_player);
                 return;
             case 2:
-                User.messagePlayer(sender, Config.cancel_failed_in_progress);
-                return;
-            case 3:
                 User.messagePlayer(sender, Config.cancel_failed_attending);
                 return;
+            case 3:
+                User.messagePlayer(sender, Config.cancel_failed_restricted);
+                return;
             case 4:
-                User.messagePlayer(sender, Config.cancel_failed_await_feedback);
+                User.messagePlayer(sender, Config.cancel_failed_completing);
 
         }
 
@@ -590,6 +590,15 @@ public class RequestHandler {
 
         UUID playerID = ((Player) sender).getUniqueId();
 
+        if (Admin.isAdmin(playerID)) {
+            if (Request.inAtdLst(playerID)) {
+                User.messagePlayer(sender, Config.status_staff_attending);
+            } else {
+                User.messagePlayer(sender, Config.status_staff_not_attending);
+            }
+            return;
+        }
+
         switch (Request.getStatus(playerID)) {
 
             case 0:
@@ -597,17 +606,14 @@ public class RequestHandler {
                 return;
             case 1:
                 String posInPndLst = Integer.toString(Request.getPosInPndLst(playerID));
-                User.messagePlayer(sender, Config.status_in_queue
+                User.messagePlayer(sender, Config.status_pending
                         .replaceAll("<POSITION>", posInPndLst));
                 return;
             case 2:
-                User.messagePlayer(sender, Config.status_in_progress);
-                return;
-            case 3:
                 User.messagePlayer(sender, Config.status_attending);
                 return;
             case 4:
-                User.messagePlayer(sender, Config.status_await_feedback);
+                User.messagePlayer(sender, Config.status_completing);
 
         }
     }
@@ -655,13 +661,13 @@ public class RequestHandler {
 
         String[][] honors = plugin.getDataSource().getTopHonors(limit);
 
-        for (String message : Config.leaderboard_title) {
+        for (String message : Config.hptop_title) {
             User.messagePlayer(sender, message);
         }
 
         for (int i = 0; i < limit ; i++) {
             if (honors[i][0] != null) {
-                User.messagePlayer(sender, Config.leaderboard_body
+                User.messagePlayer(sender, Config.hptop_body
                         .replaceAll("<ADMINNAME>", honors[i][0])
                         .replaceAll("<UPVOTE>", honors[i][1])
                         .replaceAll("<DOWNVOTE>", honors[i][2])
@@ -670,7 +676,7 @@ public class RequestHandler {
             }
         }
 
-        for (String message : Config.leaderboard_footer) {
+        for (String message : Config.hptop_footer) {
             User.messagePlayer(sender, message);
         }
 
@@ -720,9 +726,9 @@ public class RequestHandler {
         for (int i = 0; i < limit; i++) {
             if (history[i][0] != null) {
                 if (Long.parseLong(history[i][4])==0) {
-                    rating = Config.downvote_indicator;
+                    rating = Config.history_downvote_indicator;
                 } else {
-                    rating = Config.upvote_indicator;
+                    rating = Config.history_upvote_indicator;
                 }
                 User.messagePlayer(sender, Config.history_body
                         .replaceAll("<PLAYERNAME>", history[i][0])
