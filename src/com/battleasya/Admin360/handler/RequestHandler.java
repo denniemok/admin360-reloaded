@@ -65,9 +65,9 @@ public class RequestHandler {
 
         // create request
         Request request = new Request(playerID, playerName, comment);
-        Request.addToPending(request); // add to queue
+        Request.addToPndLst(request); // add to queue
 
-        String positionInPending = Integer.toString(Request.getPendingSize());
+        String positionInPending = Integer.toString(Request.getPndLstSize());
 
         // notify user
         for (String message : Config.create_succeeded_notify_player) {
@@ -104,7 +104,7 @@ public class RequestHandler {
             String playerName = request.getPlayerName();
             String comment = request.getComment();
             String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
-                    .format(new Date(request.getTime() * 1000));
+                    .format(new Date(request.getTimestamp() * 1000));
 
             User.messagePlayer(admin, Config.list_message
                     .replaceAll("<INDEX>", index)
@@ -129,12 +129,12 @@ public class RequestHandler {
         Request request;
 
         // this must go first to avoid problems
-        if (Request.inAttending(adminID)) {
+        if (Request.inAtdLst(adminID)) {
             User.messagePlayer(admin, Config.next_failed_attending);
             return;
         }
 
-        if (Request.isPendingEmpty()) {
+        if (Request.isPndLstEmpty()) {
             User.messagePlayer(admin, Config.next_failed_no_ticket);
             return;
         }
@@ -143,7 +143,7 @@ public class RequestHandler {
         if (playerName == null) {
 
             // removes from head of queue
-            request = Request.getHeadOfPending();
+            request = Request.getHeadOfPndLst();
 
             // player should exist because request exists
             player = Bukkit.getPlayer(request.getPlayerID());
@@ -160,14 +160,14 @@ public class RequestHandler {
             }
 
             // check if request exists
-            request = Request.getRequestPending(player.getUniqueId());
+            request = Request.getPndRequest(player.getUniqueId());
 
             if (request == null) {
                 User.messagePlayer(admin, Config.next_failed_not_exist);
                 return;
             }
 
-            Request.removeFromPending(request);
+            Request.removeFromPndLst(request);
 
         }
 
@@ -178,7 +178,7 @@ public class RequestHandler {
         request.setHandledBy(adminID);
 
         // migrate Request to Attending List
-        Request.addToAttending(adminID, request);
+        Request.addToAtdLst(adminID, request);
 
         // teleport admin to player
         if (Config.use_auto_teleport) {
@@ -191,7 +191,7 @@ public class RequestHandler {
             }
         }
 
-        String ticketsRemain = Integer.toString(Request.getPendingSize());
+        String ticketsRemain = Integer.toString(Request.getPndLstSize());
 
         // notify user
         for (String message : Config.ticket_in_progress_notify_player) {
@@ -222,12 +222,12 @@ public class RequestHandler {
         UUID adminID = ((Player) admin).getUniqueId();
 
         // check if a staff is already handling a player
-        if (!Request.inAttending(adminID)) {
+        if (!Request.inAtdLst(adminID)) {
             User.messagePlayer(admin, Config.teleport_failed);
             return;
         }
 
-        Request request = Request.getRequestAttending(adminID);
+        Request request = Request.getAtdRequest(adminID);
 
         String playerName = request.getPlayerName();
         UUID playerID = request.getPlayerID();
@@ -247,17 +247,17 @@ public class RequestHandler {
 
         UUID adminID = ((Player) admin).getUniqueId();
 
-        if (!Request.inAttending(adminID)) {
+        if (!Request.inAtdLst(adminID)) {
             User.messagePlayer(admin, Config.info_failed);
             return;
         }
 
-        Request request = Request.getRequestAttending(adminID);
+        Request request = Request.getAtdRequest(adminID);
 
         String playerName = request.getPlayerName();
         String comment = request.getComment();
         String time = new SimpleDateFormat("MM/dd/yy HH:mm")
-                .format(new Date(request.getTime() * 1000));
+                .format(new Date(request.getTimestamp() * 1000));
 
         for (String message : Config.info_message) {
             User.messagePlayer(admin, message
@@ -274,12 +274,12 @@ public class RequestHandler {
         String adminName = admin.getName();
         UUID adminID = ((Player) admin).getUniqueId();
 
-        if (!Request.inAttending(adminID)) {
+        if (!Request.inAtdLst(adminID)) {
             User.messagePlayer(admin, Config.drop_failed);
             return;
         }
 
-        Request request = Request.removeFromAttending(adminID);
+        Request request = Request.removeFromAtdLst(adminID);
 
         String playerName = request.getPlayerName();
         UUID playerID = request.getPlayerID();
@@ -301,7 +301,7 @@ public class RequestHandler {
         UUID admin1ID = ((Player) admin1).getUniqueId();
 
         // check admin1 status
-        if (!Request.inAttending(admin1ID)) {
+        if (!Request.inAtdLst(admin1ID)) {
             User.messagePlayer(admin1, Config.redirect_failed
                     .replaceAll("<ADMINNAME>",admin2Name));
             return;
@@ -320,24 +320,24 @@ public class RequestHandler {
         UUID admin2ID = admin2.getUniqueId();
 
         // check if admin2 is admin or if admin2 is attending
-        if (!Admin.isAdmin(admin2ID) || Request.inAttending(admin2ID)) {
+        if (!Admin.isAdmin(admin2ID) || Request.inAtdLst(admin2ID)) {
             User.messagePlayer(admin1, Config.redirect_failed
                     .replaceAll("<ADMINNAME>",admin2Name));
             return;
         }
 
-        Request request = Request.removeFromAttending(admin1ID);
+        Request request = Request.removeFromAtdLst(admin1ID);
 
         request.setHandledBy(admin2Name);
         request.setHandledBy(admin2ID);
 
-        Request.addToAttending(admin2ID, request);
+        Request.addToAtdLst(admin2ID, request);
 
         String playerName = request.getPlayerName();
         UUID playerID = request.getPlayerID();
         Player player = Bukkit.getPlayer(playerID);
 
-        String ticketsRemain = Integer.toString(Request.getPendingSize());
+        String ticketsRemain = Integer.toString(Request.getPndLstSize());
 
         User.messagePlayer(admin1, Config.redirect_succeeded
                 .replaceAll("<ADMINNAME>",admin2Name));
@@ -373,19 +373,19 @@ public class RequestHandler {
         UUID adminID = ((Player) admin).getUniqueId();
 
         // Make sure admin is not attending other requests
-        if (!Request.inAttending(adminID)) {
+        if (!Request.inAtdLst(adminID)) {
             User.messagePlayer(admin, Config.close_failed);
             return;
         }
 
         // Get and remove Request from Attending List
-        Request request = Request.removeFromAttending(adminID);
+        Request request = Request.removeFromAtdLst(adminID);
 
         // Get player uuid
         UUID playerID = request.getPlayerID();
 
         // Add Request to Awaiting List
-        Request.addToAwaiting(playerID, request);
+        Request.addToCptLst(playerID, request);
 
         // Notify admin of a successful operation
         User.messagePlayer(admin, Config.close_succeeded);
@@ -393,7 +393,7 @@ public class RequestHandler {
         // Set review scheduler
         if (Config.show_reminder) {
             BukkitTask reminder = new Review(plugin, playerID).runReminder();
-            Review.add2Reminder(playerID, reminder);
+            Review.addToRmdLst(playerID, reminder);
         } else {
             promptFeedback(playerID);
         }
@@ -412,13 +412,13 @@ public class RequestHandler {
         UUID playerID = ((Player) sender).getUniqueId();
 
         // check if a player has a request in the completed list awaiting a rating
-        if (!Request.inAwaiting(playerID)) {
+        if (!Request.inCptLst(playerID)) {
             User.messagePlayer(sender, Config.feedback_not_required);
             return;
         }
 
         // remove request from completed request list
-        Request completedRequest = Request.removeFromAwaiting(playerID);
+        Request completedRequest = Request.removeFromCptLst(playerID);
 
         // stop the reminders
         Review.removePlayer(playerID);
@@ -499,17 +499,17 @@ public class RequestHandler {
         switch (option.toLowerCase()) {
 
             case "pending":
-                amountPurged = Integer.toString(Request.getPendingSize());
-                Request.clearPendingList();
+                amountPurged = Integer.toString(Request.getPndLstSize());
+                Request.clearPndLst();
                 break;
             case "attending":
-                amountPurged = Integer.toString(Request.getAttendingSize());
-                Request.clearAttendingList();
+                amountPurged = Integer.toString(Request.getAtdLstSize());
+                Request.clearAtdLst();
                 break;
-            case "awaiting":
-                amountPurged = Integer.toString(Request.getAwaitingSize());
-                Request.clearAwaitingList();
-                Review.clearReminderList();
+            case "completing":
+                amountPurged = Integer.toString(Request.getCptLstSize());
+                Request.clearCptLst();
+                Review.clearRmdLst();
                 break;
             default:
                 User.messagePlayer(sender, Config.incorrectSyntax);
@@ -523,6 +523,7 @@ public class RequestHandler {
         }
 
     }
+
 
     public void removeTicket(CommandSender sender, String playerName) {
 
@@ -556,15 +557,13 @@ public class RequestHandler {
 
         UUID playerID = ((Player) sender).getUniqueId();
 
-        int requestStatus = Request.getStatus(playerID);
-
-        switch (requestStatus) {
+        switch (Request.getStatus(playerID)) {
 
             case 0:
                 User.messagePlayer(sender, Config.cancel_failed_no_ticket);
                 return;
             case 1:
-                Request.removeFromPending(playerID);
+                Request.removeFromPndLst(playerID);
                 User.messagePlayer(sender, Config.cancel_succeeded_notify_player);
                 return;
             case 2:
@@ -589,17 +588,15 @@ public class RequestHandler {
 
         UUID playerID = ((Player) sender).getUniqueId();
 
-        int requestStatus = Request.getStatus(playerID);
-
-        switch (requestStatus) {
+        switch (Request.getStatus(playerID)) {
 
             case 0:
                 User.messagePlayer(sender, Config.status_no_ticket);
                 return;
             case 1:
-                int position = Request.getPositionInPending(playerID);
+                String posInPndLst = Integer.toString(Request.getPosInPndLst(playerID));
                 User.messagePlayer(sender, Config.status_in_queue
-                        .replaceAll("<POSITION>", Integer.toString(position)));
+                        .replaceAll("<POSITION>", posInPndLst));
                 return;
             case 2:
                 User.messagePlayer(sender, Config.status_in_progress);
@@ -621,9 +618,9 @@ public class RequestHandler {
 
     public void printTicketStats(CommandSender sender) {
 
-        String pending = Integer.toString(Request.getPendingSize());
-        String attending = Integer.toString(Request.getAttendingSize());
-        String awaiting = Integer.toString(Request.getAwaitingSize());
+        String pending = Integer.toString(Request.getPndLstSize());
+        String attending = Integer.toString(Request.getAtdLstSize());
+        String awaiting = Integer.toString(Request.getCptLstSize());
         String completed = Integer.toString(Request.getCompletedToday());
 
         int total = plugin.getDataSource().getTotalTicketCount(1);

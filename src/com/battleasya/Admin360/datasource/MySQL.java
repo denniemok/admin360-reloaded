@@ -103,7 +103,7 @@ public class MySQL implements DataSource {
 					+ "VALUES (?, ?, ?, ?, ?)");
 			pst.setString(1, request.getPlayerName());
 			pst.setString(2, request.getHandledByName());
-			pst.setLong(3, request.getTime());
+			pst.setLong(3, request.getTimestamp());
 			if (upvote) {
 				pst.setLong(4, System.currentTimeMillis()/1000);
 			} else {

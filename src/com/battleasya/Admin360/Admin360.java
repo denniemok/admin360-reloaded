@@ -66,7 +66,7 @@ public class Admin360 extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
 
         /* Load Admin in list (useful on reloads) */
-        Admin.refreshList();
+        Admin.refreshAdmLst();
 
         /* register bstats */
         new Metrics(this, 19710);

@@ -34,10 +34,10 @@ public class JoinLeaveEvent implements Listener {
         Request.removeAdmin(playerID);
         Admin.removeAdmin(playerID);
 
+        Review.removePlayer(playerID);
+
         Request.removePlayer(playerID);
         // User.removePlayer(playerID);
-
-        Review.removePlayer(playerID);
 
     }
 

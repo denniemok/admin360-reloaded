@@ -20,10 +20,7 @@ public class Admin {
 
             Player admin = Bukkit.getPlayer(adminID);
 
-            if (admin == null) {
-                Request.removeAdmin(adminID);
-                Admin.removeAdmin(adminID);
-            } else {
+            if (admin != null) {
                 User.messagePlayer(admin, message);
             }
 
@@ -31,7 +28,7 @@ public class Admin {
     }
 
     /* Refresh all the admins in the list */
-    public static void refreshList() {
+    public static void refreshAdmLst() {
         Collection<? extends Player> playerList = Bukkit.getOnlinePlayers();
         for (Player player : playerList) {
             if (User.hasPermission(player, Permission.ATTEND_TICKET, false)) {

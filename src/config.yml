@@ -93,7 +93,7 @@ help:
   - '&fRemoval'
   - '&6/ticket purge [stage] &f- &7Purge all tickets in a stage.'
   - '&6/ticket remove <name> &f- &7Remove from all stages.'
-  - "[stage]: pending, attending, awaiting"
+  - "[stage]: pending, attending, completing"
   - '&fHonors'
   - '&6/ticket hpstats [name] &f- &7View HP stats.'
   - '&6/ticket hptop [#] &f- &7View HP leaderboard.'
