@@ -66,14 +66,14 @@ public class RequestHandler {
 
         // create request
         Request request = new Request(playerID, playerName, comment);
-        Request.addToPndLst(request); // add to queue
+        Request.addToPndLst(request); // add to end of queue
 
-        String positionInPending = Integer.toString(Request.getPndLstSize());
+        String posInPndLst = Integer.toString(Request.getPndLstSize());
 
         // notify user
         for (String message : Config.create_passed_notify_player) {
             User.messagePlayer(sender, message
-                    .replaceAll("<POSITION>", positionInPending)
+                    .replaceAll("<POSITION>", posInPndLst)
                     .replaceAll("<DETAILS>", comment));
         }
 
@@ -82,7 +82,7 @@ public class RequestHandler {
             Admin.messageAdmins(message
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<AMOUNT>", positionInPending));
+                    .replaceAll("<AMOUNT>", posInPndLst));
         }
 
         // trigger custom commands
@@ -90,7 +90,7 @@ public class RequestHandler {
             for (String command : Config.create_passed_trigger_command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
                         .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<POSITION>", positionInPending)
+                        .replaceAll("<POSITION>", posInPndLst)
                         .replaceAll("<DETAILS>", comment));
             }
         }
@@ -237,7 +237,7 @@ public class RequestHandler {
     }
 
 
-    public void teleport2Player(CommandSender admin) {
+    public void teleportToPlayer(CommandSender admin) {
 
         UUID adminID = ((Player) admin).getUniqueId();
 
@@ -303,15 +303,15 @@ public class RequestHandler {
 
         String playerName = request.getPlayerName();
         UUID playerID = request.getPlayerID();
+        Player player = Bukkit.getPlayer(playerID);
 
         User.messagePlayer(admin, Config.drop_passed_notify_handler
                 .replaceAll("<PLAYERNAME>", playerName));
 
-        // try to inform the player
-        Player player = Bukkit.getPlayer(playerID);
-
-        User.messagePlayer(player, Config.drop_passed_notify_player
-                .replaceAll("<ADMINNAME>", adminName));
+        for (String message : Config.drop_passed_notify_player) {
+            User.messagePlayer(player, message
+                    .replaceAll("<ADMINNAME>", adminName));
+        }
 
     }
 
@@ -474,7 +474,7 @@ public class RequestHandler {
         }
 
         // check if admin is online
-        // this must be kept because we did not remove from Awaiting after admin log out
+        // this must be kept because we did not remove from Completing List after admin log out
         Player admin = Bukkit.getPlayer(adminID);
 
         if (admin == null) {
@@ -692,8 +692,8 @@ public class RequestHandler {
         String completing = Integer.toString(Request.getCptLstSize());
         String completed = Integer.toString(Request.getCompletedToday());
 
-        String totalS = Integer.toString(total);
-        String upVotePercentS = Integer.toString(upvotePercent);
+        String total2S = Integer.toString(total);
+        String upVotePercent2S = Integer.toString(upvotePercent);
 
         for (String message : Config.stats_message) {
             User.messagePlayer(sender, message
@@ -701,8 +701,8 @@ public class RequestHandler {
                     .replaceAll("<ATTENDING>", attending)
                     .replaceAll("<COMPLETING>", completing)
                     .replaceAll("<COMPLETED>", completed)
-                    .replaceAll("<TOTAL>", totalS)
-                    .replaceAll("<UPVOTE_PERCENT>", upVotePercentS));
+                    .replaceAll("<TOTAL>", total2S)
+                    .replaceAll("<UPVOTE_PERCENT>", upVotePercent2S));
         }
 
             }
@@ -715,8 +715,10 @@ public class RequestHandler {
 
 
     public void resetHonor(CommandSender sender, String target) {
+
         (new BukkitRunnable() {
             public void run() {
+
         if (plugin.getDataSource().resetAdminsHonor(target)) {
             User.messagePlayer(sender, Config.hpreset_passed
                     .replaceAll("<ADMINNAME>", target));
@@ -724,8 +726,10 @@ public class RequestHandler {
             User.messagePlayer(sender, Config.hpreset_failed
                     .replaceAll("<ADMINNAME>", target));
         }
+
             }
         }).runTaskAsynchronously(plugin);
+
     }
 
 
@@ -747,7 +751,8 @@ public class RequestHandler {
         for (int i = 0; i < limit; i++) {
 
             if (honors[i][0] == null) {
-                continue;
+                // continue;
+                break;
             }
 
             User.messagePlayer(sender, Config.hptop_body
@@ -792,17 +797,17 @@ public class RequestHandler {
             upvotePercent = (upvote * 100 / total);
         }
 
-        String upvoteS = Integer.toString(upvote);
-        String downvoteS = Integer.toString(downvote);
-        String totalS = Integer.toString(total);
-        String upvotePercentS = Integer.toString(upvotePercent);
+        String upvote2S = Integer.toString(upvote);
+        String downvote2S = Integer.toString(downvote);
+        String total2S = Integer.toString(total);
+        String upvotePercent2S = Integer.toString(upvotePercent);
 
         for (String message : Config.hpstats_message) {
             User.messagePlayer(sender, message
-                    .replaceAll("<UPVOTE>", upvoteS)
-                    .replaceAll("<DOWNVOTE>", downvoteS)
-                    .replaceAll("<TOTAL>", totalS)
-                    .replaceAll("<UPVOTE_PERCENT>", upvotePercentS)
+                    .replaceAll("<UPVOTE>", upvote2S)
+                    .replaceAll("<DOWNVOTE>", downvote2S)
+                    .replaceAll("<TOTAL>", total2S)
+                    .replaceAll("<UPVOTE_PERCENT>", upvotePercent2S)
                     .replaceAll("<ADMINNAME>", adminName));
         }
 
@@ -835,7 +840,8 @@ public class RequestHandler {
         for (int i = 0; i < limit; i++) {
 
             if (history[i][0] == null) {
-                continue;
+                // continue;
+                break;
             }
 
             if (Long.parseLong(history[i][4]) == 0) {

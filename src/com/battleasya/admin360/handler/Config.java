@@ -75,7 +75,7 @@ public class Config {
     public static String transfer_passed;
     public static String drop_failed;
     public static String drop_passed_notify_handler;
-    public static String drop_passed_notify_player;
+    public static List<String> drop_passed_notify_player;
     public static String close_failed;
     public static String close_passed;
     public static boolean review_reminder_enable;
@@ -223,7 +223,7 @@ public class Config {
 
         drop_failed = config.getString("drop.failed.message");
         drop_passed_notify_handler = config.getString("drop.passed.message.notify-handler");
-        drop_passed_notify_player = config.getString("drop.passed.message.notify-player");
+        drop_passed_notify_player = config.getStringList("drop.passed.message.notify-player");
 
         close_failed = config.getString("close.failed.message");
         close_passed = config.getString("close.passed.message");

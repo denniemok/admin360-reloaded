@@ -91,7 +91,7 @@ public class A3 implements CommandExecutor {
 
                 case "tp":
                     if (User.hasPermission(sender, Permission.TELEPORT, true)) {
-                        plugin.getRequestHandler().teleport2Player(sender);
+                        plugin.getRequestHandler().teleportToPlayer(sender);
                     }
                     return true;
 

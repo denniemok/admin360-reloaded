@@ -382,7 +382,12 @@ drop:
   passed:
     message:
       notify-handler: "&f[&6ADMIN360&f] &7You have dropped &6<PLAYERNAME>&7's ticket."
-      notify-player: "&f[&6ADMIN360&f] &7Your ticket has been dropped by &6<ADMINNAME>&7."
+      notify-player:
+        - ""
+        - "&f[&6ADMIN360&f] &7Your ticket has been&c dropped&7 by &6<ADMINNAME>&7."
+        - "&f[&6ADMIN360&f] &7Make sure your request complies with our rules."
+        - "&f[&6ADMIN360&f] &7We look forward to serving you again."
+        - ""
 
 
 
