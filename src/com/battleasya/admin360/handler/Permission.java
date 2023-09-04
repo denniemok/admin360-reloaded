@@ -1,6 +1,7 @@
 package com.battleasya.admin360.handler;
 
 public enum Permission {
+
     CREATE_TICKET("admin360.player.basic"),
     VIEW_STATUS("admin360.player.status"),
     VIEW_STATS("admin360.player.stats"),

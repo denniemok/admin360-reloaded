@@ -39,11 +39,11 @@ public class Admin360 extends JavaPlugin {
         /* Fetch Config */
         getConfiguration().fetchConfig();
 
-        /* Initialise Command Executor */
+        /* Register Commands */
         getCommand("admin360").setExecutor(new B3(this));
         getCommand("ticket").setExecutor(new A3(this));
 
-        /* Initialise Listeners */
+        /* Register Listeners */
         getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
 
         /* Initialise RequestHandler */
@@ -63,9 +63,6 @@ public class Admin360 extends JavaPlugin {
         /* Setup Database */
         getDataSource().setUp();
 
-        /* Load Admin in list (useful on reloads) */
-        Admin.refreshAdmLst();
-
         /* register bstats */
         new Metrics(this, 19710);
         getLogger().info("Starting Metrics. Opt-out using the global bStats config.");
@@ -76,12 +73,15 @@ public class Admin360 extends JavaPlugin {
         } catch (Exception e) {
             version = 8;
         }
+
+        /* Load Admin in list (useful on reloads) */
+        Admin.refreshAdmLst();
         
     }
 
     @Override
     public void onDisable() {
-        ds.disconnect();
+        getDataSource().disconnect();
     }
 
     public RequestHandler getRequestHandler() {

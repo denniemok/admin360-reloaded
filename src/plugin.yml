@@ -4,7 +4,7 @@ version: 9.1.0
 api-version: 1.14
 authors: [Dennie, Vidhu]
 website: https://www.spigotmc.org/resources/28285/
-description: An advanced /helpop tool.
+description: An extended version of /helpop.
 commands:
   ticket:
     description: Admin360 Command
