@@ -559,6 +559,14 @@ public class RequestHandler {
                 Request.clearCptLst();
                 Review.clearRmdLst();
                 break;
+            case "all":
+                amountPurged = Integer.toString(Request.getPndLstSize()
+                        + Request.getAtdLstSize() + Request.getCptLstSize());
+                Request.clearPndLst();
+                Request.clearAtdLst();
+                Request.clearCptLst();
+                Review.clearRmdLst();
+                break;
             default:
                 User.messagePlayer(sender, Config.incorrect_syntax);
                 return;
