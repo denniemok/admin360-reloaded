@@ -512,8 +512,8 @@ review:
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket purge [type]: Purge all tickets in a stage.
-# Possible type: pending, attending, completing, all
+# /ticket purge [stage]: Purge all tickets in a stage.
+# Possible stages: pending, attending, completing, all
 # Requires permission "admin360.staff.purge".
 
 # /ticket remove <name>: Forcibly remove a target from all stages.
