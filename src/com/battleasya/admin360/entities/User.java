@@ -72,7 +72,7 @@ public class User {
             public void run() {
                 cooldownList.remove(playerID);
             }
-        }).runTaskLaterAsynchronously(plugin, 20L * duration);
+        }).runTaskLater(plugin, 20L * duration);
 
         return -1; // not in cooldown
 

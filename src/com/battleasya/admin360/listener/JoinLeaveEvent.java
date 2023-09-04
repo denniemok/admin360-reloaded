@@ -32,12 +32,12 @@ public class JoinLeaveEvent implements Listener {
         UUID playerID = event.getPlayer().getUniqueId();
 
         Request.removeAdmin(playerID);
+
         Admin.removeAdmin(playerID);
 
         Review.removePlayer(playerID);
 
         Request.removePlayer(playerID);
-        // User.removePlayer(playerID);
 
     }
 
