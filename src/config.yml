@@ -79,15 +79,15 @@ help:
       - "&7&m------------&r &6ADMIN360 &7&m------------"
       - "&fStep 1"
       - "&6/ticket list &f- &7View the ticket list."
-      - "&6/ticket select <name> &f- &7Select a ticket."
       - "&6/ticket next &f- &7Proceed to the next ticket."
+      - "&6/ticket select <name> &f- &7Select a ticket."
       - "&fStep 2"
       - "&6/ticket tp &f- &7Teleport to requester."
       - "&6/ticket info &f- &7View the ticket details."
       - "&fStep 3"
-      - "&6/ticket transfer <name> &f- &7Transfer the ticket."
       - "&6/ticket drop &f- &7Drop the ticket."
       - "&6/ticket close &f- &7Done-mark the ticket."
+      - "&6/ticket transfer <name> &f- &7Transfer the ticket."
       - "&fRemoval"
       - "&6/ticket remove <name> &f- &7Remove target from all stages."
       - "&6/ticket purge [stage] &f- &7Remove all tickets in a stage."
@@ -634,7 +634,6 @@ history:
 
 # End of file. You're done with the configuration. Congratulations!
 
-# We welcome users to provide feedback.
-# Project : https://www.spigotmc.org/resources/28285/
-# Support : https://github.com/denniemok/Admin360-Reloaded/issues
-# Authors : Dennie, Vidhu
+# Spigot : https://www.spigotmc.org/resources/28285/
+# Github : https://github.com/denniemok/Admin360-Reloaded/issues
+# Author : Dennie, Vidhu
