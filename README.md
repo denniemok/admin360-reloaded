@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Version-9.1.0-green"> <img src="https://img.shields.io/badge/Spigot-1.7+-lightgrey"> <img src="https://img.shields.io/badge/License-MIT-blue"> <img src="https://img.shields.io/badge/Language-Java-yellow">
+    <img src="https://img.shields.io/badge/Version-9.1.0-green"> <img src="https://img.shields.io/badge/Spigot-1.8+-lightgrey"> <img src="https://img.shields.io/badge/License-MIT-blue"> <img src="https://img.shields.io/badge/Language-Java-yellow">
 </p>
 <br>
 
@@ -43,7 +43,7 @@ Have you ever been in a situation where many players need help, but there are on
 ### Build Dependencies
 
 - Java 8
-- Spigot-API 1.10.1 R0.1 <br>
+- Spigot-API 1.20.1 R0.1 <br>
 
 <hr>
 
