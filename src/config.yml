@@ -1,186 +1,199 @@
 ############################################################
 # +------------------------------------------------------+ #
-# |                       Notes                          | #
+# |                        Notes                         | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# Version 8.1.2
-# Tested on Spigot 1.8.8, 1.12.2, 1.16.5
+# Admin360 auto-renames any old config file into "config_old.yml" on server restart.
+# You should delete "config_old.yml" after use to avoid breaking auto-renaming on future updates.
 
-# Config version = Plugin version.
+# Comments in this file can be a bit lengthy because we try hard to explain everything to you.
+# If you do spend time reading through all the messages, I assure you a good understanding of how Admin360 works.
+
+# This plugin supports HEX codes on 1.16+ servers.
+# Example: "#e69296This is a #c8a2c8test #e69296message."
+
+# All messages, by default, contain all the built-in placeholders made available to that particular message.
+# You can safely remove or duplicate these placeholders in a message.
+
+# Admin360 recognises players with permission "admin360.staff.basic" as staff on server join.
+# If a player is granted the above permission while they're online, they should re-join the server.
+
+# <PENDING> <ATTENDING> <COMPLETING> <COMPLETED> are the 4 major stages Admin360 used to administer Requests.
+# The first 3 stages are managed completely in Memory, while completed requests will be saved to the database.
+
+# <PENDING> is a Queue holding all pending Requests that awaits processing.
+# <ATTENDING> is a List holding all attending Requests that are currently in progress.
+# <COMPLETING> is a List holding all closed Requests that awaits user review.
+# <COMPLETED> does not exist in Memory, but all entries in the database can be referred to this stage.
+
+# What Admin360 does is to manage the transition between these stages.
+# Incomplete requests will be voided on server restart.
+
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        General                       | #
+# +------------------------------------------------------+ #
+############################################################
+
 # Do not change this unless you know what you're doing.
-# This is for the plugin to check whether we should generate a new config for you.
-version: '8.1.2'
+# Admin360 uses this to check whether we should recreate a new config for you.
+version: "9.1.0"
 
-# Whenever there's an update available, read the upgrade procedures as instructed on our spigot project page.
-# If there are any changes made to this config, for example, if we've added several new settings or messages,
-# you may have to compare the changes of the new and old config. And, it takes time to apply your old settings
-# especially when the update is big.
+general:
+  message:
+    no-permission: "&f[&6ADMIN360&f] &c&nAccess Denied&7 You do not have permission to use this command."
+    incorrect-syntax: "&f[&6ADMIN360&f] &c&nIncorrect Syntax&7 Use &6/admin360 &7to display a list of commands."
+    reload-config: "&f[&6ADMIN360&f] &7The config file has been reloaded successfully."
 
-# Since version 7.1.0, the plugin will auto-rename the old config file into "config_old.yml" on server restart.
-# This is to make sure that everything works even if we reworked the config file (which is something I always do).
-# But remember to delete the "config_old.yml" after you've migrated all the changes.
-# If not, it may break this auto-rename feature on future updates.
+# You MUST restart your server to apply any changes in this section.
+# Admin360 will use SQLite if mysql is set to false.
+# The other options will only be valid if mysql is true.
+datasource:
+  mysql: false
+  host: "localhost"
+  port: "3306"
+  database: "database"
+  username: "user"
+  password: "password"
+  options: "?autoReconnect=true&verifyServerCertificate=false&useSSL=false"
 
-# As you can see, the comments can be lengthy because we want to explain everything to you.
-# If you do spend time reading through this, then you will know how the plugin works.
-# If you want to disable some messages, simply make it an empty line using ''.
-# All default messages contain all the placeholders that can be used. You can remove it or duplicate it.
-# However, placeholders will only work in that particular message.
-
-# We welcome users who want to share their version of translation to everyone else.
-# Contact us so that we can make your translation official.
-# Project : https://www.spigotmc.org/resources/admin360-reloaded.28285/
-# Support : https://github.com/denniemok/Admin360-Reloaded/issues
-# Authors : Vidhu, Dennie
-
-
-
-############################################################
-# +------------------------------------------------------+ #
-# |      Basic (perms, syntax, help, reload, database)   | #
-# +------------------------------------------------------+ #
-############################################################
-
-no-permission: '&f[&6ADMIN360&f] &c&nAccess Denied&7 You do not have permission to use this command.'
-incorrect-syntax: '&f[&6ADMIN360&f] &c&nIncorrect Syntax&7 Use &6/admin360 &7to display a list of commands.'
-is-player-check: '&f[&6ADMIN360&f] &c&nAccess Denied&7 This is a player-only command.'
-reload-message: '&f[&6ADMIN360&f] &7The config file has been reloaded successfully.'
-
-# Database
-# You MUST restart your server if you've changed the database settings and if you want the changes to apply.
-# Admin360 will use SQLite if use-mysql is set to false.
-# Drivers that we use: SQLite (org.sqlite.jdbc) and MYSQL (com.mysql.jdbc)
-# Your hosting provider should have these installed by default. If you're running your server on Windows, SQLite is preferred.
-# The other options such as host, port, database, username and password will only be valid if use-mysql is true.
-use-mysql: false
-host: 'localhost'
-port: '3306'
-database: 'database'
-username: 'user'
-password: 'password'
-
-# Help Section: Player Commands
-# This message supports multiple lines.
-command-list-player:
-  - ''
-  - '&7&m------------&r &6ADMIN360 &7&m------------'
-  - '&6/ticket create [details] &f- &7Open a ticket.'
-  - '&6/ticket cancel &f- &7Cancel your ticket.'
-  - '&6/ticket status &f- &7Query ticket status.'
-  - '&6/ticket stats &f- &7View ticket statistics.'
-  - '&6/ticket help &f- &7Print command list.'
-  - '&b/admin360 &f- &7Display plugin info.'
-  - '&7*&fParameters: [Optional] <Compulsory>'
-  - '&7&m---------------------------------'
-  - ''
-
-# Help Section: Staff Commands
-# This message supports multiple lines.
-command-list-staff:
-  - ''
-  - '&7&m------------&r &6ADMIN360 &7&m------------'
-  - '&fStep 1'
-  - '&6/ticket list &f- &7View the ticket list.'
-  - '&6/ticket pick <name> &f- &7Pick up a ticket.'
-  - '&6/ticket next &f- &7Proceed to the next ticket.'
-  - '&fStep 2'
-  - '&6/ticket tp &f- &7Teleport to the player.'
-  - '&6/ticket info &f- &7View the ticket details.'
-  - '&fStep 3'
-  - '&6/ticket redirect <name> &f- &7Redirect a ticket.'
-  - '&6/ticket drop &f- &7Drop and abandon a ticket.'
-  - '&6/ticket close &f- &7Done-mark a ticket.'
-  - '&fRemoval'
-  - '&6/ticket purge &f- &7Purge all queuing tickets.'
-  - '&6/ticket delete <name> &f- &7Delete a ticket.'
-  - '&fHonors'
-  - '&6/ticket hpstats [name] &f- &7View HP stats.'
-  - '&6/ticket hptop [#] &f- &7View HP leaderboard.'
-  - '&6/ticket history [#] &f- &7View HP history.'
-  - '&6/ticket hpreset <name> &f- &7Reset HP stats.'
-  - '&b/admin360 reload &f- &7Reload the config file.'
-  - '&7*&fParameters: [Optional] <Compulsory>'
-  - '&7&m---------------------------------'
-  - ''
+help:
+  message:
+    player-commands:
+      - ""
+      - "&7&m------------&r &6ADMIN360 &7&m------------"
+      - "&6/ticket create [details] &f- &7Open a ticket."
+      - "&6/ticket cancel &f- &7Cancel your ticket."
+      - "&6/ticket status &f- &7Query ticket status."
+      - "&6/ticket stats &f- &7View overall statistics."
+      - "&6/ticket help &f- &7Display command list."
+      - "&b/admin360 &f- &7Display plugin info."
+      - "&7*&fParameters: [Optional] <Compulsory>"
+      - "&7&m---------------------------------"
+      - ""
+    staff-commands:
+      - ""
+      - "&7&m------------&r &6ADMIN360 &7&m------------"
+      - "&fStep 1"
+      - "&6/ticket list &f- &7View the ticket list."
+      - "&6/ticket next &f- &7Proceed to the next ticket."
+      - "&6/ticket select <name> &f- &7Select a ticket."
+      - "&fStep 2"
+      - "&6/ticket tp &f- &7Teleport to requester."
+      - "&6/ticket info &f- &7View the ticket details."
+      - "&fStep 3"
+      - "&6/ticket drop &f- &7Drop the ticket."
+      - "&6/ticket close &f- &7Done-mark the ticket."
+      - "&6/ticket transfer <name> &f- &7Transfer the ticket."
+      - "&fRemoval"
+      - "&6/ticket remove <name> &f- &7Remove target from all stages."
+      - "&6/ticket purge [stage] &f- &7Remove all tickets in a stage."
+      - "&7[stage]: pending (default), attending, completing, all"
+      - "&fHonors"
+      - "&6/ticket hpstats [name] &f- &7View HP stats."
+      - "&6/ticket hptop [line] &f- &7View HP leaderboard."
+      - "&6/ticket history [line] &f- &7View HP history."
+      - "&6/ticket hpreset <name> &f- &7Reset HP stats."
+      - "&b/admin360 reload &f- &7Reload the config file."
+      - "&7*&fParameters: [Optional] <Compulsory>"
+      - "&7&m---------------------------------"
+      - ""
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                Create A Ticket (Player)              | #
+# |                   Ticket Creation                    | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket create [details] : Open a ticket with or without a description of the request.
-# This is a player command which requires the permission "admin360.player.basic".
+# /ticket create [details] : Open a request with or without a description.
+# Requires the permission "admin360.player.basic".
 
-# create-failed-no-staff : Creation aborted because there are no staff online.
-# create-failed-in-queue : Creation aborted because you already have a ticket opened.
-# create-failed-in-progress : Creation aborted because a staff is attending your help-request.
-# create-failed-require-feedback : Creation aborted because you still haven't given us feedback.
-# create-failed-anti-exploit : Creation aborted because you are a staff member. Staff is banned from ticket creation to prevent boosting.
-# *boosting: self-ticketing exploit.
-# create-succeeded : Creation succeeded. Your ticket has been put in the next position of the queue.
+create:
 
-# After a ticket is opened, your staff (with permission "admin360.staff.basic") will be notified.
+  # Here's a cooldown feature to avoid creation spamming
+  # Cooldown persists even after the target logs out.
+  cooldown:
+    enable: true
+    interval: 60 # in seconds
+    message: "&f[&6ADMIN360&f] &7Please wait for &6<SECONDS>s&7 before opening another ticket."
 
-# We impose a command cool-down to avoid spamming issues.
-# The unit of cooldown-timer is expressed in seconds.
-use-cooldown: true
-cooldown-timer: 60
-cooldown-message: '&f[&6ADMIN360&f] &7Please wait for &6<SECONDSLEFT>s&7 before opening another ticket.'
+  # If this is set to true ...
+  # Players will not be allowed to create tickets when there are no staff on the server.
+  require-staff: false
 
-# Check if any staff members are currently available.
-# If this is set to true, players will not be allowed to open a new ticket if there is no staff in the server.
-# How do we determine between a player and a staff? Staff are those who have the permission "admin360.staff.basic".
-staff-online-required: true
-create-failed-no-staff: '&f[&6ADMIN360&f] &c&nCreate Failed&7 There are no staff currently available.'
+  # Create aborted because ...
+  # no-staff : There are no staff available atm.
+  # pending : You have a pending request in queue atm.
+  # attending : Staff is attending to your request atm.
+  # completing : You have a completing request atm that awaits your review.
+  # restricted : You are a staff, and you are blocked from using this feature to avoid self-boosting.
+  failed:
+    message:
+      no-staff: "&f[&6ADMIN360&f] &c&nCreate Failed&7 We cannot handle your request at the moment."
+      pending: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a pending ticket in queue. (&fTips: &6/ticket status&7)"
+      attending: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have an attending ticket in progress.(&fTips: &6/ticket status&7)"
+      completing: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a ticket that await your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
+      restricted: "&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for this user group."
 
-create-failed-in-queue: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a ticket opened. (&fTips: &6/ticket status&7)'
-create-failed-in-progress: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You have another ticket in progress.(&fTips: &6/ticket status&7)'
-create-failed-require-feedback: '&f[&6ADMIN360&f] &c&nCreate Failed&7 You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
-create-failed-anti-exploit: '&f[&6ADMIN360&f] &c&nCreate Failed&7 Members of the staff team are not allowed to open a ticket to avoid exploits.'
-
-# This message supports multiple lines.
-create-succeeded:
-  - '&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7). Use &6/ticket status &7to check your progress.'
-# Do you want to run a custom command right after a ticket is opened? Default example using title-manager.
-# Change this to true if you want to use this option.
-ticket-created-trigger-custom-command: false
-ticket-created-custom-command: 'tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)'
-
-# Notify your staff when there is a ticket created.
-# This message supports multiple lines.
-ticket-created-notify-staff:
-  - ''
-  - '&f[&6ADMIN360&f] &6<PLAYERNAME> &copened a &a&lNEW &cticket.'
-  - '&f[&6ADMIN360&f] &cDetails: &f<DETAILS>'
-  - '&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)'
-  - ''
+  # Create succeeded means ...
+  # Request is added to Pending Queue and is put at the end of queue.
+  passed:
+    message:
+      notify-player:
+        - ""
+        - "&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7)."
+        - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
+        - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to query the progress."
+        - ""
+      # This will notify all online staff with permission "admin360.staff.basic".
+      notify-staff:
+        - ""
+        - "&f[&6ADMIN360&f] &6<PLAYERNAME>&7 opened a ticket."
+        - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
+        - "&f[&6ADMIN360&f] &e<AMOUNT>&f ticket(s) remaining"
+        - ""
+    # Run console commands on ticket creation. Default example using Title-Manager.
+    # <DETAILS> is also available as a placeholder.
+    trigger:
+      enable: false
+      command:
+        - "tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)"
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                Cancel A Ticket (Player)              | #
+# |                 Ticket Cancellation                  | #
 # +------------------------------------------------------+ #
 ############################################################
 
 # /ticket cancel: Cancel your submitted request.
-# This is a player command which requires the permission "admin360.player.basic".
+# Requires the permission "admin360.player.basic".
 
-# cancel-failed-no-ticket : You didn't open any request. There are no request for you to cancel.
-# cancel-failed-in-progress : You can't cancel your request because a staff is now attending it.
-# cancel-failed-attending : You are a staff, and you are processing a ticket. You cannot cancel any tickets.
-# cancel-failed-require-feedback : You cannot cancel your request because you still haven't given us feedback.
-# cancel-succeeded : You have cancelled your submitted request successfully.
+cancel:
 
-cancel-failed-no-ticket: '&f[&6ADMIN360&f] &c&nCancel Failed&7 Do you need help? (&fTips: &6/ticket create [details]&7)'
-cancel-failed-in-progress: '&f[&6ADMIN360&f] &c&nCancel Failed&7 A staff is attending your help-request. (&fTips: &6/ticket status&7)'
-cancel-failed-attending: '&f[&6ADMIN360&f] &c&nCancel Failed&7 Members of the staff team do not need this function.'
-cancel-failed-require-feedback: '&f[&6ADMIN360&f] &c&nCancel Failed&7 You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
-cancel-succeeded: '&f[&6ADMIN360&f] &7You have removed your ticket from the queue successfully.'
+  # Cancel aborted because ...
+  # no-ticket : You don't have any pending request, nothing to cancel tbh.
+  # attending : Staff is attending to your request, pretty self-explanatory.
+  # completing : You have a completing request that awaits your review.
+  # restricted : You are a staff. You can't create a ticket, how can you cancel one?
+  failed:
+    message:
+      no-ticket: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You don't have any pending requests. (&fTips: &6/ticket create [details]&7)"
+      attending: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You cannot cancel an attending request. (&fTips: &6/ticket status&7)"
+      completing: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You have a ticket that await your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
+      restricted: "&f[&6ADMIN360&f] &c&nCancel Failed&7 This feature has been disabled for this user group."
+
+  # Cancel succeeded means ...
+  # You have successfully cancelled your submitted request.
+  # Request is removed from Pending Queue.
+  passed:
+    message: "&f[&6ADMIN360&f] &7You have successfully cancelled your request."
 
 
 
@@ -190,332 +203,437 @@ cancel-succeeded: '&f[&6ADMIN360&f] &7You have removed your ticket from the queu
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket status: Query the current status of your ticket.
-# This is a player command which requires the permission "admin360.player.status".
+# /ticket status: Query your ticket status.
+# Requires the permission "admin360.player.status".
 
-# status-no-ticket : You didn't submit any help-requests. You can open one.
-# status-in-queue : You already have a ticket opened, which is still in the queue at the moment.
-# status-in-progress : A staff is attending your request at the moment.
-# status-attending : You are a staff, and you are currently attending a case.
-# status-require-feedback : Your ticket is closed, but you still haven't given us feedback.
+status:
 
-status-no-ticket: '&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)'
-status-in-queue: '&f[&6ADMIN360&f] &7Your ticket is now in position &6<POSITION> &7of the queue.'
-status-in-progress: '&f[&6ADMIN360&f] &7Your ticket is now in progress. A staff will contact you soon.'
-status-attending: '&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)'
-status-require-feedback: '&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)'
+  # Player exclusive status
+  # no-ticket : You don't have any pending request atm.
+  # pending : You have a pending request in queue atm.
+  # attending : Staff is attending to your request atm.
+  # completing : You have a completing request that awaits your review atm.
+  player:
+    message:
+      no-ticket: "&f[&6ADMIN360&f] &7You don't have any pending request. (&fTips: &6/ticket create [details]&7)"
+      pending: "&f[&6ADMIN360&f] &7Your ticket is now &6pending &7in queue position &6<POSITION>&7."
+      attending: "&f[&6ADMIN360&f] &7Our staff is attending to your ticket. You will be approached soon."
+      completing: "&f[&6ADMIN360&f] &7You have a ticket that await your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
 
-
-
-############################################################
-# +------------------------------------------------------+ #
-# |         View Ticket Statistics (Player/Staff)        | #
-# +------------------------------------------------------+ #
-############################################################
-
-# /ticket stats: Display tickets statistics.
-# This is a player command which requires the permission "admin360.player.stats".
-
-# <INQUEUE> <INPROGRESS> <AWAITING> <COMPLETED> are temporary counters.
-# They will be reset once the server restarts. It's because they are stored in RAM.
-# <TOTAL> is a counter of records of the database. <PERCENT> is the upvote ratio.
-# They will not be reset on server restart.
-
-# This message supports multiple lines.
-stats-message:
-  - ''
-  - '&f[&6ADMIN360&f]     &c<INQUEUE> &fticket(s) in the queue.'
-  - '&f[&6ADMIN360&f]     &e<INPROGRESS> &fticket(s) in progress.'
-  - '&f[&6ADMIN360&f]     &a<AWAITING> &fticket(s) awaiting feedback.'
-  - '&f[&6ADMIN360&f]     &b<COMPLETED> &fticket(s) completed today.'
-  - '&f[&6ADMIN360&f]     &d<TOTAL> &ftotal ticket(s) &7(&f<PERCENT>%&a▲&7)'
-  - ''
+  # Staff exclusive status
+  # attending : You are attending a request atm.
+  # not-attending : You are not attending a request atm.
+  staff:
+    message:
+      attending: "&f[&6ADMIN360&f] &7You are attending to a request at the moment. (&fTips: &6/ticket info&7)"
+      not-attending: "&f[&6ADMIN360&f] &7You are not attending to any request at the moment. (&fTips: &6/ticket next&7)"
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                 Pick A Ticket (Staff)                | #
+# |                  Ticket Statistics                   | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket list: List out all the tickets from the queue.
-# /ticket pick <name>: Pick a ticket from the queue and proceed.
-# /ticket next: Proceed to process the next request in the queue.
-# This is a staff command which requires the permission "admin360.staff.basic".
+# /ticket stats: Display ticket statistics.
+# Requires the permission "admin360.player.stats".
 
-# "next" and "pick" share the same messages and settings.
-# next-failed-no-ticket : Currently, there are no tickets in the queue, so you cannot proceed.
-# next-failed-attending : You are still attending a request. That's why you can't proceed to process the next ticket.
-# After picking a ticket, you will be teleported to the target player by Admin360 (which can be disabled).
+# <PENDING> <ATTENDING> <COMPLETING> <COMPLETED> are all temporary counters.
+# They are all stored in memory and will be reset once the server restarts.
 
-# Your staff in the server (with permission "admin360.staff.basic") will be notified when the status of a ticket has
-# changed. The player who created the ticket will also be informed.
+# In fact, most of Admin360 components are in memory as well, including the
+# Pending Request Queue, Attending Request List and Completing Request List.
+# <COMPLETED> counts all the completed requests since previous server restart.
 
-list-message: '&f[&6ADMIN360&f] &6&l<INDEX> &7[&f<TIME>&7] &f<PLAYERNAME> &7: <DETAILS>'
+# Only completed requests get stored to the database for statistical and logging purposes.
+# Any incomplete tickets (pending, attending, completing) will be voided on server restart.
 
-next-failed-no-ticket: '&f[&6ADMIN360&f] &c&nNext Failed&7 There are no tickets at the moment.'
-next-failed-attending: '&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one.'
+# <TOTAL> counts the number of records from the database.
+# All entries in the database are historical completed requests with a submitted review.
 
-# Do you want Admin360 to teleport your staff to the target player by default?
-# Change this to false if you want to disable this option.
-use-auto-teleport: true
+# <UPVOTE_PERCENT> is the upvote:total ratio calculated based on data retrieved from database.
 
-# This message supports multiple lines.
-ticket-in-progress-notify-player:
-  - '&f[&6ADMIN360&f] &6<ADMINNAME> &7is now reviewing your request.'
-# Do you want to run a custom command right after a ticket changed its status? Default example using title-manager.
-# Change this to true if you want to use this option.
-ticket-in-progress-trigger-custom-command: false
-ticket-in-progress-custom-command: 'tm msg <PLAYERNAME> &b\n&6<ADMINNAME> &fis now reviewing your request.'
-
-# This message supports multiple lines.
-ticket-in-progress-notify-staff:
-  - ''
-  - '&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c''s ticket.'
-  - '&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)'
-  - ''
+stats:
+  message:
+    - ""
+    - "&f[&6ADMIN360&f]     &c<PENDING>&f ticket(s) pending."
+    - "&f[&6ADMIN360&f]     &e<ATTENDING>&f ticket(s) attending."
+    - "&f[&6ADMIN360&f]     &a<COMPLETING>&f ticket(s) completing."
+    - "&f[&6ADMIN360&f]     &b<COMPLETED>&f ticket(s) completed &3today&7."
+    - "&f[&6ADMIN360&f]     &d<TOTAL>&f ticket(s) completed &3all-time &7(&f<UPVOTE_PERCENT>%&a+&7)"
+    - ""
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |             Teleport To The Target (Staff)           | #
+# |                   Ticket Selection                   | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket tp: It allows you to teleport to the player who opened the ticket that you are processing now.
-# This is a staff command which requires the permission "admin360.staff.tp".
+# /ticket list: List out all the tickets in queue.
+# /ticket select <name>: Select a ticket in queue to attend.
+# /ticket next: Proceed to attend the next request in queue.
+# Requires the permission "admin360.staff.basic".
 
-teleport-failed: '&f[&6ADMIN360&f] &c&nTeleport Failed&7 This function is disabled at the moment.'
-teleport-succeeded: '&f[&6ADMIN360&f] &7You have been teleported to &6<PLAYERNAME>&7.'
+# "next" and "select" share the same messages and settings.
 
+list:
+  message:
+    header:
+      - ""
+      - "&f[&6ADMIN360&f] &6Ticket List"
+    body: "&f[&6ADMIN360&f] &e&l<INDEX> &7[&f<DATETIME>&7] &f<PLAYERNAME> &7: <DETAILS>"
+    footer:
+      - ""
 
+attend:
 
-############################################################
-# +------------------------------------------------------+ #
-# |                View Ticket Info (Staff)              | #
-# +------------------------------------------------------+ #
-############################################################
+  # Do you want Admin360 to teleport your staff to the target player by default?
+  # Change this to false if you want to disable this option.
+  auto-teleport: true
 
-# /ticket info: Remember "/ticket create [details]"? This command enables you to read that details again.
-# if you are processing that ticket (in case you forgot).
-# This is a staff command which requires the permission "admin360.staff.info".
+  # Attend aborted because ...
+  # no-ticket : There are no pending tickets available in queue atm.
+  # not-online : Selection target is not online atm.
+  # not-pending : Selection target has no pending tickets atm.
+  # attending : You are attending a request atm.
+  failed:
+    message:
+      no-ticket: "&f[&6ADMIN360&f] &c&nAttend Failed&7 There are no pending tickets at the moment."
+      not-online: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7is not online at the moment."
+      not-pending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7does not have a pending request."
+      attending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 You are already attending to a request."
 
-info-failed: '&f[&6ADMIN360&f] &c&nView-Info Failed&7 This function is disabled at the moment.'
-
-# This message supports multiple lines.
-info-message:
-  - ''
-  - '&f[&6ADMIN360&f]     &6Name: &f<PLAYERNAME>'
-  - '&f[&6ADMIN360&f]     &6Details: &f<DETAILS>'
-  - '&f[&6ADMIN360&f]     &6Time: &f<TIME>'
-  - ''
-
-
-
-############################################################
-# +------------------------------------------------------+ #
-# |                Redirect A Ticket (Staff)             | #
-# +------------------------------------------------------+ #
-############################################################
-
-# /ticket redirect: Redirect and reassign a ticket to another staff.
-# This is a staff command which requires the permission "admin360.staff.redirect".
-
-# You will get the fail message either because the name you enter is invalid,
-# or that staff is handling a request at the moment.
-redirect-failed: '&f[&6ADMIN360&f] &c&nRedirect Failed&7 This ticket cannot be redirected to &6<ADMINNAME>&7.'
-redirect-succeeded: '&f[&6ADMIN360&f] &7You have redirected this ticket to &6<ADMINNAME>&7.'
-
-
-
-############################################################
-# +------------------------------------------------------+ #
-# |                 Drop A Ticket (Staff)                | #
-# +------------------------------------------------------+ #
-############################################################
-
-# /ticket drop: Drop and abandon a ticket without the need to close it.
-# This is a staff command which requires the permission "admin360.staff.drop".
-
-drop-failed: '&f[&6ADMIN360&f] &c&nDrop Failed&7 You cannot use this function at the moment.'
-drop-message: '&f[&6ADMIN360&f] &7You have cancelled &6<PLAYERNAME>&7''s ticket.'
-drop-notify-player: '&f[&6ADMIN360&f] &7Your ticket has been cancelled by &6<ADMINNAME>&7.'
+  # Attend succeeded means ...
+  # You will be teleported to the ticket creator.
+  # Request is removed from Pending Queue and added to the Attending List.
+  passed:
+    message:
+      notify-player:
+        - ""
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has been assigned to your request."
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending to your request."
+        - ""
+      # This will notify all online staff with permission "admin360.staff.basic".
+      notify-staff:
+        - ""
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending to &6<PLAYERNAME>&7's request."
+        - "&f[&6ADMIN360&f] &e<AMOUNT>&f ticket(s) remaining"
+        - ""
+    # Run console commands on ticket attendance. Default example using title-manager.
+    trigger:
+      enable: false
+      command:
+        - "tm msg <PLAYERNAME> &b\n&6<ADMINNAME> &fis now reviewing your request."
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                 Close A Ticket (Staff)               | #
+# |                     Teleportation                    | #
+# +------------------------------------------------------+ #
+############################################################
+
+# /ticket tp: Teleport to the request owner.
+# Requires the permission "admin360.staff.teleport".
+
+teleport:
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nTeleport Failed&7 You are not attending to any request at the moment."
+  passed:
+    message: "&f[&6ADMIN360&f] &7You have been teleported to &6<PLAYERNAME>&7."
+
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Ticket Information                  | #
+# +------------------------------------------------------+ #
+############################################################
+
+# /ticket info: Display ticket information.
+# Requires the permission "admin360.staff.info".
+
+info:
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nView-Info Failed&7 You are not attending to any request at the moment."
+  passed:
+    message:
+      - ""
+      - "&f[&6ADMIN360&f]     &6Name: &f<PLAYERNAME>"
+      - "&f[&6ADMIN360&f]     &6Details: &f<DETAILS>"
+      - "&f[&6ADMIN360&f]     &6Time: &f<DATETIME>"
+      - ""
+
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                   Ticket Transfer                    | #
+# +------------------------------------------------------+ #
+############################################################
+
+# /ticket redirect: Transfer your assigned ticket to another staff.
+# Requires the permission "admin360.staff.transfer".
+
+transfer:
+
+  # Transfer aborted because ...
+  # You are not attending to any request, or the target is not a staff.
+  # The name you enter is invalid, or the target is attending another request atm.
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nTransfer Failed&7 This request cannot be transferred to &6<ADMINNAME>&7."
+
+  # Transfer succeeded means ...
+  # The entire attend cycle will be triggered again, as if it is a new ticket.
+  # Request is removed from Attending List and re-added with the new assignee.
+  passed:
+    message: "&f[&6ADMIN360&f] &7You have successfully transferred this request to &6<ADMINNAME>&7."
+
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Ticket Abandonment                  | #
+# +------------------------------------------------------+ #
+############################################################
+
+# /ticket drop: Abandon a ticket without the need to close it.
+# Requires the permission "admin360.staff.drop".
+
+drop:
+
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nDrop Failed&7 You are not attending to any request at the moment."
+
+  # Drop succeeded means ...
+  # Request is removed from Attending List.
+  passed:
+    message:
+      notify-handler: "&f[&6ADMIN360&f] &7You have successfully dropped &6<PLAYERNAME>&7's request."
+      notify-player:
+        - ""
+        - "&f[&6ADMIN360&f] &7Your ticket has been&c dropped&7 by &6<ADMINNAME>&7."
+        - "&f[&6ADMIN360&f] &7Make sure your request complies with our rules."
+        - "&f[&6ADMIN360&f] &7We look forward to serving you again."
+        - ""
+
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                     Ticket Close                     | #
 # +------------------------------------------------------+ #
 ############################################################
 
 # /ticket close: Close a ticket and done-mark it.
-# This is a staff command which requires the permission "admin360.staff.basic".
+# Requires the permission "admin360.staff.basic".
 
-close-failed: '&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending any request at the moment.'
-close-succeeded: '&f[&6ADMIN360&f] &7You have closed this ticket successfully.'
+close:
+
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending to any request at the moment."
+
+  # Close succeeded means ...
+  # Review reminder will be in action to prompt request owner for feedback.
+  # Request is removed from Attending List and put to Completing List.
+  passed:
+    message: "&f[&6ADMIN360&f] &7You have successfully closed &6<PLAYERNAME>&7's request."
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                  Give Feedback (Player)              | #
+# |                    Service Review                    | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket yes, /ticket no: After a ticket is closed, your player will be asked to rate the service.
+# /ticket yes, /ticket no: Upvote or downvote a service.
+# Requires the permission "admin360.player.basic".
+
+# After a ticket is closed, your player will be asked to rate the service.
 # They can upvote or downvote. /ticket yes: upvote; /ticket no: downvote.
-# This is a player command which requires the permission "admin360.player.basic".
 
-# After a player has made a review, the ticket details will be stored as a record in the database.
-# If not, then the database will not store anything. The details will only be kept in RAM.
+# Once a review is submitted, details of that request will be added to the database.
+# Requests will only be kept in memory if a review is not submitted.
 
-# Set this to true if you want to remind your players to give feedback after their tickets are closed.
-show-reminder: true
+review:
 
-# If the above option (show-reminder) is set to true,
-# a timed message (feedback-required) with an interval (reminder-frequency) measured in seconds
-# will be set to remind your players to give feedback. This option can be disturbing for
-# your players if you set the frequency to some low values.
-# But sometimes, more annoying = more effective :)
-reminder-frequency: 20
+  # Periodically prompt your players to review the service they received.
+  reminder:
+    enable: false
+    interval: 20 # in seconds
 
-feedback-required: '&f[&6ADMIN360&f] &7We have completed your request. Are you satisfied with our service? [&a/ticket yes&7, &c/ticket no&7].'
-# Do you want to run a custom command if the player needs to give a review? Default example using chest-command.
-# This can work really well with some plugins that opens a GUI with buttons triggering /ticket yes and /ticket no.
-# Change this to true if you want to use this option.
-feedback-trigger-custom-command: false
-feedback-custom-command: 'chestcommands open feedback.yml <PLAYERNAME>'
+  # Prompt message will be sent at least once regardless of reminder.enable option.
+  # This section, however, will be triggered periodically if reminder.enable is true.
+  prompt:
+    message:
+      - ""
+      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has completed your request."
+      - "&f[&6ADMIN360&f] &7Are you satisfied with &6<ADMINNAME>&7's service?"
+      - "&f[&6ADMIN360&f] &fYes: &7[&a/ticket yes&7], &fNo: &7[&c/ticket no&7]"
+      - ""
+    # Runs console commands on review prompt. Default example using Chest-Commands.
+    # e.g. Opens a GUI with buttons triggering /ticket yes and /ticket no.
+    # <ADMINNAME> is also available as a placeholder.
+    trigger:
+      enable: false
+      command:
+        - "chestcommands open feedback.yml <PLAYERNAME>"
 
-feedback-not-required: '&f[&6ADMIN360&f] &7You are not required to give us feedback at the moment.'
-feedback-received: '&f[&6ADMIN360&f] &7Thank you for your feedback. We are looking forward to serving you again.'
+  # Failed to give rating
+  # Probably because of wrong ticket status ...
+  failed:
+    message: "&f[&6ADMIN360&f] &7You don't have any completing ticket at the moment."
 
-# If you do not want your staff to know who actually votes for them, simply remove the placeholder.
-upvote-rating-notify-staff: '&f[&6ADMIN360&f] &6<PLAYERNAME> &elikes &7your service. [&f1&a▲&7]'
-downvote-rating-notify-staff: '&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your service. [&f1&c▼&7]'
+  # Rating received means ...
+  # Review reminder will be put to halt.
+  # Request is removed from Completing List and added to the database.
+  passed:
+    message:
+      received: "&f[&6ADMIN360&f] &7Thank you for your feedback. We look forward to serving you again."
+      upvote-notify: "&f[&6ADMIN360&f] &6<PLAYERNAME>&e likes &7your service. [&f1&a+&7]"
+      downvote-notify: "&f[&6ADMIN360&f] &6<PLAYERNAME>&c dislikes &7your service. [&f1&c-&7]"
+    # Runs console commands on review received. Default example using EssentialsX.
+    # e.g. Gives both staff and player some custom rewards to complete a ticket.
+    trigger:
+      enable: false
+      command:
+        - "eco give <PLAYERNAME> 100"
+        - "eco give <ADMINNAME> 100"
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                Remove A Ticket (Staff)              | #
+# |                    Ticket Removal                    | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket purge, /ticket delete <name>: Purge all pending tickets or delete a particular ticket.
-# They are staff commands which require permission "admin360.staff.purge" and "admin360.staff.delete".
+# /ticket purge [type]: Purge all tickets in a stage.
+# Possible type: pending, attending, completing, all
+# Requires permission "admin360.staff.purge".
+
+# /ticket remove <name>: Forcibly remove a target from all stages.
+# Requires permission "admin360.staff.remove".
 
 # Difference between purge and delete:
-# Purge: Remove all tickets in the queue.
-# Delete: Delete everything related to a particular player regardless of status.
-# However, you cannot delete a completed ticket.
+# Purge: Remove all tickets in a stage.
+# Delete: Remove a player from all stages.
 
-# This message supports multiple lines.
-purge-message:
-  - ''
-  - '&f[&6ADMIN360&f]     &fPurged &c<AMOUNTPURGED> &fpending ticket(s).'
-  - ''
+purge:
+  message:
+    - ""
+    - "&f[&6ADMIN360&f]     &fPurged &c<AMOUNT> &f<TYPE> ticket(s)."
+    - ""
 
-#This message is used for /ticket delete and /ticket abandon.
-delete-message: '&f[&6ADMIN360&f] &6<PLAYERNAME>&7''s ticket has been removed successfully.'
+remove:
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nRemove Failed&7 &6<PLAYERNAME> &7is not online at the moment."
+  passed:
+    message: "&f[&6ADMIN360&f] &6<PLAYERNAME> &7has been forcibly removed from all stages."
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                  Honor Points (Staff)                | #
+# |                     Honor Points                     | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket hpstats [name]: Honor Points Statistics, /ticket hptop [#]: Honor Points Leaderboard.
-# /ticket hpreset <name>: Clear Honor points of a staff.
-# They are staff commands which require the permissions "admin360.staff.hptop", "admin360.staff.hpstats"
-# and "admin360.staff.hpreset".
+# /ticket hpstats [name]: Honor Points Statistics.
+# Requires the permission "admin360.staff.hpstats".
 
-# This message supports multiple lines.
-hpstats-message:
-  - ''
-  - '&f[&6ADMIN360&f]     &6<ADMINNAME>&f''s Statistics'
-  - '&f[&6ADMIN360&f]     &a<UPVOTE> &fupvote(s) &a▲'
-  - '&f[&6ADMIN360&f]     &c<DOWNVOTE> &fdownvote(s) &c▼'
-  - '&f[&6ADMIN360&f]     &e<TOTAL> &ftotal ticket(s) &a▲&c▼'
-  - '&f[&6ADMIN360&f]     &b<PERCENT>% &fsatisfaction &a▲'
-  - ''
+# /ticket hptop [line]: Honor Points Leaderboard.
+# Requires the permission "admin360.staff.hptop".
 
-# Set the number of records shown in hptop.
-default-leaderboard-output: 5
+# /ticket hpreset <name>: Reset the target's database entries.
+# Requires the permission "admin360.staff.hpreset".
 
-# This message supports multiple lines.
-leaderboard-title:
-  - ''
-  - '&7&m-------------&r &6LEADERBOARD &7&m-------------'
-  - '         &7[ &a▲&fUpvote  &c▼&fDownvote  &a▲&c▼&fTotal &7]'
-  - ''
 
-# hptop body message
-leaderboard-body: '           &6<ADMINNAME>&7: &f<UPVOTE>&a▲ &f<DOWNVOTE>&c▼ &f<TOTAL>&a▲&c▼ &f<PERCENT>%&a▲'
+hpstats:
+  message:
+    - ""
+    - "&f[&6ADMIN360&f]     &6<ADMINNAME>&f's Statistics"
+    - "&f[&6ADMIN360&f]     &a<UPVOTE>&f upvote(s) &a+"
+    - "&f[&6ADMIN360&f]     &c<DOWNVOTE>&f downvote(s) &c-"
+    - "&f[&6ADMIN360&f]     &e<TOTAL>&f total ticket(s) &a+&c-"
+    - "&f[&6ADMIN360&f]     &b<UPVOTE_PERCENT>%&f satisfaction &a+"
+    - ""
 
-# This message supports multiple lines.
-leaderboard-footer:
-  - ''
-  - '&7&m--------------------------------------'
-  - ''
+hptop:
+
+  # Set the number of records shown in hptop.
+  default-limit: 5
+
+  message:
+    header:
+      - ""
+      - "&7&m-------------&r &6LEADERBOARD &7&m-------------"
+      - "         &7[ &a+&fUpvote  &c-&fDownvote  &a+&c-&fTotal &7]"
+      - ""
+    body: "           &6<ADMINNAME>&7: &f<UPVOTE>&a+ &f<DOWNVOTE>&c- &f<TOTAL>&a+&c- &f<UPVOTE_PERCENT>%&a+"
+    footer:
+      - ""
+      - "&7&m--------------------------------------"
+      - ""
 
 # Names are stored in the database with case preserved. Case-sensitive for name inputs.
-reset-hpstats-failed: '&f[&6ADMIN360&f] &c&nReset Failed&7 Player not found. Names are case-sensitive.'
-reset-hpstats-succeeded: '&f[&6ADMIN360&f] &7You have reset &6<ADMINNAME>&7''s stats successfully.'
+hpreset:
+  failed:
+    message: "&f[&6ADMIN360&f] &c&nReset Failed&7 &6<ADMINNAME>&7 does not exists in the database. (&fTips: &7Names are Case-Sensitive!&7)"
+  passed:
+    message: "&f[&6ADMIN360&f] &7You have successfully reset &6<ADMINNAME>&7's honor stats."
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |              Ticket / HP History (Staff)             | #
+# |            Ticket / Honor Points History             | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket history [#]: Honor Points History.
-# This is a staff command which requires the permission "admin360.staff.history".
+# /ticket history [line]: Honor Points History.
+# Requires the permission "admin360.staff.history".
 
-# This command is closely related to the Honor Points system.
-# If a /ticket hpreset is executed, all the records related to that staff will also be removed.
-# A ticket will only appear in the history as a record when it is completed. That's because tickets
-# in other stages (in queue, in progress, awaiting feedback) will not be stored in the database.
-# They will only be stored temporarily in RAM.
+# This command works closely with Honor Points system.
+# If a /ticket hpreset <name> is executed, all records related to that staff will be removed.
+# Only completed requests will appear in the history as they are stored in the database.
+# Requests in other stages are managed in memory and will only be added to the database on receiving a review.
 
-# Set the number of records shown in history.
-default-history-output: 5
+history:
 
-# This message supports multiple lines.
-history-title:
-  - ''
-  - '&7&m-----------------&r &6HISTORY &7&m-----------------'
-  - '     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]'
-  - ''
+  # Set the number of records shown in history.
+  default-limit: 5
 
-# History body message
-#<TIME> is the time that the player opened the ticket.
-history-body: '&7[&f<TIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>'
-upvote-indicator: '&a▲'
-downvote-indicator: '&c▼'
+  upvote-indicator: "&a+"
+  downvote-indicator: "&c-"
 
-# This message supports multiple lines.
-history-footer:
-  - ''
-  - '&7&m------------------------------------------'
-  - ''
+  message:
+    header:
+      - ""
+      - "&7&m-----------------&r &6HISTORY &7&m-----------------"
+      - "     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]"
+      - ""
+    #<DATETIME> is the time that the player opened the ticket.
+    body: "&7[&f<DATETIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>"
+    footer:
+      - ""
+      - "&7&m------------------------------------------"
+      - ""
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                      Final Notes                     | #
+# |                     Final Notes                      | #
 # +------------------------------------------------------+ #
 ############################################################
 
 # End of file. You're done with the configuration. Congratulations!
 
-# Project : https://www.spigotmc.org/resources/admin360-reloaded.28285/
-# Support : https://github.com/denniemok/Admin360-Reloaded/issues
-# Authors : Vidhu, Dennie
+# Spigot : https://www.spigotmc.org/resources/28285/
+# Github : https://github.com/denniemok/Admin360-Reloaded/issues
+# Author : Dennie, Vidhu

@@ -1,17 +1,24 @@
-package com.battleasya.Admin360.datasource;
+package com.battleasya.admin360.datasource;
 
-import com.battleasya.Admin360.entities.Request;
-import org.bukkit.Bukkit;
+import com.battleasya.admin360.Admin360;
+import com.battleasya.admin360.entities.Request;
 
 import java.sql.*;
-import java.util.logging.Level;
 
-public class SQLite_DataSource implements DataSource {
+@SuppressWarnings("CallToPrintStackTrace")
+public class SQLite implements DataSource {
+
+	private final Admin360 plugin;
+
+	public SQLite(Admin360 plugin) {
+		this.plugin = plugin;
+	}
 
 	private Connection con = null;
 
 	@Override
 	public void connect(String host, String port, String database, String username, String password) {
+
 		if (con != null) {
 			return;
 		}
@@ -20,20 +27,26 @@ public class SQLite_DataSource implements DataSource {
 			Class.forName("org.sqlite.JDBC");
 			con = DriverManager.getConnection("jdbc:sqlite:plugins/Admin360-Reloaded/database.db");
 		} catch (ClassNotFoundException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Couldn't find the SQLite driver.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the SQLite driver.");
 			e.printStackTrace();
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		} catch (SQLException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[Admin360-Reloaded] Failed to connect to the SQLite database.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the SQLite database.");
 			e.printStackTrace();
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		}
 
-		System.out.println("[Admin360-Reloaded] Connected to the SQLite database.");
+		plugin.getLogger().info("[Admin360-Reloaded] Connected to the SQLite database.");
+
 	}
 
 	@Override
 	public void disconnect() {
+
 		if (con == null) {
 			return;
 		}
@@ -41,17 +54,19 @@ public class SQLite_DataSource implements DataSource {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to disconnect from the SQLite database.");
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to disconnect from the SQLite database.");
 			e.printStackTrace();
 			return;
 		}
 
 		con = null;
-		System.out.println("[Admin360-Reloaded] Disconnected from the SQLite database.");
+		plugin.getLogger().info("[Admin360-Reloaded] Disconnected from the SQLite database.");
+
 	}
 
 	@Override
 	public void setUp() {
+
 		Statement st = null;
         
         try {
@@ -64,51 +79,37 @@ public class SQLite_DataSource implements DataSource {
         			+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
 					+ "Reason TEXT DEFAULT NULL)");
         } catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] Failed to setup the SQLite database.");
-        	e.printStackTrace();
+			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the SQLite database.");
+			e.printStackTrace();
 			close(st);
+			disconnect();
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
         	return;
         } finally {
         	close(st);
         }
 
-        System.out.println("[Admin360-Reloaded] Finished setting up the SQLite database.");
-	}
+		plugin.getLogger().info("[Admin360-Reloaded] Finished setting up the SQLite database.");
 
-	@Override
-	public void addColumn() {
-		Statement st = null;
-
-		try {
-			st = con.createStatement();
-			st.executeUpdate("ALTER TABLE Honors ADD COLUMN Reason TEXT DEFAULT NULL");
-		} catch(SQLException e) {
-			System.out.println("[Admin360-Reloaded] The database structure is at the latest version.");
-			close(st);
-			return;
-		} finally {
-			close(st);
-		}
-
-		System.out.println("[Admin360-Reloaded] Finished updating the database structure.");
 	}
 	
 	@Override
 	public void addRecord(Request request, boolean upvote) {
+
 		PreparedStatement pst = null;
 		
 		try {
 			pst = con.prepareStatement("INSERT INTO Honors (HonorFrom, HonorTo, Request_TimeStamp, Honor_TimeStamp, Reason) "
 					+ "VALUES (?, ?, ?, ?, ?)");
 			pst.setString(1, request.getPlayerName());
-			pst.setString(2, request.getHandledBy());
-			pst.setLong(3, request.getTime());
+			pst.setString(2, request.getHandledByName());
+			pst.setLong(3, request.getTimestamp());
 			if (upvote) {
-				pst.setLong(4, System.currentTimeMillis()/1000);
+				pst.setLong(4, System.currentTimeMillis() / 1000);
 			} else {
 				pst.setLong(4, 0);
 			}
-			pst.setString(5, request.getReason());
+			pst.setString(5, request.getComment());
 			pst.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -120,13 +121,13 @@ public class SQLite_DataSource implements DataSource {
 
 	@Override
 	public int getAdminTicketCount(String adminName, int situation) {
+
 		int honor = 0;
 		PreparedStatement pst = null;
         ResultSet rs = null;
         
 		try {
 			if (situation == 1) {
-
 				pst = con.prepareStatement("SELECT COUNT(ID_Honor) AS Total FROM Honors "
 						+ "WHERE Honor_TimeStamp != 0 AND HonorTo = ?");
 			} else {
@@ -173,8 +174,9 @@ public class SQLite_DataSource implements DataSource {
 
 	@Override
 	public boolean resetAdminsHonor(String adminName) {
+
 		PreparedStatement pst = null;
-		int rowsAffected;
+		int rowsAffected = 0;
 		
 		try {
 			pst = con.prepareStatement("DELETE FROM Honors WHERE honorTo = ?");
@@ -182,13 +184,12 @@ public class SQLite_DataSource implements DataSource {
 			rowsAffected = pst.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
-			close(pst);
-			return false;
 		} finally {
 			close(pst);
 		}
 
 		return rowsAffected >= 1;
+
 	}
 
 	@Override
@@ -221,10 +222,12 @@ public class SQLite_DataSource implements DataSource {
 		}
 		
 		return honor;
+
 	}
 
 	@Override
 	public String[][] getHistory(int limit) {
+
 		String[][] history = new String[limit][5];
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -234,7 +237,7 @@ public class SQLite_DataSource implements DataSource {
 			pst.setInt(1, limit);
 			rs = pst.executeQuery();
 			int i=0;
-			while(rs.next()){
+			while (rs.next()){
 				history[i][0] = rs.getString("HonorFrom");
 				history[i][1] = rs.getString("HonorTo");
 				history[i][2] = rs.getString("Details");
