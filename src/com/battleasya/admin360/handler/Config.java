@@ -17,10 +17,13 @@ public class Config {
 
     public static boolean version_set;
     public static boolean version_latest;
+
     public static String version;
+
     public static String no_permission;
     public static String incorrect_syntax;
     public static String reload_config;
+
     public static boolean ds_mysql;
     public static String ds_host;
     public static String ds_port;
@@ -28,82 +31,119 @@ public class Config {
     public static String ds_username;
     public static String ds_password;
     public static String ds_options;
+
     public static List<String> player_command_list;
     public static List<String> staff_command_list;
+
     public static boolean create_cooldown_enable;
     public static int create_cooldown_interval;
     public static String create_cooldown_message;
+
     public static boolean create_require_staff;
+
     public static String create_failed_no_staff;
     public static String create_failed_pending;
     public static String create_failed_attending;
     public static String create_failed_completing;
     public static String create_failed_restricted;
+
     public static List<String> create_passed_notify_player;
+    public static List<String> create_passed_notify_staff;
+
     public static boolean create_passed_trigger_enable;
     public static List<String> create_passed_trigger_command;
-    public static List<String> create_passed_notify_staff;
+
     public static String cancel_failed_no_ticket;
     public static String cancel_failed_attending;
     public static String cancel_failed_restricted;
     public static String cancel_failed_completing;
+
     public static String cancel_passed_notify_player;
+
     public static String status_no_ticket;
     public static String status_pending;
     public static String status_attending;
+    public static String status_completing;
+
     public static String status_staff_attending;
     public static String status_staff_not_attending;
-    public static String status_completing;
+
     public static List<String> stats_message;
+
     public static List<String> list_header;
     public static String list_body;
     public static List<String> list_footer;
+
     public static boolean attend_auto_teleport;
+
     public static String attend_failed_no_ticket;
     public static String attend_failed_not_online;
     public static String attend_failed_not_pending;
     public static String attend_failed_attending;
+
     public static List<String> attend_passed_notify_player;
+    public static List<String> attend_passed_notify_staff;
+
     public static boolean attend_passed_trigger_enable;
     public static List<String> attend_passed_trigger_command;
-    public static List<String> attend_passed_notify_staff;
+
     public static String teleport_failed;
     public static String teleport_passed;
+
     public static String info_failed;
     public static List<String> info_passed;
+
     public static String transfer_failed;
     public static String transfer_passed;
+
     public static String drop_failed;
+
     public static String drop_passed_notify_handler;
     public static List<String> drop_passed_notify_player;
+
     public static String close_failed;
     public static String close_passed;
+
     public static boolean review_reminder_enable;
     public static int review_reminder_interval;
+
     public static List<String> review_prompt;
+
     public static boolean review_prompt_trigger_enable;
     public static List<String> review_prompt_trigger_command;
+
     public static String review_failed;
+
     public static String review_received;
     public static String review_upvote_notify_handler;
     public static String review_downvote_notify_handler;
+
     public static boolean review_received_trigger_enable;
     public static List<String> review_received_trigger_command;
+
     public static List<String> purge_message;
+
     public static String remove_passed;
     public static String remove_failed;
+
     public static List<String> hpstats_message;
+
     public static int hptop_default_limit;
+
     public static List<String> hptop_header;
     public static String hptop_body;
     public static List<String> hptop_footer;
+
     public static String hpreset_failed;
     public static String hpreset_passed;
+
     public static int history_default_limit;
-    public static List<String> history_header;
-    public static String history_body;
+
     public static String history_upvote_indicator;
     public static String history_downvote_indicator;
+
+    public static List<String> history_header;
+    public static String history_body;
     public static List<String> history_footer;
 
     /* Init checking */
