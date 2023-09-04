@@ -89,8 +89,8 @@ help:
       - "&6/ticket drop &f- &7Drop the ticket."
       - "&6/ticket close &f- &7Done-mark the ticket."
       - "&fRemoval"
-      - "&6/ticket purge [stage] &f- &7Purge all tickets in a stage."
       - "&6/ticket remove <name> &f- &7Remove target from all stages."
+      - "&6/ticket purge [stage] &f- &7Remove all tickets in a stage."
       - "&7[stage]: pending (default), attending, completing, all"
       - "&fHonors"
       - "&6/ticket hpstats [name] &f- &7View HP stats."
@@ -284,7 +284,7 @@ list:
     header:
       - ""
       - "&f[&6ADMIN360&f] &6Ticket List"
-    body: "&f[&6ADMIN360&f] &6<INDEX> &7[&f<DATETIME>&7] &f<PLAYERNAME> &7: <DETAILS>"
+    body: "&f[&6ADMIN360&f] &e&l<INDEX> &7[&f<DATETIME>&7] &f<PLAYERNAME> &7: <DETAILS>"
     footer:
       - ""
 
@@ -319,7 +319,7 @@ attend:
       # This will notify all online staff with permission "admin360.staff.basic".
       notify-staff:
         - ""
-        - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now attending to &6<PLAYERNAME>&c's request."
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending to &6<PLAYERNAME>&7's request."
         - "&f[&6ADMIN360&f] &e<AMOUNT>&f ticket(s) remaining"
         - ""
     # Run console commands on ticket attendance. Default example using title-manager.
@@ -381,6 +381,7 @@ info:
 transfer:
 
   # Transfer aborted because ...
+  # You are not attending to any request, or the target is not a staff.
   # The name you enter is invalid, or the target is attending another request atm.
   failed:
     message: "&f[&6ADMIN360&f] &c&nTransfer Failed&7 This request cannot be transferred to &6<ADMINNAME>&7."
@@ -474,8 +475,8 @@ review:
       - "&f[&6ADMIN360&f] &7Are you satisfied with &6<ADMINNAME>&7's service?"
       - "&f[&6ADMIN360&f] &fYes: &7[&a/ticket yes&7], &fNo: &7[&c/ticket no&7]"
       - ""
-    # Run console commands on review prompt. Default example using Chest-Commands.
-    # e.g. Open a GUI with buttons triggering /ticket yes and /ticket no.
+    # Runs console commands on review prompt. Default example using Chest-Commands.
+    # e.g. Opens a GUI with buttons triggering /ticket yes and /ticket no.
     # <ADMINNAME> is also available as a placeholder.
     trigger:
       enable: false
@@ -616,8 +617,8 @@ history:
       - "&7&m-----------------&r &6HISTORY &7&m-----------------"
       - "     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]"
       - ""
-    #<TIME> is the time that the player opened the ticket.
-    body: "&7[&f<TIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>"
+    #<DATETIME> is the time that the player opened the ticket.
+    body: "&7[&f<DATETIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>"
     footer:
       - ""
       - "&7&m------------------------------------------"
