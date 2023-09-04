@@ -186,12 +186,7 @@ public class A3 implements CommandExecutor {
 
                 case "hpreset":
                     if (User.hasPermission(sender, Permission.RESET_HP_STATS, true)) {
-                        if (plugin.getDataSource().resetAdminsHonor(args[1])) {
-                            User.messagePlayer(sender, Config.hpreset_passed
-                                    .replaceAll("<ADMINNAME>", args[1]));
-                        } else {
-                            User.messagePlayer(sender, Config.hpreset_failed);
-                        }
+                        plugin.getRequestHandler().resetHonor(sender, args[1]);
                     }
                     return true;
 

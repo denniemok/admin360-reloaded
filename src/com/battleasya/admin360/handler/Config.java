@@ -56,11 +56,14 @@ public class Config {
     public static String status_staff_not_attending;
     public static String status_completing;
     public static List<String> stats_message;
-    public static String list_message;
+    public static List<String> list_header;
+    public static String list_body;
+    public static List<String> list_footer;
+    public static boolean attend_auto_teleport;
     public static String attend_failed_no_ticket;
-    public static String attend_failed_not_exist;
+    public static String attend_failed_not_online;
+    public static String attend_failed_not_pending;
     public static String attend_failed_attending;
-    public static boolean use_auto_teleport;
     public static List<String> attend_passed_notify_player;
     public static boolean attend_passed_trigger_enable;
     public static String attend_passed_trigger_command;
@@ -85,18 +88,20 @@ public class Config {
     public static String review_received;
     public static String review_upvote_notify_handler;
     public static String review_downvote_notify_handler;
+    public static boolean review_received_trigger_enable;
+    public static String review_received_trigger_command;
     public static List<String> purge_message;
     public static String remove_passed;
     public static String remove_failed;
     public static List<String> hpstats_message;
     public static int hptop_default_limit;
-    public static List<String> hptop_title;
+    public static List<String> hptop_header;
     public static String hptop_body;
     public static List<String> hptop_footer;
     public static String hpreset_failed;
     public static String hpreset_passed;
     public static int history_default_limit;
-    public static List<String> history_title;
+    public static List<String> history_header;
     public static String history_body;
     public static String history_upvote_indicator;
     public static String history_downvote_indicator;
@@ -190,12 +195,15 @@ public class Config {
 
         stats_message = config.getStringList("stats.message");
 
-        list_message = config.getString("list.message");
+        list_header = config.getStringList("list.message.header");
+        list_body = config.getString("list.message.body");
+        list_footer = config.getStringList("list.message.footer");
 
-        use_auto_teleport = config.getBoolean("attend.auto-teleport");
+        attend_auto_teleport = config.getBoolean("attend.auto-teleport");
 
         attend_failed_no_ticket = config.getString("attend.failed.message.no-ticket");
-        attend_failed_not_exist = config.getString("attend.failed.message.not-exist");
+        attend_failed_not_online = config.getString("attend.failed.message.not-online");
+        attend_failed_not_pending = config.getString("attend.failed.message.not-pending");
         attend_failed_attending = config.getString("attend.failed.message.attending");
 
         attend_passed_notify_player = config.getStringList("attend.passed.message.notify-player");
@@ -229,10 +237,13 @@ public class Config {
         review_prompt_trigger_command = config.getString("review.prompt.trigger.command");
 
         review_failed = config.getString("review.failed.message");
-        review_received = config.getString("review.passed.message.received");
 
-        review_upvote_notify_handler = config.getString("review.passed.message.upvote-notify-handler");
-        review_downvote_notify_handler = config.getString("review.passed.message.downvote-notify-handler");
+        review_received = config.getString("review.passed.message.received");
+        review_upvote_notify_handler = config.getString("review.passed.message.upvote-notify");
+        review_downvote_notify_handler = config.getString("review.passed.message.downvote-notify");
+
+        review_received_trigger_enable = config.getBoolean("review.passed.trigger.enable");
+        review_received_trigger_command = config.getString("review.passed.trigger.command");
 
         purge_message = config.getStringList("purge.message");
 
@@ -243,7 +254,7 @@ public class Config {
 
         hptop_default_limit = config.getInt("hptop.default-limit");
 
-        hptop_title = config.getStringList("hptop.message.title");
+        hptop_header = config.getStringList("hptop.message.header");
         hptop_body = config.getString("hptop.message.body");
         hptop_footer = config.getStringList("hptop.message.footer");
 
@@ -252,7 +263,7 @@ public class Config {
 
         history_default_limit = config.getInt("history.default-limit");
 
-        history_title = config.getStringList("history.message.title");
+        history_header = config.getStringList("history.message.header");
         history_body = config.getString("history.message.body");
         history_footer = config.getStringList("history.message.footer");
 

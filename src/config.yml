@@ -60,44 +60,44 @@ datasource:
 help:
   message:
     player-commands:
-    - ""
-    - "&7&m------------&r &6ADMIN360 &7&m------------"
-    - "&6/ticket create [details] &f- &7Open a ticket."
-    - "&6/ticket cancel &f- &7Cancel your ticket."
-    - "&6/ticket status &f- &7Query ticket status."
-    - "&6/ticket stats &f- &7View overall statistics."
-    - "&6/ticket help &f- &7Display command list."
-    - "&b/admin360 &f- &7Display plugin info."
-    - "&7*&fParameters: [Optional] <Compulsory>"
-    - "&7&m---------------------------------"
-    - ""
+      - ""
+      - "&7&m------------&r &6ADMIN360 &7&m------------"
+      - "&6/ticket create [details] &f- &7Open a ticket."
+      - "&6/ticket cancel &f- &7Cancel your ticket."
+      - "&6/ticket status &f- &7Query ticket status."
+      - "&6/ticket stats &f- &7View overall statistics."
+      - "&6/ticket help &f- &7Display command list."
+      - "&b/admin360 &f- &7Display plugin info."
+      - "&7*&fParameters: [Optional] <Compulsory>"
+      - "&7&m---------------------------------"
+      - ""
     staff-commands:
-    - ""
-    - "&7&m------------&r &6ADMIN360 &7&m------------"
-    - "&fStep 1"
-    - "&6/ticket list &f- &7View the ticket list."
-    - "&6/ticket select <name> &f- &7Select a ticket."
-    - "&6/ticket next &f- &7Proceed to the next ticket."
-    - "&fStep 2"
-    - "&6/ticket tp &f- &7Teleport to the player."
-    - "&6/ticket info &f- &7View the ticket details."
-    - "&fStep 3"
-    - "&6/ticket transfer <name> &f- &7Redirect a ticket."
-    - "&6/ticket drop &f- &7Drop and abandon a ticket."
-    - "&6/ticket close &f- &7Done-mark a ticket."
-    - "&fRemoval"
-    - "&6/ticket purge [stage] &f- &7Purge all tickets in a stage."
-    - "&6/ticket remove <name> &f- &7Remove from all stages."
-    - "[stage]: pending, attending, completing"
-    - "&fHonors"
-    - "&6/ticket hpstats [name] &f- &7View HP stats."
-    - "&6/ticket hptop [#] &f- &7View HP leaderboard."
-    - "&6/ticket history [#] &f- &7View HP history."
-    - "&6/ticket hpreset <name> &f- &7Reset HP stats."
-    - "&b/admin360 reload &f- &7Reload the config file."
-    - "&7*&fParameters: [Optional] <Compulsory>"
-    - "&7&m---------------------------------"
-    - ""
+      - ""
+      - "&7&m------------&r &6ADMIN360 &7&m------------"
+      - "&fStep 1"
+      - "&6/ticket list &f- &7View the ticket list."
+      - "&6/ticket select <name> &f- &7Select a ticket."
+      - "&6/ticket next &f- &7Proceed to the next ticket."
+      - "&fStep 2"
+      - "&6/ticket tp &f- &7Teleport to the player."
+      - "&6/ticket info &f- &7View the ticket details."
+      - "&fStep 3"
+      - "&6/ticket transfer <name> &f- &7Redirect a ticket."
+      - "&6/ticket drop &f- &7Drop and abandon a ticket."
+      - "&6/ticket close &f- &7Done-mark a ticket."
+      - "&fRemoval"
+      - "&6/ticket purge [stage] &f- &7Purge all tickets in a stage."
+      - "&6/ticket remove <name> &f- &7Remove from all stages."
+      - "[stage]: pending, attending, completing"
+      - "&fHonors"
+      - "&6/ticket hpstats [name] &f- &7View HP stats."
+      - "&6/ticket hptop [#] &f- &7View HP leaderboard."
+      - "&6/ticket history [#] &f- &7View HP history."
+      - "&6/ticket hpreset <name> &f- &7Reset HP stats."
+      - "&b/admin360 reload &f- &7Reload the config file."
+      - "&7*&fParameters: [Optional] <Compulsory>"
+      - "&7&m---------------------------------"
+      - ""
 
 
 
@@ -125,7 +125,7 @@ create:
   cooldown:
     enable: true
     interval: 60 # in seconds
-    message: "&f[&6ADMIN360&f] &7Please wait for &6<SECONDSLEFT>s&7 before opening another ticket."
+    message: "&f[&6ADMIN360&f] &7Please wait for &6<SECONDS>s&7 before opening another ticket."
 
   # Check if any staff members are currently available.
   # If this is set to true, players will not be allowed to open a new ticket if there is no staff in the server.
@@ -143,15 +143,17 @@ create:
   passed:
     message:
       notify-player:
-      - "&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7)."
-      - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
-      - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to check your progress."
-      notify-staff: # all staff
-      - ""
-      - "&f[&6ADMIN360&f] &6<PLAYERNAME> &copened a &a&lNEW &cticket."
-      - "&f[&6ADMIN360&f] &cDetails: &f<DETAILS>"
-      - "&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)"
-      - ""
+        - ""
+        - "&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7)."
+        - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
+        - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to check your progress."
+        - ""
+      notify-staff: # notify all staff
+        - ""
+        - "&f[&6ADMIN360&f] &6<PLAYERNAME>&c opened a &a&lNEW&c ticket."
+        - "&f[&6ADMIN360&f] &cDetails:&f <DETAILS>"
+        - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
+        - ""
     # Run a console command after a ticket is opened. Default example using title-manager.
     trigger: # for player-only
       enable: false
@@ -233,13 +235,13 @@ status:
 # This message supports multiple lines.
 stats:
   message:
-  - ""
-  - "&f[&6ADMIN360&f]     &c<INQUEUE> &fticket(s) in the queue."
-  - "&f[&6ADMIN360&f]     &e<INPROGRESS> &fticket(s) in progress."
-  - "&f[&6ADMIN360&f]     &a<AWAITING> &fticket(s) awaiting feedback."
-  - "&f[&6ADMIN360&f]     &b<COMPLETED> &fticket(s) completed today."
-  - "&f[&6ADMIN360&f]     &d<TOTAL> &ftotal ticket(s) &7(&f<PERCENT>%&a+&7)"
-  - ""
+    - ""
+    - "&f[&6ADMIN360&f]     &c<PENDING>&f ticket(s) pending."
+    - "&f[&6ADMIN360&f]     &e<ATTENDING>&f ticket(s) attending."
+    - "&f[&6ADMIN360&f]     &a<COMPLETING>&f ticket(s) completing."
+    - "&f[&6ADMIN360&f]     &b<COMPLETED>&f ticket(s) completed &3today&7."
+    - "&f[&6ADMIN360&f]     &d<TOTAL>&f ticket(s) completed &3all-time &7(&f<UPVOTE_PERCENT>%&a+&7)"
+    - ""
 
 
 
@@ -263,7 +265,13 @@ stats:
 # changed. The player who created the ticket will also be informed.
 
 list:
-  message: "&f[&6ADMIN360&f] &6&l<INDEX> &7[&f<DATETIME>&7] &f<PLAYERNAME> &7: <DETAILS>"
+  message:
+    header:
+      - ""
+      - "&f[&6ADMIN360&f] &6Ticket List"
+    body: "&f[&6ADMIN360&f] &6<INDEX> &7[&f<DATETIME>&7] &f<PLAYERNAME> &7: <DETAILS>"
+    footer:
+      - ""
 
 attend:
 
@@ -273,22 +281,24 @@ attend:
 
   failed:
     message:
-      no-ticket: "&f[&6ADMIN360&f] &c&nNext Failed&7 There are no tickets at the moment."
-      not-exist: "&f[&6ADMIN360&f] &c&nNext Failed&7 That person does not have an opened request."
-      attending: "&f[&6ADMIN360&f] &c&nNext Failed&7 You have to close your current ticket before attending the next one."
+      no-ticket: "&f[&6ADMIN360&f] &c&nNext Failed&7 There are no pending tickets atm."
+      not-online: "&f[&6ADMIN360&f] &c&nNext Failed&7 &6<PLAYERNAME> &7is not online atm."
+      not-pending: "&f[&6ADMIN360&f] &c&nNext Failed&7 &6<PLAYERNAME> &7does not have a pending request atm."
+      attending: "&f[&6ADMIN360&f] &c&nNext Failed&7 You are already attending a request atm."
 
   passed:
     message:
       notify-player:
-      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has been assigned to your request."
-      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now processing your request."
+        - ""
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has been assigned to your request."
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending your request."
+        - ""
       notify-staff: # all staff
-      - ""
-      - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c's ticket."
-      - "&f[&6ADMIN360&f] &7(&e<TICKETSREMAIN> &fticket(s) remaining&7)"
-      - ""
+        - ""
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c's ticket."
+        - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
+        - ""
     # Do you want to run a custom command right after a ticket changed its status? Default example using title-manager.
-    # Change this to true if you want to use this option.
     trigger:
       enable: false
       command: "tm msg <PLAYERNAME> &b\n&6<ADMINNAME> &fis now reviewing your request."
@@ -306,7 +316,7 @@ attend:
 
 teleport:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nTeleport Failed&7 This function is disabled at the moment."
+    message: "&f[&6ADMIN360&f] &c&nTeleport Failed&7 You are not attending a request at the moment."
   passed:
     message: "&f[&6ADMIN360&f] &7You have been teleported to &6<PLAYERNAME>&7."
 
@@ -324,14 +334,14 @@ teleport:
 
 info:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nView-Info Failed&7 This function is disabled at the moment."
+    message: "&f[&6ADMIN360&f] &c&nView-Info Failed&7 You are not attending a request at the moment."
   passed:
     message:
-    - ""
-    - "&f[&6ADMIN360&f]     &6Name: &f<PLAYERNAME>"
-    - "&f[&6ADMIN360&f]     &6Details: &f<DETAILS>"
-    - "&f[&6ADMIN360&f]     &6Time: &f<DATETIME>"
-    - ""
+      - ""
+      - "&f[&6ADMIN360&f]     &6Name: &f<PLAYERNAME>"
+      - "&f[&6ADMIN360&f]     &6Details: &f<DETAILS>"
+      - "&f[&6ADMIN360&f]     &6Time: &f<DATETIME>"
+      - ""
 
 
 
@@ -341,17 +351,17 @@ info:
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket redirect: Redirect and reassign a ticket to another staff.
-# This is a staff command which requires the permission "admin360.staff.redirect".
+# /ticket redirect: Transfer your ticket to another available staff.
+# This is a staff command which requires the permission "admin360.staff.transfer".
 
 # You will get the fail message either because the name you enter is invalid,
-# or that staff is handling a request at the moment.
+# or that staff is attending a request at the moment.
 transfer:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nRedirect Failed&7 This ticket cannot be redirected to &6<ADMINNAME>&7."
+    message: "&f[&6ADMIN360&f] &c&nTransfer Failed&7 This ticket cannot be transferred to &6<ADMINNAME>&7."
   passed:
-    message: "&f[&6ADMIN360&f] &7You have redirected this ticket to &6<ADMINNAME>&7."
-
+    message: "&f[&6ADMIN360&f] &7You have transferred this ticket to &6<ADMINNAME>&7."
+    # then messages of attend will be triggered again, as if it is a new ticket
 
 
 ############################################################
@@ -365,11 +375,11 @@ transfer:
 
 drop:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nDrop Failed&7 You cannot use this function at the moment."
+    message: "&f[&6ADMIN360&f] &c&nDrop Failed&7 You are not attending a request at the moment."
   passed:
     message:
-      notify-handler: "&f[&6ADMIN360&f] &7You have cancelled &6<PLAYERNAME>&7's ticket."
-      notify-player: "&f[&6ADMIN360&f] &7Your ticket has been cancelled by &6<ADMINNAME>&7."
+      notify-handler: "&f[&6ADMIN360&f] &7You have dropped &6<PLAYERNAME>&7's ticket."
+      notify-player: "&f[&6ADMIN360&f] &7Your ticket has been dropped by &6<ADMINNAME>&7."
 
 
 
@@ -384,9 +394,10 @@ drop:
 
 close:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending any request at the moment."
+    message: "&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending a request at the moment."
   passed:
-    message: "&f[&6ADMIN360&f] &7You have closed this ticket successfully."
+    message: "&f[&6ADMIN360&f] &7You have successfully closed &6<PLAYERNAME>&7's ticket."
+    # notify player via feedback reminder
 
 
 
@@ -418,23 +429,29 @@ review:
   # prompt message will be sent at least once regardless of whether reminder is enabled or not
   prompt:
     message:
-    - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has completed your request. Are you satisfied with our service?"
-    - "&f[&6ADMIN360&f] &7Are you satisfied with &6<ADMINNAME>&7's service? [&a/ticket yes&7, &c/ticket no&7]"
+      - ""
+      - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has completed your request."
+      - "&f[&6ADMIN360&f] &7Are you satisfied with &6<ADMINNAME>&7's service?"
+      - "&f[&6ADMIN360&f] &7[&a/ticket yes&7, &c/ticket no&7]"
+      - ""
     # Do you want to run a custom command if the player needs to give a review? Default example using chest-command.
     # This can work really well with some plugins that opens a GUI with buttons triggering /ticket yes and /ticket no.
-    # Change this to true if you want to use this option.
     trigger:
       enable: false
       command: "chestcommands open feedback.yml <PLAYERNAME>" # <ADMINNAME> also available
 
-  # If you do not want your staff to know who actually votes for them, simply remove the placeholder.
   failed:
     message: "&f[&6ADMIN360&f] &7You are not required to give us feedback at the moment."
+
   passed:
     message:
-      received: "&f[&6ADMIN360&f] &7Thank you for your feedback. We are looking forward to serving you again."
-      upvote-notify-handler: "&f[&6ADMIN360&f] &6<PLAYERNAME> &elikes &7your service. [&f1&a+&7]"
-      downvote-notify-handler: "&f[&6ADMIN360&f] &6<PLAYERNAME> &cdislikes &7your service. [&f1&c-&7]"
+      received: "&f[&6ADMIN360&f] &7Thank you for your feedback. We look forward to serving you again."
+      # If you do not want your staff to know who actually votes for them, simply remove the placeholder.
+      upvote-notify: "&f[&6ADMIN360&f] &6<PLAYERNAME>&e likes &7your service. [&f1&a+&7]"
+      downvote-notify: "&f[&6ADMIN360&f] &6<PLAYERNAME>&c dislikes &7your service. [&f1&c-&7]"
+    trigger:
+      enable: false
+      command: "<ADMINNAME> <PLAYERNAME>"
 
 
 
@@ -452,19 +469,18 @@ review:
 # Delete: Delete everything related to a particular player regardless of status.
 # However, you cannot delete a completed ticket.
 
-# This message supports multiple lines.
 purge:
   message:
-  - ""
-  - "&f[&6ADMIN360&f]     &fPurged &c<AMOUNT> &f<TYPE> ticket(s)."
-  - ""
+    - ""
+    - "&f[&6ADMIN360&f]     &fPurged &c<AMOUNT> &f<TYPE> ticket(s)."
+    - ""
 
 #This message is used for /ticket delete and /ticket abandon.
 remove:
   failed:
-    message: "&f[&6ADMIN360&f] &6<PLAYERNAME>&7's ticket has been removed successfully."
+    message: "&f[&6ADMIN360&f] &c&nRemove Failed&7 &6<PLAYERNAME> &7is not online."
   passed:
-    message: "&f[&6ADMIN360&f] &6<PLAYERNAME>&7's ticket has been removed successfully."
+    message: "&f[&6ADMIN360&f] &6<PLAYERNAME> &7has been forcibly removed from all queues."
 
 
 
@@ -479,16 +495,16 @@ remove:
 # They are staff commands which require the permissions "admin360.staff.hptop", "admin360.staff.hpstats"
 # and "admin360.staff.hpreset".
 
-# This message supports multiple lines.
+
 hpstats:
   message:
-  - ""
-  - "&f[&6ADMIN360&f]     &6<ADMINNAME>&f's Statistics"
-  - "&f[&6ADMIN360&f]     &a<UPVOTE> &fupvote(s) &a+"
-  - "&f[&6ADMIN360&f]     &c<DOWNVOTE> &fdownvote(s) &c-"
-  - "&f[&6ADMIN360&f]     &e<TOTAL> &ftotal ticket(s) &a+&c-"
-  - "&f[&6ADMIN360&f]     &b<PERCENT>% &fsatisfaction &a+"
-  - ""
+    - ""
+    - "&f[&6ADMIN360&f]     &6<ADMINNAME>&f's Statistics"
+    - "&f[&6ADMIN360&f]     &a<UPVOTE>&f upvote(s) &a+"
+    - "&f[&6ADMIN360&f]     &c<DOWNVOTE>&f downvote(s) &c-"
+    - "&f[&6ADMIN360&f]     &e<TOTAL>&f total ticket(s) &a+&c-"
+    - "&f[&6ADMIN360&f]     &b<UPVOTE_PERCENT>%&f satisfaction &a+"
+    - ""
 
 hptop:
 
@@ -496,22 +512,22 @@ hptop:
   default-limit: 5
 
   message:
-    title:
-    - ""
-    - "&7&m-------------&r &6LEADERBOARD &7&m-------------"
-    - "         &7[ &a+&fUpvote  &c-&fDownvote  &a+&c-&fTotal &7]"
-    - ""
-    body: "           &6<ADMINNAME>&7: &f<UPVOTE>&a+ &f<DOWNVOTE>&c- &f<TOTAL>&a+&c- &f<PERCENT>%&a+"
+    header:
+      - ""
+      - "&7&m-------------&r &6LEADERBOARD &7&m-------------"
+      - "         &7[ &a+&fUpvote  &c-&fDownvote  &a+&c-&fTotal &7]"
+      - ""
+    body: "           &6<ADMINNAME>&7: &f<UPVOTE>&a+ &f<DOWNVOTE>&c- &f<TOTAL>&a+&c- &f<UPVOTE_PERCENT>%&a+"
     footer:
-    - ""
-    - "&7&m--------------------------------------"
-    - ""
+      - ""
+      - "&7&m--------------------------------------"
+      - ""
 
 hpreset:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nReset Failed&7 Player not found. Names are case-sensitive."
+    message: "&f[&6ADMIN360&f] &c&nReset Failed&7 &6<ADMINNAME>&7 does not exists in database. (&fTips: &7Names are case-sensitive!&7)"
   passed:
-    message: "&f[&6ADMIN360&f] &7You have reset &6<ADMINNAME>&7's stats successfully."
+    message: "&f[&6ADMIN360&f] &7You have successfully reset &6<ADMINNAME>&7's honor stats."
   # Names are stored in the database with case preserved. Case-sensitive for name inputs.
 
 
@@ -540,11 +556,11 @@ history:
   downvote-indicator: "&c-"
 
   message:
-    title:
-    - ""
-    - "&7&m-----------------&r &6HISTORY &7&m-----------------"
-    - "     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]"
-    - ""
+    header:
+      - ""
+      - "&7&m-----------------&r &6HISTORY &7&m-----------------"
+      - "     &7[ &aP: &fPlayer  &cS: &fStaff  &dR: &fRating  &eD: &fDetails &7]"
+      - ""
     #<TIME> is the time that the player opened the ticket.
     body: "&7[&f<TIME>&7] &aP:&f<PLAYERNAME> &cS:&f<ADMINNAME> &dR:&f<RATING> &eD:&f<DETAILS>"
     footer:

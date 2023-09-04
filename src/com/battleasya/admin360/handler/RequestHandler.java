@@ -58,7 +58,7 @@ public class RequestHandler {
             if (secondsLeft != -1) { // still in cooldown
                 String secondsLeft2S = String.valueOf(secondsLeft);
                 User.messagePlayer(sender, Config.create_cooldown_message
-                        .replaceAll("<SECONDSLEFT>", secondsLeft2S));
+                        .replaceAll("<SECONDS>", secondsLeft2S));
                 return;
             }
         }
@@ -81,7 +81,7 @@ public class RequestHandler {
             Admin.messageAdmins(message
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<TICKETSREMAIN>", positionInPending));
+                    .replaceAll("<AMOUNT>", positionInPending));
         }
 
         // trigger custom commands
@@ -97,8 +97,14 @@ public class RequestHandler {
 
     public void printPendingList(CommandSender admin) {
 
+        // print header
+        for (String message : Config.list_header) {
+            User.messagePlayer(admin, message);
+        }
+
         int i = 1;
 
+        // print body
         // loop through each Request in Pending List
         for (Request request : Request.requestPending) {
 
@@ -108,7 +114,7 @@ public class RequestHandler {
             String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
                     .format(new Date(request.getTimestamp() * 1000));
 
-            User.messagePlayer(admin, Config.list_message
+            User.messagePlayer(admin, Config.list_body
                     .replaceAll("<INDEX>", index)
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
@@ -116,6 +122,11 @@ public class RequestHandler {
 
             i++;
 
+        }
+
+        // print footer
+        for (String message : Config.list_footer) {
+            User.messagePlayer(admin, message);
         }
 
     }
@@ -157,7 +168,8 @@ public class RequestHandler {
             player = Bukkit.getPlayer(playerName);
 
             if (player == null) {
-                User.messagePlayer(admin, Config.attend_failed_not_exist);
+                User.messagePlayer(admin, Config.attend_failed_not_online
+                        .replaceAll("<PLAYERNAME>", playerName));
                 return;
             }
 
@@ -165,7 +177,8 @@ public class RequestHandler {
             request = Request.getPndRequest(player.getUniqueId());
 
             if (request == null) {
-                User.messagePlayer(admin, Config.attend_failed_not_exist);
+                User.messagePlayer(admin, Config.attend_failed_not_pending
+                        .replaceAll("<PLAYERNAME>", player.getName()));
                 return;
             }
 
@@ -183,7 +196,7 @@ public class RequestHandler {
         Request.addToAtdLst(adminID, request);
 
         // teleport admin to player
-        if (Config.use_auto_teleport) {
+        if (Config.attend_auto_teleport) {
             try {
                 ((Player) admin).teleport(player);
                 User.messagePlayer(admin, Config.teleport_passed
@@ -206,7 +219,7 @@ public class RequestHandler {
             Admin.messageAdmins(message
                     .replaceAll("<ADMINNAME>", adminName)
                     .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<TICKETSREMAIN>", ticketsRemain));
+                    .replaceAll("<AMOUNT>", ticketsRemain));
         }
 
         // trigger custom commands
@@ -258,14 +271,14 @@ public class RequestHandler {
 
         String playerName = request.getPlayerName();
         String comment = request.getComment();
-        String time = new SimpleDateFormat("MM/dd/yy HH:mm")
+        String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
                 .format(new Date(request.getTimestamp() * 1000));
 
         for (String message : Config.info_passed) {
             User.messagePlayer(admin, message
                     .replaceAll("<PLAYERNAME>", playerName)
                     .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<DATETIME>", time));
+                    .replaceAll("<DATETIME>", datetime));
         }
 
     }
@@ -353,7 +366,7 @@ public class RequestHandler {
             Admin.messageAdmins(message
                     .replaceAll("<ADMINNAME>", admin2Name)
                     .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<TICKETSREMAIN>", ticketsRemain));
+                    .replaceAll("<AMOUNT>", ticketsRemain));
         }
 
         if (Config.attend_passed_trigger_enable) {
@@ -386,12 +399,14 @@ public class RequestHandler {
 
         // Get player uuid
         UUID playerID = request.getPlayerID();
+        String playerName = request.getPlayerName();
 
         // Add Request to Awaiting List
         Request.addToCptLst(playerID, request);
 
         // Notify admin of a successful operation
-        User.messagePlayer(admin, Config.close_passed);
+        User.messagePlayer(admin, Config.close_passed
+                .replaceAll("<PLAYERNAME>", playerName));
 
         // Set review scheduler
         if (Config.review_reminder_enable) {
@@ -421,7 +436,10 @@ public class RequestHandler {
         }
 
         // remove request from completed request list
-        Request completedRequest = Request.removeFromCptLst(playerID);
+        Request request = Request.removeFromCptLst(playerID);
+
+        String adminName = request.getHandledByName();
+        UUID adminID = request.getHandledByID();
 
         // stop the reminders
         Review.removePlayer(playerID);
@@ -430,14 +448,21 @@ public class RequestHandler {
         Request.addCompletedToday();
 
         // add to database
-        plugin.getDataSource().addRecord(completedRequest, isSatisfactory);
+        plugin.getDataSource().addRecord(request, isSatisfactory);
 
         // send player a message
         User.messagePlayer(sender, Config.review_received);
 
+        // trigger command here so that even admin is offline it is executed
+        if (Config.review_received_trigger_enable) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.review_received_trigger_command
+                    .replaceAll("<PLAYERNAME>", playerName)
+                    .replaceAll("<ADMINNAME>", adminName));
+        }
+
         // check if admin is online
         // this must be kept because we did not remove from Awaiting after admin log out
-        Player admin = Bukkit.getPlayer(completedRequest.getHandledByID());
+        Player admin = Bukkit.getPlayer(adminID);
 
         if (admin == null) {
             return;
@@ -632,31 +657,43 @@ public class RequestHandler {
 
         String pending = Integer.toString(Request.getPndLstSize());
         String attending = Integer.toString(Request.getAtdLstSize());
-        String awaiting = Integer.toString(Request.getCptLstSize());
+        String completing = Integer.toString(Request.getCptLstSize());
         String completed = Integer.toString(Request.getCompletedToday());
 
         int total = plugin.getDataSource().getTotalTicketCount(1);
-        int upVote = plugin.getDataSource().getTotalTicketCount(2);
-        int percent;
+        int upvote = plugin.getDataSource().getTotalTicketCount(2);
+        int upvotePercent;
 
-        if (total == 0 || upVote == 0) {
-            percent = 0;
+        if (total == 0 || upvote == 0) {
+            upvotePercent = 0;
         } else {
-            percent = upVote * 100 / total;
+            upvotePercent = upvote * 100 / total;
         }
 
         String totalS = Integer.toString(total);
-        String percentS = Integer.toString(percent);
+        String upVotePercentS = Integer.toString(upvotePercent);
 
         for (String message : Config.stats_message) {
-        	User.messagePlayer(sender, message.replaceAll("<AWAITING>", awaiting)
-                    .replaceAll("<INPROGRESS>", attending)
-                    .replaceAll("<INQUEUE>", pending)
+        	User.messagePlayer(sender, message
+                    .replaceAll("<PENDING>", pending)
+                    .replaceAll("<ATTENDING>", attending)
+                    .replaceAll("<COMPLETING>", completing)
                     .replaceAll("<COMPLETED>", completed)
                     .replaceAll("<TOTAL>", totalS)
-                    .replaceAll("<PERCENT>", percentS));
+                    .replaceAll("<UPVOTE_PERCENT>", upVotePercentS));
     	}
 
+    }
+
+
+    public void resetHonor(CommandSender sender, String target) {
+        if (plugin.getDataSource().resetAdminsHonor(target)) {
+            User.messagePlayer(sender, Config.hpreset_passed
+                    .replaceAll("<ADMINNAME>", target));
+        } else {
+            User.messagePlayer(sender, Config.hpreset_failed
+                    .replaceAll("<ADMINNAME>", target));
+        }
     }
 
 
@@ -665,7 +702,7 @@ public class RequestHandler {
 
         String[][] honors = plugin.getDataSource().getTopHonors(limit);
 
-        for (String message : Config.hptop_title) {
+        for (String message : Config.hptop_header) {
             User.messagePlayer(sender, message);
         }
 
@@ -676,7 +713,7 @@ public class RequestHandler {
                         .replaceAll("<UPVOTE>", honors[i][1])
                         .replaceAll("<DOWNVOTE>", honors[i][2])
                         .replaceAll("<TOTAL>", honors[i][3])
-                        .replaceAll("<PERCENT>", honors[i][4]));
+                        .replaceAll("<UPVOTE_PERCENT>", honors[i][4]));
             }
         }
 
@@ -689,28 +726,28 @@ public class RequestHandler {
 
     public void printHonorStats(CommandSender sender, String adminName) {
 
-        int upVote = plugin.getDataSource().getAdminTicketCount(adminName,1);
-        int downVote = plugin.getDataSource().getAdminTicketCount(adminName,2);
-        int total = upVote + downVote;
-        int percent;
+        int upvote = plugin.getDataSource().getAdminTicketCount(adminName,1);
+        int downvote = plugin.getDataSource().getAdminTicketCount(adminName,2);
+        int total = upvote + downvote;
+        int upvotePercent;
 
-        if (total == 0 || upVote == 0) {
-            percent = 0;
+        if (total == 0 || upvote == 0) {
+            upvotePercent = 0;
         } else {
-             percent = (upVote*100/(total));
+             upvotePercent = (upvote*100/(total));
         }
 
-        String upVoteS = Integer.toString(upVote);
-        String downVoteS = Integer.toString(downVote);
+        String upvoteS = Integer.toString(upvote);
+        String downvoteS = Integer.toString(downvote);
         String totalS = Integer.toString(total);
-        String percentS = Integer.toString(percent);
+        String upvotePercentS = Integer.toString(upvotePercent);
 
         for (String message : Config.hpstats_message) {
             User.messagePlayer(sender, message
-                    .replaceAll("<UPVOTE>", upVoteS)
-                    .replaceAll("<DOWNVOTE>", downVoteS)
+                    .replaceAll("<UPVOTE>", upvoteS)
+                    .replaceAll("<DOWNVOTE>", downvoteS)
                     .replaceAll("<TOTAL>", totalS)
-                    .replaceAll("<PERCENT>", percentS)
+                    .replaceAll("<UPVOTE_PERCENT>", upvotePercentS)
                     .replaceAll("<ADMINNAME>", adminName));
         }
 
@@ -723,8 +760,8 @@ public class RequestHandler {
         String[][] history = plugin.getDataSource().getHistory(limit);
         String rating;
 
-        for (String history_title : Config.history_title) {
-            User.messagePlayer(sender, history_title);
+        for (String message : Config.history_header) {
+            User.messagePlayer(sender, message);
         }
 
         for (int i = 0; i < limit; i++) {
@@ -734,17 +771,19 @@ public class RequestHandler {
                 } else {
                     rating = Config.history_upvote_indicator;
                 }
+                String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
+                        .format(new Date(Long.parseLong(history[i][3])*1000));
                 User.messagePlayer(sender, Config.history_body
                         .replaceAll("<PLAYERNAME>", history[i][0])
                         .replaceAll("<ADMINNAME>", history[i][1])
                         .replaceAll("<DETAILS>", history[i][2])
-                        .replaceAll("<TIME>", new SimpleDateFormat("MM/dd/yy HH:mm").format(new Date(Long.parseLong(history[i][3])*1000)))
+                        .replaceAll("<DATETIME>", datetime)
                         .replaceAll("<RATING>", rating));
             }
         }
 
-        for (String history_footer : Config.history_footer) {
-            User.messagePlayer(sender, history_footer);
+        for (String message : Config.history_footer) {
+            User.messagePlayer(sender, message);
         }
 
     }
