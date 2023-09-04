@@ -1,7 +1,6 @@
 package com.battleasya.admin360.handler;
 
 import com.battleasya.admin360.Admin360;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -34,7 +33,7 @@ public class Config {
     public static boolean create_cooldown_enable;
     public static int create_cooldown_interval;
     public static String create_cooldown_message;
-    public static boolean check_staff_availability;
+    public static boolean create_require_staff;
     public static String create_failed_no_staff;
     public static String create_failed_pending;
     public static String create_failed_attending;
@@ -42,7 +41,7 @@ public class Config {
     public static String create_failed_restricted;
     public static List<String> create_passed_notify_player;
     public static boolean create_passed_trigger_enable;
-    public static String create_passed_trigger_command;
+    public static List<String> create_passed_trigger_command;
     public static List<String> create_passed_notify_staff;
     public static String cancel_failed_no_ticket;
     public static String cancel_failed_attending;
@@ -66,7 +65,7 @@ public class Config {
     public static String attend_failed_attending;
     public static List<String> attend_passed_notify_player;
     public static boolean attend_passed_trigger_enable;
-    public static String attend_passed_trigger_command;
+    public static List<String> attend_passed_trigger_command;
     public static List<String> attend_passed_notify_staff;
     public static String teleport_failed;
     public static String teleport_passed;
@@ -83,13 +82,13 @@ public class Config {
     public static int review_reminder_interval;
     public static List<String> review_prompt;
     public static boolean review_prompt_trigger_enable;
-    public static String review_prompt_trigger_command;
+    public static List<String> review_prompt_trigger_command;
     public static String review_failed;
     public static String review_received;
     public static String review_upvote_notify_handler;
     public static String review_downvote_notify_handler;
     public static boolean review_received_trigger_enable;
-    public static String review_received_trigger_command;
+    public static List<String> review_received_trigger_command;
     public static List<String> purge_message;
     public static String remove_passed;
     public static String remove_failed;
@@ -126,15 +125,15 @@ public class Config {
             boolean rename = configFile.renameTo(new File(plugin.getDataFolder(), "config_old.yml"));
 
             if (rename) {
-                Bukkit.getLogger().info("[Admin360-Reloaded] Renamed the old config file to config_old.yml.");
+                plugin.getLogger().info("[Admin360-Reloaded] Renamed the old config file to config_old.yml.");
             } else {
-                Bukkit.getLogger().severe("[Admin360-Reloaded] Failed to rename the old config file to config_old.yml.");
+                plugin.getLogger().severe("[Admin360-Reloaded] Failed to rename the old config file to config_old.yml.");
             }
 
             plugin.saveDefaultConfig();
 
         } else {
-            Bukkit.getLogger().info("[Admin360-Reloaded] config.yml is at the latest version.");
+            plugin.getLogger().info("[Admin360-Reloaded] config.yml is at the latest version.");
         }
 
     }
@@ -165,7 +164,7 @@ public class Config {
         create_cooldown_interval = config.getInt("create.cooldown.interval");
         create_cooldown_message = config.getString("create.cooldown.message");
 
-        check_staff_availability = config.getBoolean("create.check-staff-availability");
+        create_require_staff = config.getBoolean("create.require-staff");
 
         create_failed_no_staff = config.getString("create.failed.message.no-staff");
         create_failed_pending = config.getString("create.failed.message.pending");
@@ -177,7 +176,7 @@ public class Config {
         create_passed_notify_staff = config.getStringList("create.passed.message.notify-staff");
 
         create_passed_trigger_enable = config.getBoolean("create.passed.trigger.enable");
-        create_passed_trigger_command = config.getString("create.passed.trigger.command");
+        create_passed_trigger_command = config.getStringList("create.passed.trigger.command");
 
         cancel_failed_no_ticket = config.getString("cancel.failed.message.no-ticket");
         cancel_failed_attending = config.getString("cancel.failed.message.attending");
@@ -190,6 +189,7 @@ public class Config {
         status_pending = config.getString("status.player.message.pending");
         status_attending = config.getString("status.player.message.attending");
         status_completing = config.getString("status.player.message.completing");
+
         status_staff_attending = config.getString("status.staff.message.attending");
         status_staff_not_attending = config.getString("status.staff.message.not-attending");
 
@@ -210,7 +210,7 @@ public class Config {
         attend_passed_notify_staff = config.getStringList("attend.passed.message.notify-staff");
 
         attend_passed_trigger_enable = config.getBoolean("attend.passed.trigger.enable");
-        attend_passed_trigger_command = config.getString("attend.passed.trigger.command");
+        attend_passed_trigger_command = config.getStringList("attend.passed.trigger.command");
 
         teleport_failed = config.getString("teleport.failed.message");
         teleport_passed = config.getString("teleport.passed.message");
@@ -234,7 +234,7 @@ public class Config {
         review_prompt = config.getStringList("review.prompt.message");
 
         review_prompt_trigger_enable = config.getBoolean("review.prompt.trigger.enable");
-        review_prompt_trigger_command = config.getString("review.prompt.trigger.command");
+        review_prompt_trigger_command = config.getStringList("review.prompt.trigger.command");
 
         review_failed = config.getString("review.failed.message");
 
@@ -243,7 +243,7 @@ public class Config {
         review_downvote_notify_handler = config.getString("review.passed.message.downvote-notify");
 
         review_received_trigger_enable = config.getBoolean("review.passed.trigger.enable");
-        review_received_trigger_command = config.getString("review.passed.trigger.command");
+        review_received_trigger_command = config.getStringList("review.passed.trigger.command");
 
         purge_message = config.getStringList("purge.message");
 
@@ -263,12 +263,12 @@ public class Config {
 
         history_default_limit = config.getInt("history.default-limit");
 
+        history_upvote_indicator = config.getString("history.upvote-indicator");
+        history_downvote_indicator = config.getString("history.downvote-indicator");
+
         history_header = config.getStringList("history.message.header");
         history_body = config.getString("history.message.body");
         history_footer = config.getStringList("history.message.footer");
-
-        history_upvote_indicator = config.getString("history.upvote-indicator");
-        history_downvote_indicator = config.getString("history.downvote-indicator");
 
     }
 

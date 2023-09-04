@@ -127,11 +127,11 @@ create:
     interval: 60 # in seconds
     message: "&f[&6ADMIN360&f] &7Please wait for &6<SECONDS>s&7 before opening another ticket."
 
-  # Check if any staff members are currently available.
-  # If this is set to true, players will not be allowed to open a new ticket if there is no staff in the server.
-  # How do we determine between a player and a staff? Staff are those who have the permission "admin360.staff.basic".
-  check-staff-availability: true
+  # If this is set to true, players will not be allowed to open a new ticket if there is no staff on the server.
+  # Staff are those who have the permission "admin360.staff.basic".
+  require-staff: false
 
+  # create failed
   failed:
     message:
       no-staff: "&f[&6ADMIN360&f] &c&nCreate Failed&7 We cannot handle your request at the moment."
@@ -140,6 +140,7 @@ create:
       completing: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a completing ticket that awaits your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
       restricted: "&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for members of the staff team."
 
+  # ticket created
   passed:
     message:
       notify-player:
@@ -154,11 +155,12 @@ create:
         - "&f[&6ADMIN360&f] &cDetails:&f <DETAILS>"
         - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
         - ""
-    # Run a console command after a ticket is opened. Default example using title-manager.
+    # Run console commands on ticket creation. Default example using title-manager.
     trigger: # for player-only
       enable: false
-      command: "tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)"
-      # <DETAILS> also available for trigger command
+      command:
+        - "tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)"
+        # <DETAILS> also available for trigger command
 
 
 
@@ -301,7 +303,8 @@ attend:
     # Do you want to run a custom command right after a ticket changed its status? Default example using title-manager.
     trigger:
       enable: false
-      command: "tm msg <PLAYERNAME> &b\n&6<ADMINNAME> &fis now reviewing your request."
+      command:
+        - "tm msg <PLAYERNAME> &b\n&6<ADMINNAME> &fis now reviewing your request."
 
 
 
@@ -438,7 +441,8 @@ review:
     # This can work really well with some plugins that opens a GUI with buttons triggering /ticket yes and /ticket no.
     trigger:
       enable: false
-      command: "chestcommands open feedback.yml <PLAYERNAME>" # <ADMINNAME> also available
+      command:
+        - "chestcommands open feedback.yml <PLAYERNAME>" # <ADMINNAME> also available
 
   failed:
     message: "&f[&6ADMIN360&f] &7You are not required to give us feedback at the moment."
@@ -451,7 +455,8 @@ review:
       downvote-notify: "&f[&6ADMIN360&f] &6<PLAYERNAME>&c dislikes &7your service. [&f1&c-&7]"
     trigger:
       enable: false
-      command: "<ADMINNAME> <PLAYERNAME>"
+      command:
+        - "<ADMINNAME> <PLAYERNAME>"
 
 
 

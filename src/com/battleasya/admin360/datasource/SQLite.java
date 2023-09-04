@@ -66,6 +66,7 @@ public class SQLite implements DataSource {
 
 	@Override
 	public void setUp() {
+
 		Statement st = null;
         
         try {
@@ -94,6 +95,7 @@ public class SQLite implements DataSource {
 	
 	@Override
 	public void addRecord(Request request, boolean upvote) {
+
 		PreparedStatement pst = null;
 		
 		try {
@@ -103,7 +105,7 @@ public class SQLite implements DataSource {
 			pst.setString(2, request.getHandledByName());
 			pst.setLong(3, request.getTimestamp());
 			if (upvote) {
-				pst.setLong(4, System.currentTimeMillis()/1000);
+				pst.setLong(4, System.currentTimeMillis() / 1000);
 			} else {
 				pst.setLong(4, 0);
 			}
@@ -174,7 +176,7 @@ public class SQLite implements DataSource {
 	public boolean resetAdminsHonor(String adminName) {
 
 		PreparedStatement pst = null;
-		int rowsAffected;
+		int rowsAffected = 0;
 		
 		try {
 			pst = con.prepareStatement("DELETE FROM Honors WHERE honorTo = ?");
@@ -182,8 +184,6 @@ public class SQLite implements DataSource {
 			rowsAffected = pst.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
-			close(pst);
-			return false;
 		} finally {
 			close(pst);
 		}

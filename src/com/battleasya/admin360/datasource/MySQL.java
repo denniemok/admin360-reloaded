@@ -69,6 +69,7 @@ public class MySQL implements DataSource {
 
 	@Override
 	public void setUp() {
+
 		Statement st = null;
 
 		try {
@@ -92,10 +93,12 @@ public class MySQL implements DataSource {
 		}
 
 		plugin.getLogger().info("[Admin360-Reloaded] Finished setting up the MySQL database.");
+
 	}
 	
 	@Override
 	public void addRecord(Request request, boolean upvote){
+
 		PreparedStatement pst = null;
 		
 		try {
@@ -178,7 +181,7 @@ public class MySQL implements DataSource {
 	@Override
 	public boolean resetAdminsHonor(String adminName) {
 		PreparedStatement pst = null;
-		int rowsAffected;
+		int rowsAffected = 0;
 
 		try {
 			pst = con.prepareStatement("DELETE FROM Honors WHERE honorTo = ?");
@@ -186,13 +189,12 @@ public class MySQL implements DataSource {
 			rowsAffected = pst.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
-			close(pst);
-			return false;
 		} finally {
 			close(pst);
 		}
 
 		return rowsAffected >= 1;
+
 	}
 
 	@Override

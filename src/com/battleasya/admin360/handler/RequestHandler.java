@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +35,7 @@ public class RequestHandler {
         UUID playerID = ((Player) sender).getUniqueId();
 
         // check staff availability
-        if (Config.check_staff_availability && !Admin.isAvailable()) {
+        if (Config.create_require_staff && !Admin.isAvailable()) {
             User.messagePlayer(sender, Config.create_failed_no_staff);
             return;
         }
@@ -86,10 +87,12 @@ public class RequestHandler {
 
         // trigger custom commands
         if (Config.create_passed_trigger_enable) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.create_passed_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<POSITION>", positionInPending)
-                    .replaceAll("<DETAILS>", comment));
+            for (String command : Config.create_passed_trigger_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
+                        .replaceAll("<PLAYERNAME>", playerName)
+                        .replaceAll("<POSITION>", positionInPending)
+                        .replaceAll("<DETAILS>", comment));
+            }
         }
 
     }
@@ -224,9 +227,11 @@ public class RequestHandler {
 
         // trigger custom commands
         if (Config.attend_passed_trigger_enable) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.attend_passed_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<ADMINNAME>", adminName));
+            for (String command : Config.attend_passed_trigger_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
+                        .replaceAll("<PLAYERNAME>", playerName)
+                        .replaceAll("<ADMINNAME>", adminName));
+            }
         }
 
     }
@@ -370,9 +375,11 @@ public class RequestHandler {
         }
 
         if (Config.attend_passed_trigger_enable) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.attend_passed_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<ADMINNAME>", admin2Name));
+            for (String command : Config.attend_passed_trigger_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
+                        .replaceAll("<PLAYERNAME>", playerName)
+                        .replaceAll("<ADMINNAME>", admin2Name));
+            }
         }
 
     }
@@ -455,9 +462,11 @@ public class RequestHandler {
 
         // trigger command here so that even admin is offline it is executed
         if (Config.review_received_trigger_enable) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.review_received_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<ADMINNAME>", adminName));
+            for (String command : Config.review_received_trigger_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
+                        .replaceAll("<PLAYERNAME>", playerName)
+                        .replaceAll("<ADMINNAME>", adminName));
+            }
         }
 
         // check if admin is online
@@ -512,9 +521,11 @@ public class RequestHandler {
         }
 
         if (Config.review_prompt_trigger_enable) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Config.review_prompt_trigger_command
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<ADMINNAME>", adminName));
+            for (String command : Config.review_prompt_trigger_command) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
+                        .replaceAll("<PLAYERNAME>", playerName)
+                        .replaceAll("<ADMINNAME>", adminName));
+            }
         }
 
         return true;
@@ -700,26 +711,42 @@ public class RequestHandler {
     // print hptop module
     public void printHonorTop(CommandSender sender, int limit) {
 
+        (new BukkitRunnable() {
+            public void run() {
+
         String[][] honors = plugin.getDataSource().getTopHonors(limit);
+
+        (new BukkitRunnable() {
+            public void run() {
 
         for (String message : Config.hptop_header) {
             User.messagePlayer(sender, message);
         }
 
-        for (int i = 0; i < limit ; i++) {
-            if (honors[i][0] != null) {
-                User.messagePlayer(sender, Config.hptop_body
-                        .replaceAll("<ADMINNAME>", honors[i][0])
-                        .replaceAll("<UPVOTE>", honors[i][1])
-                        .replaceAll("<DOWNVOTE>", honors[i][2])
-                        .replaceAll("<TOTAL>", honors[i][3])
-                        .replaceAll("<UPVOTE_PERCENT>", honors[i][4]));
+        for (int i = 0; i < limit; i++) {
+
+            if (honors[i][0] == null) {
+                continue;
             }
+
+            User.messagePlayer(sender, Config.hptop_body
+                    .replaceAll("<ADMINNAME>", honors[i][0])
+                    .replaceAll("<UPVOTE>", honors[i][1])
+                    .replaceAll("<DOWNVOTE>", honors[i][2])
+                    .replaceAll("<TOTAL>", honors[i][3])
+                    .replaceAll("<UPVOTE_PERCENT>", honors[i][4]));
+
         }
 
         for (String message : Config.hptop_footer) {
             User.messagePlayer(sender, message);
         }
+
+            }
+        }).runTask(plugin);
+
+            }
+        }).runTaskAsynchronously(plugin);
 
     }
 
@@ -734,7 +761,7 @@ public class RequestHandler {
         if (total == 0 || upvote == 0) {
             upvotePercent = 0;
         } else {
-             upvotePercent = (upvote*100/(total));
+             upvotePercent = (upvote * 100 / total);
         }
 
         String upvoteS = Integer.toString(upvote);
@@ -754,10 +781,17 @@ public class RequestHandler {
     }
 
 
-    //print history module
+    // print history module
     public void printHonorHistory(CommandSender sender, int limit) {
 
+        (new BukkitRunnable() {
+            public void run() {
+
         String[][] history = plugin.getDataSource().getHistory(limit);
+
+        (new BukkitRunnable() {
+            public void run() {
+
         String rating;
 
         for (String message : Config.history_header) {
@@ -765,26 +799,38 @@ public class RequestHandler {
         }
 
         for (int i = 0; i < limit; i++) {
-            if (history[i][0] != null) {
-                if (Long.parseLong(history[i][4])==0) {
-                    rating = Config.history_downvote_indicator;
-                } else {
-                    rating = Config.history_upvote_indicator;
-                }
-                String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
-                        .format(new Date(Long.parseLong(history[i][3])*1000));
-                User.messagePlayer(sender, Config.history_body
-                        .replaceAll("<PLAYERNAME>", history[i][0])
-                        .replaceAll("<ADMINNAME>", history[i][1])
-                        .replaceAll("<DETAILS>", history[i][2])
-                        .replaceAll("<DATETIME>", datetime)
-                        .replaceAll("<RATING>", rating));
+
+            if (history[i][0] == null) {
+                continue;
             }
+
+            if (Long.parseLong(history[i][4]) == 0) {
+                rating = Config.history_downvote_indicator;
+            } else {
+                rating = Config.history_upvote_indicator;
+            }
+
+            String datetime = new SimpleDateFormat("MM/dd/yy HH:mm")
+                    .format(new Date(Long.parseLong(history[i][3]) * 1000));
+
+            User.messagePlayer(sender, Config.history_body
+                    .replaceAll("<PLAYERNAME>", history[i][0])
+                    .replaceAll("<ADMINNAME>", history[i][1])
+                    .replaceAll("<DETAILS>", history[i][2])
+                    .replaceAll("<DATETIME>", datetime)
+                    .replaceAll("<RATING>", rating));
+
         }
 
         for (String message : Config.history_footer) {
             User.messagePlayer(sender, message);
         }
+
+            }
+        }).runTask(plugin);
+
+            }
+        }).runTaskAsynchronously(plugin);
 
     }
 
