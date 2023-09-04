@@ -1,12 +1,8 @@
 ############################################################
 # +------------------------------------------------------+ #
-# |                       Notes                          | #
+# |                        Notes                         | #
 # +------------------------------------------------------+ #
 ############################################################
-
-# Do not change this unless you know what you're doing.
-# The plugin uses this to check whether we should recreate a new config for you.
-version: "9.1.0"
 
 # Whenever Admin360 has an update available on Spigot page, do read the upgrade instructions.
 # If there are any changes made to this config, you will have to apply the changes on your own
@@ -27,6 +23,10 @@ version: "9.1.0"
 
 # Staff are those who have the permission "admin360.staff.basic".
 
+# HEX Colour Support
+# This plugin supports HEX codes on 1.16+ servers.
+# Example: "#e69296Your ping is #c8a2c8%ping% #e69296ms."
+
 # We welcome users to provide feedback.
 # Project : https://www.spigotmc.org/resources/28285/
 # Support : https://github.com/denniemok/Admin360-Reloaded/issues
@@ -36,9 +36,13 @@ version: "9.1.0"
 
 ############################################################
 # +------------------------------------------------------+ #
-# |      Basic (perms, syntax, help, reload, database)   | #
+# |                        General                       | #
 # +------------------------------------------------------+ #
 ############################################################
+
+# Do not change this unless you know what you're doing.
+# Admin360 uses this to check whether we should recreate a new config for you.
+version: "9.1.0"
 
 general:
   message:
@@ -108,8 +112,8 @@ help:
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket create [details] : Open a ticket with or without a description of the request.
-# This is a player command which requires the permission "admin360.player.basic".
+# /ticket create [details] : Open a request with or without a description.
+# Requires the permission "admin360.player.basic".
 
 create:
 
@@ -120,14 +124,15 @@ create:
     interval: 60 # in seconds
     message: "&f[&6ADMIN360&f] &7Please wait for &6<SECONDS>s&7 before opening another ticket."
 
-  # If this is set to true, players will not be allowed to open a new ticket if there are no staff on the server.
+  # If this is set to true ...
+  # Players will not be allowed to create tickets when there are no staff on the server.
   require-staff: false
 
   # Create aborted because ...
   # no-staff : There are no staff available atm.
   # pending : You have a pending request in queue atm.
   # attending : Staff is attending your request atm.
-  # completing : You have a completing request that awaits your review atm.
+  # completing : You have a completing request atm that awaits your review.
   # restricted : You are a staff, and you are blocked from using this feature to avoid self-boosting.
   failed:
     message:
@@ -138,7 +143,7 @@ create:
       restricted: "&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for members of the staff team."
 
   # Create succeeded, and that means ...
-  # Your ticket has been added to the pending queue and is put in the end of queue.
+  # Your ticket has been added to the Pending Queue and is put in the end of queue.
   passed:
     message:
       notify-player:
@@ -147,14 +152,14 @@ create:
         - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
         - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to check your progress."
         - ""
-      # This will notify all online staff.
+      # This will notify all online staff with permission "admin360.staff.basic".
       notify-staff:
         - ""
         - "&f[&6ADMIN360&f] &6<PLAYERNAME>&c opened a &a&lNEW&c ticket."
         - "&f[&6ADMIN360&f] &cDetails:&f <DETAILS>"
         - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
         - ""
-    # Run console commands on ticket creation. Default example using title-manager.
+    # Run console commands on ticket creation. Default example using Title-Manager.
     # <DETAILS> is also available for trigger command.
     trigger:
       enable: false
@@ -165,17 +170,17 @@ create:
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                   Ticket Cancellation                | #
+# |                 Ticket Cancellation                  | #
 # +------------------------------------------------------+ #
 ############################################################
 
 # /ticket cancel: Cancel your submitted request.
-# This is a player command which requires the permission "admin360.player.basic".
+# Requires the permission "admin360.player.basic".
 
 cancel:
 
   # Cancel aborted because ...
-  # no-ticket : You don't have any pending requests, nothing to cancel tbh.
+  # no-ticket : You don't have any pending request, nothing to cancel tbh.
   # attending : Staff is attending your request, pretty self-explanatory.
   # completing : You have a completing request that awaits your review.
   # restricted : You are a staff. You can't create a ticket, how can you cancel one?
@@ -188,7 +193,7 @@ cancel:
 
   # Cancel succeeded, and that means ...
   # You have successfully cancelled your submitted request.
-  # The request is removed from the pending queue.
+  # The request is removed from the Pending Queue.
   passed:
     message: "&f[&6ADMIN360&f] &7You have successfully cancelled your request."
 
@@ -200,22 +205,24 @@ cancel:
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket status: Query the current status of your ticket.
-# This is a player command which requires the permission "admin360.player.status".
-
-# status-no-ticket : You didn't submit any help-requests. You can open one.
-# status-in-queue : You already have a ticket opened, which is still in the queue at the moment.
-# status-in-progress : A staff is attending your request at the moment.
-# status-attending : You are a staff, and you are currently attending a case.
-# status-require-feedback : Your ticket is closed, but you still haven't given us feedback.
+# /ticket status: Query your ticket status.
+# Requires the permission "admin360.player.status".
 
 status:
+
+  # no-ticket : You don't have any pending request atm.
+  # pending : You have a pending request in queue atm.
+  # attending : Staff is attending your request atm.
+  # completing : You have a completing request that awaits your review atm.
   player:
     message:
       no-ticket: "&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)"
       pending: "&f[&6ADMIN360&f] &7Your ticket is now &6pending &7in queue position &6<POSITION>&7."
       attending: "&f[&6ADMIN360&f] &7We are now processing your ticket. A staff will contact you soon."
       completing: "&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
+
+  # attending : You are attending a request atm.
+  # not-attending : You are not attending a request atm.
   staff:
     message:
       attending: "&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)"
@@ -225,19 +232,28 @@ status:
 
 ############################################################
 # +------------------------------------------------------+ #
-# |         View Ticket Statistics (Player/Staff)        | #
+# |                  Ticket Statistics                   | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket stats: Display tickets statistics.
-# This is a player command which requires the permission "admin360.player.stats".
+# /ticket stats: Display ticket statistics.
+# Requires the permission "admin360.player.stats".
 
-# <INQUEUE> <INPROGRESS> <AWAITING> <COMPLETED> are temporary counters.
-# They will be reset once the server restarts. It's because they are stored in RAM.
-# <TOTAL> is a counter of records of the database. <PERCENT> is the upvote ratio.
-# They will not be reset on server restart.
+# <PENDING> <ATTENDING> <COMPLETING> <COMPLETED> are all temporary counters.
+# They are all stored in memory and will be reset once the server restarts.
 
-# This message supports multiple lines.
+# In fact, most of Admin360 components are in memory as well, including the
+# Pending Request Queue, Attending Request List and Completing Request List.
+# <COMPLETED> counts all the completed requests since previous server restart.
+
+# Only completed requests get stored to the database for statistical and logging purposes.
+# Any incomplete tickets (pending, attending, completing) will be voided on server restart.
+
+# <TOTAL> counts the number of records from the database.
+# All entries in database are historical completed requests with a submitted review.
+
+# <UPVOTE_PERCENT> is the upvote:total ratio calculated based on the data retrieved from database.
+
 stats:
   message:
     - ""
@@ -252,22 +268,16 @@ stats:
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                 Pick A Ticket (Staff)                | #
+# |                   Ticket Selection                   | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket list: List out all the tickets from the queue.
-# /ticket pick <name>: Pick a ticket from the queue and proceed.
-# /ticket next: Proceed to process the next request in the queue.
-# This is a staff command which requires the permission "admin360.staff.basic".
+# /ticket list: List out all the tickets in queue.
+# /ticket select <name>: Select a ticket in queue to attend.
+# /ticket next: Proceed to attend the next request in queue.
+# Requires the permission "admin360.staff.basic".
 
-# "next" and "pick" share the same messages and settings.
-# next-failed-no-ticket : Currently, there are no tickets in the queue, so you cannot proceed.
-# next-failed-attending : You are still attending a request. That's why you can't proceed to process the next ticket.
-# After picking a ticket, you will be teleported to the target player by Admin360 (which can be disabled).
-
-# Your staff in the server (with permission "admin360.staff.basic") will be notified when the status of a ticket has
-# changed. The player who created the ticket will also be informed.
+# "next" and "select" share the same messages and settings.
 
 list:
   message:
@@ -284,13 +294,21 @@ attend:
   # Change this to false if you want to disable this option.
   auto-teleport: true
 
+  # Attend aborted because ...
+  # no-ticket : There are no pending tickets available in queue atm.
+  # not-online : Selection target is not online atm.
+  # not-pending : Selection target has no pending tickets atm.
+  # attending : You are attending a request atm.
   failed:
     message:
-      no-ticket: "&f[&6ADMIN360&f] &c&nNext Failed&7 There are no pending tickets atm."
-      not-online: "&f[&6ADMIN360&f] &c&nNext Failed&7 &6<PLAYERNAME> &7is not online atm."
-      not-pending: "&f[&6ADMIN360&f] &c&nNext Failed&7 &6<PLAYERNAME> &7does not have a pending request atm."
-      attending: "&f[&6ADMIN360&f] &c&nNext Failed&7 You are already attending a request atm."
+      no-ticket: "&f[&6ADMIN360&f] &c&nAttend Failed&7 There are no pending tickets atm."
+      not-online: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7is not online atm."
+      not-pending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7does not have a pending request atm."
+      attending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 You are already attending a request atm."
 
+  # Attend succeeded, and that means ...
+  # You will be teleported to the ticket creator.
+  # Request is removed from the Pending Queue and added to the Attending List.
   passed:
     message:
       notify-player:
@@ -298,12 +316,13 @@ attend:
         - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has been assigned to your request."
         - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending your request."
         - ""
-      notify-staff: # all staff
+      # This will notify all online staff with permission "admin360.staff.basic".
+      notify-staff:
         - ""
         - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c's ticket."
         - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
         - ""
-    # Do you want to run a custom command right after a ticket changed its status? Default example using title-manager.
+    # Run console commands on ticket attendance. Default example using title-manager.
     trigger:
       enable: false
       command:
@@ -313,12 +332,12 @@ attend:
 
 ############################################################
 # +------------------------------------------------------+ #
-# |             Teleport To The Target (Staff)           | #
+# |                     Teleportation                    | #
 # +------------------------------------------------------+ #
 ############################################################
 
-# /ticket tp: It allows you to teleport to the player who opened the ticket that you are processing now.
-# This is a staff command which requires the permission "admin360.staff.tp".
+# /ticket tp: Teleport to the request owner.
+# Requires the permission "admin360.staff.teleport".
 
 teleport:
   failed:
