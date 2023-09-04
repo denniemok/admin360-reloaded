@@ -20,12 +20,12 @@
 # If a player is granted the above permission while they're online, they should re-join the server.
 
 # <PENDING> <ATTENDING> <COMPLETING> <COMPLETED> are the 4 major stages Admin360 used to administer Requests.
-# The first 3 stages are managed completely in Memory, while completed requests will be saved to database.
+# The first 3 stages are managed completely in Memory, while completed requests will be saved to the database.
 
 # <PENDING> is a Queue holding all pending Requests that awaits processing.
 # <ATTENDING> is a List holding all attending Requests that are currently in progress.
 # <COMPLETING> is a List holding all closed Requests that awaits user review.
-# <COMPLETED> does not exist in Memory, but all the entries in database can be referred to this stage.
+# <COMPLETED> does not exist in Memory, but all entries in the database can be referred to this stage.
 
 # What Admin360 does is to manage the transition between these stages.
 # Incomplete requests will be voided on server restart.
@@ -82,20 +82,20 @@ help:
       - "&6/ticket select <name> &f- &7Select a ticket."
       - "&6/ticket next &f- &7Proceed to the next ticket."
       - "&fStep 2"
-      - "&6/ticket tp &f- &7Teleport to the player."
+      - "&6/ticket tp &f- &7Teleport to requester."
       - "&6/ticket info &f- &7View the ticket details."
       - "&fStep 3"
-      - "&6/ticket transfer <name> &f- &7Transfer a ticket."
-      - "&6/ticket drop &f- &7Drop and abandon a ticket."
-      - "&6/ticket close &f- &7Done-mark a ticket."
+      - "&6/ticket transfer <name> &f- &7Transfer the ticket."
+      - "&6/ticket drop &f- &7Drop the ticket."
+      - "&6/ticket close &f- &7Done-mark the ticket."
       - "&fRemoval"
       - "&6/ticket purge [stage] &f- &7Purge all tickets in a stage."
       - "&6/ticket remove <name> &f- &7Remove target from all stages."
-      - "[stage]: pending (default), attending, completing, all"
+      - "&7[stage]: pending (default), attending, completing, all"
       - "&fHonors"
       - "&6/ticket hpstats [name] &f- &7View HP stats."
-      - "&6/ticket hptop [#] &f- &7View HP leaderboard."
-      - "&6/ticket history [#] &f- &7View HP history."
+      - "&6/ticket hptop [line] &f- &7View HP leaderboard."
+      - "&6/ticket history [line] &f- &7View HP history."
       - "&6/ticket hpreset <name> &f- &7Reset HP stats."
       - "&b/admin360 reload &f- &7Reload the config file."
       - "&7*&fParameters: [Optional] <Compulsory>"
@@ -129,33 +129,33 @@ create:
   # Create aborted because ...
   # no-staff : There are no staff available atm.
   # pending : You have a pending request in queue atm.
-  # attending : Staff is attending your request atm.
+  # attending : Staff is attending to your request atm.
   # completing : You have a completing request atm that awaits your review.
   # restricted : You are a staff, and you are blocked from using this feature to avoid self-boosting.
   failed:
     message:
       no-staff: "&f[&6ADMIN360&f] &c&nCreate Failed&7 We cannot handle your request at the moment."
-      pending: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a pending ticket. (&fTips: &6/ticket status&7)"
-      attending: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have an attending ticket.(&fTips: &6/ticket status&7)"
-      completing: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a completing ticket that awaits your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
-      restricted: "&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for members of the staff team."
+      pending: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have a pending ticket in queue. (&fTips: &6/ticket status&7)"
+      attending: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You already have an attending ticket in progress.(&fTips: &6/ticket status&7)"
+      completing: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a ticket that await your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
+      restricted: "&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for this user group."
 
   # Create succeeded means ...
-  # Request is added to Pending Queue and is put in the end of queue.
+  # Request is added to Pending Queue and is put at the end of queue.
   passed:
     message:
       notify-player:
         - ""
         - "&f[&6ADMIN360&f] &7You have opened a ticket (&fPosition: &c<POSITION>&7)."
         - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
-        - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to check your progress."
+        - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to query the progress."
         - ""
       # This will notify all online staff with permission "admin360.staff.basic".
       notify-staff:
         - ""
-        - "&f[&6ADMIN360&f] &6<PLAYERNAME>&c opened a &a&lNEW&c ticket."
-        - "&f[&6ADMIN360&f] &cDetails:&f <DETAILS>"
-        - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
+        - "&f[&6ADMIN360&f] &6<PLAYERNAME>&7 opened a ticket."
+        - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
+        - "&f[&6ADMIN360&f] &e<AMOUNT>&f ticket(s) remaining"
         - ""
     # Run console commands on ticket creation. Default example using Title-Manager.
     # <DETAILS> is also available as a placeholder.
@@ -179,15 +179,15 @@ cancel:
 
   # Cancel aborted because ...
   # no-ticket : You don't have any pending request, nothing to cancel tbh.
-  # attending : Staff is attending your request, pretty self-explanatory.
+  # attending : Staff is attending to your request, pretty self-explanatory.
   # completing : You have a completing request that awaits your review.
   # restricted : You are a staff. You can't create a ticket, how can you cancel one?
   failed:
     message:
-      no-ticket: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You don't have any active requests. (&fTips: &6/ticket create [details]&7)"
-      attending: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You cannot cancel an in-progress request. (&fTips: &6/ticket status&7)"
-      completing: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You have a ticket that requires your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
-      restricted: "&f[&6ADMIN360&f] &c&nCancel Failed&7 This feature has been disabled for members of the staff team."
+      no-ticket: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You don't have any pending requests. (&fTips: &6/ticket create [details]&7)"
+      attending: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You cannot cancel an attending request. (&fTips: &6/ticket status&7)"
+      completing: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You have a ticket that await your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
+      restricted: "&f[&6ADMIN360&f] &c&nCancel Failed&7 This feature has been disabled for this user group."
 
   # Cancel succeeded means ...
   # You have successfully cancelled your submitted request.
@@ -211,22 +211,22 @@ status:
   # Player exclusive status
   # no-ticket : You don't have any pending request atm.
   # pending : You have a pending request in queue atm.
-  # attending : Staff is attending your request atm.
+  # attending : Staff is attending to your request atm.
   # completing : You have a completing request that awaits your review atm.
   player:
     message:
-      no-ticket: "&f[&6ADMIN360&f] &7Do you need help? (&fTips: &6/ticket create [details]&7)"
+      no-ticket: "&f[&6ADMIN360&f] &7You don't have any pending request. (&fTips: &6/ticket create [details]&7)"
       pending: "&f[&6ADMIN360&f] &7Your ticket is now &6pending &7in queue position &6<POSITION>&7."
-      attending: "&f[&6ADMIN360&f] &7We are now processing your ticket. A staff will contact you soon."
-      completing: "&f[&6ADMIN360&f] &7You may have forgotten to give us feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
+      attending: "&f[&6ADMIN360&f] &7Our staff is attending to your ticket. You will be approached soon."
+      completing: "&f[&6ADMIN360&f] &7You have a ticket that await your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
 
   # Staff exclusive status
   # attending : You are attending a request atm.
   # not-attending : You are not attending a request atm.
   staff:
     message:
-      attending: "&f[&6ADMIN360&f] &7You are attending a help-request at the moment. (&fTips: &6/ticket info&7)"
-      not-attending: "&f[&6ADMIN360&f] &7You are not attending any tickets at the moment. (&fTips: &6/ticket next&7)"
+      attending: "&f[&6ADMIN360&f] &7You are attending to a request at the moment. (&fTips: &6/ticket info&7)"
+      not-attending: "&f[&6ADMIN360&f] &7You are not attending to any request at the moment. (&fTips: &6/ticket next&7)"
 
 
 
@@ -250,9 +250,9 @@ status:
 # Any incomplete tickets (pending, attending, completing) will be voided on server restart.
 
 # <TOTAL> counts the number of records from the database.
-# All entries in database are historical completed requests with a submitted review.
+# All entries in the database are historical completed requests with a submitted review.
 
-# <UPVOTE_PERCENT> is the upvote:total ratio calculated based on the data retrieved from database.
+# <UPVOTE_PERCENT> is the upvote:total ratio calculated based on data retrieved from database.
 
 stats:
   message:
@@ -301,10 +301,10 @@ attend:
   # attending : You are attending a request atm.
   failed:
     message:
-      no-ticket: "&f[&6ADMIN360&f] &c&nAttend Failed&7 There are no pending tickets atm."
-      not-online: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7is not online atm."
-      not-pending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7does not have a pending request atm."
-      attending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 You are already attending a request atm."
+      no-ticket: "&f[&6ADMIN360&f] &c&nAttend Failed&7 There are no pending tickets at the moment."
+      not-online: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7is not online at the moment."
+      not-pending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 &6<PLAYERNAME> &7does not have a pending request."
+      attending: "&f[&6ADMIN360&f] &c&nAttend Failed&7 You are already attending to a request."
 
   # Attend succeeded means ...
   # You will be teleported to the ticket creator.
@@ -314,13 +314,13 @@ attend:
       notify-player:
         - ""
         - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has been assigned to your request."
-        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending your request."
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &7is now attending to your request."
         - ""
       # This will notify all online staff with permission "admin360.staff.basic".
       notify-staff:
         - ""
-        - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now processing &6<PLAYERNAME>&c's ticket."
-        - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
+        - "&f[&6ADMIN360&f] &6<ADMINNAME> &cis now attending to &6<PLAYERNAME>&c's request."
+        - "&f[&6ADMIN360&f] &e<AMOUNT>&f ticket(s) remaining"
         - ""
     # Run console commands on ticket attendance. Default example using title-manager.
     trigger:
@@ -341,7 +341,7 @@ attend:
 
 teleport:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nTeleport Failed&7 You are not attending a request at the moment."
+    message: "&f[&6ADMIN360&f] &c&nTeleport Failed&7 You are not attending to any request at the moment."
   passed:
     message: "&f[&6ADMIN360&f] &7You have been teleported to &6<PLAYERNAME>&7."
 
@@ -358,7 +358,7 @@ teleport:
 
 info:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nView-Info Failed&7 You are not attending a request at the moment."
+    message: "&f[&6ADMIN360&f] &c&nView-Info Failed&7 You are not attending to any request at the moment."
   passed:
     message:
       - ""
@@ -383,13 +383,13 @@ transfer:
   # Transfer aborted because ...
   # The name you enter is invalid, or the target is attending another request atm.
   failed:
-    message: "&f[&6ADMIN360&f] &c&nTransfer Failed&7 This ticket cannot be transferred to &6<ADMINNAME>&7."
+    message: "&f[&6ADMIN360&f] &c&nTransfer Failed&7 This request cannot be transferred to &6<ADMINNAME>&7."
 
   # Transfer succeeded means ...
   # The entire attend cycle will be triggered again, as if it is a new ticket.
   # Request is removed from Attending List and re-added with the new assignee.
   passed:
-    message: "&f[&6ADMIN360&f] &7You have transferred this ticket to &6<ADMINNAME>&7."
+    message: "&f[&6ADMIN360&f] &7You have successfully transferred this request to &6<ADMINNAME>&7."
 
 
 
@@ -405,13 +405,13 @@ transfer:
 drop:
 
   failed:
-    message: "&f[&6ADMIN360&f] &c&nDrop Failed&7 You are not attending a request at the moment."
+    message: "&f[&6ADMIN360&f] &c&nDrop Failed&7 You are not attending to any request at the moment."
 
   # Drop succeeded means ...
   # Request is removed from Attending List.
   passed:
     message:
-      notify-handler: "&f[&6ADMIN360&f] &7You have dropped &6<PLAYERNAME>&7's ticket."
+      notify-handler: "&f[&6ADMIN360&f] &7You have successfully dropped &6<PLAYERNAME>&7's request."
       notify-player:
         - ""
         - "&f[&6ADMIN360&f] &7Your ticket has been&c dropped&7 by &6<ADMINNAME>&7."
@@ -433,13 +433,13 @@ drop:
 close:
 
   failed:
-    message: "&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending a request at the moment."
+    message: "&f[&6ADMIN360&f] &c&nClose Failed&7 You are not attending to any request at the moment."
 
   # Close succeeded means ...
   # Review reminder will be in action to prompt request owner for feedback.
   # Request is removed from Attending List and put to Completing List.
   passed:
-    message: "&f[&6ADMIN360&f] &7You have successfully closed &6<PLAYERNAME>&7's ticket."
+    message: "&f[&6ADMIN360&f] &7You have successfully closed &6<PLAYERNAME>&7's request."
 
 
 
@@ -455,7 +455,7 @@ close:
 # After a ticket is closed, your player will be asked to rate the service.
 # They can upvote or downvote. /ticket yes: upvote; /ticket no: downvote.
 
-# Once a review is submitted, details of that request will be added to database.
+# Once a review is submitted, details of that request will be added to the database.
 # Requests will only be kept in memory if a review is not submitted.
 
 review:
@@ -472,7 +472,7 @@ review:
       - ""
       - "&f[&6ADMIN360&f] &6<ADMINNAME> &7has completed your request."
       - "&f[&6ADMIN360&f] &7Are you satisfied with &6<ADMINNAME>&7's service?"
-      - "&f[&6ADMIN360&f] &7[&a/ticket yes&7, &c/ticket no&7]"
+      - "&f[&6ADMIN360&f] &fYes: &7[&a/ticket yes&7], &fNo: &7[&c/ticket no&7]"
       - ""
     # Run console commands on review prompt. Default example using Chest-Commands.
     # e.g. Open a GUI with buttons triggering /ticket yes and /ticket no.
@@ -485,11 +485,11 @@ review:
   # Failed to give rating
   # Probably because of wrong ticket status ...
   failed:
-    message: "&f[&6ADMIN360&f] &7You are not required to give us feedback at the moment."
+    message: "&f[&6ADMIN360&f] &7You don't have any completing ticket at the moment."
 
   # Rating received means ...
   # Review reminder will be put to halt.
-  # Request is removed from Completing List and added to database.
+  # Request is removed from Completing List and added to the database.
   passed:
     message:
       received: "&f[&6ADMIN360&f] &7Thank you for your feedback. We look forward to serving you again."
@@ -530,9 +530,9 @@ purge:
 
 remove:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nRemove Failed&7 &6<PLAYERNAME> &7is not online."
+    message: "&f[&6ADMIN360&f] &c&nRemove Failed&7 &6<PLAYERNAME> &7is not online at the moment."
   passed:
-    message: "&f[&6ADMIN360&f] &6<PLAYERNAME> &7has been forcibly removed from all queues."
+    message: "&f[&6ADMIN360&f] &6<PLAYERNAME> &7has been forcibly removed from all stages."
 
 
 
@@ -582,7 +582,7 @@ hptop:
 # Names are stored in the database with case preserved. Case-sensitive for name inputs.
 hpreset:
   failed:
-    message: "&f[&6ADMIN360&f] &c&nReset Failed&7 &6<ADMINNAME>&7 does not exists in database. (&fTips: &7Names are case-sensitive!&7)"
+    message: "&f[&6ADMIN360&f] &c&nReset Failed&7 &6<ADMINNAME>&7 does not exists in the database. (&fTips: &7Names are Case-Sensitive!&7)"
   passed:
     message: "&f[&6ADMIN360&f] &7You have successfully reset &6<ADMINNAME>&7's honor stats."
 
@@ -599,8 +599,8 @@ hpreset:
 
 # This command works closely with Honor Points system.
 # If a /ticket hpreset <name> is executed, all records related to that staff will be removed.
-# Only completed requests will appear in the history as they are stored in database.
-# Requests in other stages are managed in memory and will only be added to database on receiving a review.
+# Only completed requests will appear in the history as they are stored in the database.
+# Requests in other stages are managed in memory and will only be added to the database on receiving a review.
 
 history:
 
