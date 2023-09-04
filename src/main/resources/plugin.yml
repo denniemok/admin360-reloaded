@@ -1,6 +1,6 @@
 name: Admin360-Reloaded
 main: com.battleasya.admin360.Admin360
-version: 9.1.0
+version: ${version}
 api-version: 1.14
 authors: [Dennie, Vidhu]
 website: https://www.spigotmc.org/resources/28285/

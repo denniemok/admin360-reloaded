@@ -40,7 +40,7 @@
 
 # Do not change this unless you know what you're doing.
 # Admin360 uses this to check whether we should recreate a new config for you.
-version: "9.1.0"
+version: "${version}"
 
 general:
   message:
