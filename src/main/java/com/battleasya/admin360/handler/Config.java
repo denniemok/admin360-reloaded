@@ -152,7 +152,7 @@ public class Config {
         FileConfiguration config = plugin.getConfig();
 
         version_set = config.isSet("version");
-        version_latest = config.getString("version").equalsIgnoreCase(plugin.getDescription().getVersion());
+        version_latest = plugin.getDescription().getVersion().equalsIgnoreCase(config.getString("version"));
 
     }
 

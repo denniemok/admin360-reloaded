@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 /* This class handles everything about the /ticket command. */
 
+@SuppressWarnings("NullableProblems")
 public class A3 implements CommandExecutor {
 
     private final Admin360 plugin;

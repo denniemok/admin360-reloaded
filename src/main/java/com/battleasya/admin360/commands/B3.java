@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 
 /* This class handles everything about the /admin360 command. */
 
+@SuppressWarnings("NullableProblems")
 public class B3 implements CommandExecutor {
 
     private final Admin360 plugin;
@@ -67,7 +68,7 @@ public class B3 implements CommandExecutor {
 
         User.messagePlayer(sender, "");
         User.messagePlayer(sender, "&f[&6ADMIN360&f] Version: &7" + plugin.getDescription().getVersion());
-        User.messagePlayer(sender, "&f[&6ADMIN360&f] Authors: &7" + plugin.getDescription().getAuthors().toString());
+        User.messagePlayer(sender, "&f[&6ADMIN360&f] Authors: &7" + plugin.getDescription().getAuthors());
         User.messagePlayer(sender, "");
 
     }
