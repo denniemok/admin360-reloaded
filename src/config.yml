@@ -5,24 +5,27 @@
 ############################################################
 
 # Do not change this unless you know what you're doing.
-# This is for the plugin to check whether we should generate a new config for you.
+# The plugin uses this to check whether we should recreate a new config for you.
 version: "9.1.0"
 
-# Whenever there's an update available, read the upgrade procedures as instructed on our spigot project page.
-# If there are any changes made to this config, for example, if we've added several new options or messages,
+# Whenever Admin360 has an update available on Spigot page, do read the upgrade instructions.
+# If there are any changes made to this config, you will have to apply the changes on your own
 # you will have to compare and apply the changes on your own.
 
 # Since 7.1.0, the plugin will auto-rename the old config file into "config_old.yml" on server restart.
 # This is to make sure everything works properly especially after a big update.
-# You should have deleted the "config_old.yml" after migrated all the changes.
+# You should have deleted the "config_old.yml" after migrating all the changes.
 # Don't just leave it there as it may break the auto-rename function on future updates.
 
-# As you can see, the comments can be a bit lengthy here because we want to explain everything to you.
-# If you do spend time reading through these messages, you will have a good sense of how the plugin works.
+# Comments can be a bit lengthy here because we want to explain everything to you.
+# If you do spend time reading through these messages, you will get a deep understanding about how Admin360 works.
 
-# If you want to disable a message, simply makes it an empty line using "".
 # All messages, by default, contain all the placeholders that can be used on that particular message.
 # You can remove it or duplicate it.
+
+# you need to know there are 3 types of
+
+# Staff are those who have the permission "admin360.staff.basic".
 
 # We welcome users to provide feedback.
 # Project : https://www.spigotmc.org/resources/28285/
@@ -43,8 +46,7 @@ general:
     incorrect-syntax: "&f[&6ADMIN360&f] &c&nIncorrect Syntax&7 Use &6/admin360 &7to display a list of commands."
     reload-config: "&f[&6ADMIN360&f] &7The config file has been reloaded successfully."
 
-
-# You MUST restart your server if you've changed the database settings.
+# You MUST restart your server to apply any changes in this section.
 # Admin360 will use SQLite if mysql is set to false.
 # The other options will only be valid if mysql is true.
 datasource:
@@ -55,7 +57,6 @@ datasource:
   username: "user"
   password: "password"
   options: "?autoReconnect=true&verifyServerCertificate=false&useSSL=false"
-
 
 help:
   message:
@@ -103,35 +104,31 @@ help:
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                Create A Ticket (Player)              | #
+# |                   Ticket Creation                    | #
 # +------------------------------------------------------+ #
 ############################################################
 
 # /ticket create [details] : Open a ticket with or without a description of the request.
 # This is a player command which requires the permission "admin360.player.basic".
 
-# create-failed-no-staff : Creation aborted because there are no staff online.
-# create-failed-in-queue : Creation aborted because you already have a ticket opened.
-# create-failed-in-progress : Creation aborted because a staff is attending your help-request.
-# create-failed-require-feedback : Creation aborted because you still haven't given us feedback.
-# create-failed-anti-exploit : Creation aborted because you are a staff member. Staff is banned from ticket creation to prevent boosting.
-# *boosting: self-ticketing exploit.
-# create-succeeded : Creation succeeded. Your ticket has been put in the next position of the queue.
-
-# After a ticket is opened, your staff (with permission "admin360.staff.basic") will be notified.
-
 create:
 
+  # Here's a cooldown feature to avoid creation spamming
+  # Cooldown persists even after the target logs out.
   cooldown:
     enable: true
     interval: 60 # in seconds
     message: "&f[&6ADMIN360&f] &7Please wait for &6<SECONDS>s&7 before opening another ticket."
 
-  # If this is set to true, players will not be allowed to open a new ticket if there is no staff on the server.
-  # Staff are those who have the permission "admin360.staff.basic".
+  # If this is set to true, players will not be allowed to open a new ticket if there are no staff on the server.
   require-staff: false
 
-  # create failed
+  # Create aborted because ...
+  # no-staff : There are no staff available atm.
+  # pending : You have a pending request in queue atm.
+  # attending : Staff is attending your request atm.
+  # completing : You have a completing request that awaits your review atm.
+  # restricted : You are a staff, and you are blocked from using this feature to avoid self-boosting.
   failed:
     message:
       no-staff: "&f[&6ADMIN360&f] &c&nCreate Failed&7 We cannot handle your request at the moment."
@@ -140,7 +137,8 @@ create:
       completing: "&f[&6ADMIN360&f] &c&nCreate Failed&7 You have a completing ticket that awaits your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
       restricted: "&f[&6ADMIN360&f] &c&nCreate Failed&7 This feature has been disabled for members of the staff team."
 
-  # ticket created
+  # Create succeeded, and that means ...
+  # Your ticket has been added to the pending queue and is put in the end of queue.
   passed:
     message:
       notify-player:
@@ -149,43 +147,48 @@ create:
         - "&f[&6ADMIN360&f] &7Details: &f<DETAILS>"
         - "&f[&6ADMIN360&f] &7Use &6/ticket status &7to check your progress."
         - ""
-      notify-staff: # notify all staff
+      # This will notify all online staff.
+      notify-staff:
         - ""
         - "&f[&6ADMIN360&f] &6<PLAYERNAME>&c opened a &a&lNEW&c ticket."
         - "&f[&6ADMIN360&f] &cDetails:&f <DETAILS>"
         - "&f[&6ADMIN360&f] &7(&e<AMOUNT>&f ticket(s) remaining&7)"
         - ""
     # Run console commands on ticket creation. Default example using title-manager.
-    trigger: # for player-only
+    # <DETAILS> is also available for trigger command.
+    trigger:
       enable: false
       command:
         - "tm msg <PLAYERNAME> &b\n&6Ticket Created &7(&fPosition: &6<POSITION>&7)"
-        # <DETAILS> also available for trigger command
 
 
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                Cancel A Ticket (Player)              | #
+# |                   Ticket Cancellation                | #
 # +------------------------------------------------------+ #
 ############################################################
 
 # /ticket cancel: Cancel your submitted request.
 # This is a player command which requires the permission "admin360.player.basic".
 
-# cancel-failed-no-ticket : You didn't open any request. There are no request for you to cancel.
-# cancel-failed-in-progress : You can't cancel your request because a staff is now attending it.
-# cancel-failed-attending : You are a staff, and you are processing a ticket. You cannot cancel any tickets.
-# cancel-failed-require-feedback : You cannot cancel your request because you still haven't given us feedback.
-# cancel-succeeded : You have cancelled your submitted request successfully.
-
 cancel:
+
+  # Cancel aborted because ...
+  # no-ticket : You don't have any pending requests, nothing to cancel tbh.
+  # attending : Staff is attending your request, pretty self-explanatory.
+  # completing : You have a completing request that awaits your review.
+  # restricted : You are a staff. You can't create a ticket, how can you cancel one?
   failed:
     message:
       no-ticket: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You don't have any active requests. (&fTips: &6/ticket create [details]&7)"
       attending: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You cannot cancel an in-progress request. (&fTips: &6/ticket status&7)"
       completing: "&f[&6ADMIN360&f] &c&nCancel Failed&7 You have a ticket that requires your feedback. (&fTips: &a/ticket yes&7, &c/ticket no&7)"
       restricted: "&f[&6ADMIN360&f] &c&nCancel Failed&7 This feature has been disabled for members of the staff team."
+
+  # Cancel succeeded, and that means ...
+  # You have successfully cancelled your submitted request.
+  # The request is removed from the pending queue.
   passed:
     message: "&f[&6ADMIN360&f] &7You have successfully cancelled your request."
 
