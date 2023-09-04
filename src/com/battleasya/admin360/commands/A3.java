@@ -20,7 +20,7 @@ public class A3 implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public void messageCommandList(CommandSender sender) {
+    public void printCommandList(CommandSender sender) {
         for (String message : Config.player_command_list) {
             User.messagePlayer(sender, message);
         }
@@ -40,7 +40,7 @@ public class A3 implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            messageCommandList(sender);
+            printCommandList(sender);
             return true;
         }
 
@@ -49,7 +49,7 @@ public class A3 implements CommandExecutor {
             switch (args[0].toLowerCase()) {
 
                 case "help":
-                    messageCommandList(sender);
+                    printCommandList(sender);
                     return true;
 
                 case "create":

@@ -455,7 +455,11 @@ public class RequestHandler {
         Request.addCompletedToday();
 
         // add to database
-        plugin.getDataSource().addRecord(request, isSatisfactory);
+        (new BukkitRunnable() {
+            public void run() {
+                plugin.getDataSource().addRecord(request, isSatisfactory);
+            }
+        }).runTaskAsynchronously(plugin);
 
         // send player a message
         User.messagePlayer(sender, Config.review_received);
@@ -666,13 +670,15 @@ public class RequestHandler {
 
     public void printTicketStats(CommandSender sender) {
 
-        String pending = Integer.toString(Request.getPndLstSize());
-        String attending = Integer.toString(Request.getAtdLstSize());
-        String completing = Integer.toString(Request.getCptLstSize());
-        String completed = Integer.toString(Request.getCompletedToday());
+        (new BukkitRunnable() {
+            public void run() {
 
         int total = plugin.getDataSource().getTotalTicketCount(1);
         int upvote = plugin.getDataSource().getTotalTicketCount(2);
+
+        (new BukkitRunnable() {
+            public void run() {
+
         int upvotePercent;
 
         if (total == 0 || upvote == 0) {
@@ -681,23 +687,36 @@ public class RequestHandler {
             upvotePercent = upvote * 100 / total;
         }
 
+        String pending = Integer.toString(Request.getPndLstSize());
+        String attending = Integer.toString(Request.getAtdLstSize());
+        String completing = Integer.toString(Request.getCptLstSize());
+        String completed = Integer.toString(Request.getCompletedToday());
+
         String totalS = Integer.toString(total);
         String upVotePercentS = Integer.toString(upvotePercent);
 
         for (String message : Config.stats_message) {
-        	User.messagePlayer(sender, message
+            User.messagePlayer(sender, message
                     .replaceAll("<PENDING>", pending)
                     .replaceAll("<ATTENDING>", attending)
                     .replaceAll("<COMPLETING>", completing)
                     .replaceAll("<COMPLETED>", completed)
                     .replaceAll("<TOTAL>", totalS)
                     .replaceAll("<UPVOTE_PERCENT>", upVotePercentS));
-    	}
+        }
+
+            }
+        }).runTask(plugin);
+
+            }
+        }).runTaskAsynchronously(plugin);
 
     }
 
 
     public void resetHonor(CommandSender sender, String target) {
+        (new BukkitRunnable() {
+            public void run() {
         if (plugin.getDataSource().resetAdminsHonor(target)) {
             User.messagePlayer(sender, Config.hpreset_passed
                     .replaceAll("<ADMINNAME>", target));
@@ -705,6 +724,8 @@ public class RequestHandler {
             User.messagePlayer(sender, Config.hpreset_failed
                     .replaceAll("<ADMINNAME>", target));
         }
+            }
+        }).runTaskAsynchronously(plugin);
     }
 
 
@@ -753,15 +774,22 @@ public class RequestHandler {
 
     public void printHonorStats(CommandSender sender, String adminName) {
 
-        int upvote = plugin.getDataSource().getAdminTicketCount(adminName,1);
-        int downvote = plugin.getDataSource().getAdminTicketCount(adminName,2);
+        (new BukkitRunnable() {
+            public void run() {
+
+        int upvote = plugin.getDataSource().getAdminTicketCount(adminName, 1);
+        int downvote = plugin.getDataSource().getAdminTicketCount(adminName, 2);
+
+        (new BukkitRunnable() {
+            public void run() {
+
         int total = upvote + downvote;
         int upvotePercent;
 
         if (total == 0 || upvote == 0) {
             upvotePercent = 0;
         } else {
-             upvotePercent = (upvote * 100 / total);
+            upvotePercent = (upvote * 100 / total);
         }
 
         String upvoteS = Integer.toString(upvote);
@@ -777,6 +805,12 @@ public class RequestHandler {
                     .replaceAll("<UPVOTE_PERCENT>", upvotePercentS)
                     .replaceAll("<ADMINNAME>", adminName));
         }
+
+            }
+        }).runTask(plugin);
+
+            }
+        }).runTaskAsynchronously(plugin);
 
     }
 
