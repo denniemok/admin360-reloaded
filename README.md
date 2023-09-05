@@ -18,7 +18,7 @@
 
 ### Introduction
 
-Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem Minecraft server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by reshaping player-staff interaction.
+Have you ever been in a situation where many players need help, but there are only one or two admins online? If so, you should know how difficult it is to keep track of who needs help and in what order they asked for it. Another problem Minecraft server owners often face is when hardworking players who get promoted to Admin start slacking off and not helping anymore. This plugin aims to solve both of these problems by re-consolidating player-staff interaction.
 
 [First released](https://dev.bukkit.org/bukkit-plugins/admin360/) by Vidhu in 2013, Admin360 is a lightweight yet a very essential community relations tool for Minecraft server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, but this version also introduces many additional features and QoL changes.
 
