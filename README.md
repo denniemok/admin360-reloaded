@@ -34,7 +34,6 @@ Have you ever been in a situation where many players need help, but there are on
 ### Runtime Dependencies
 
 - Java 8 or above
-- SQLite (org.sqlite.jdbc) or MySQL (com.mysql.jdbc) drivers
 - Permission plugin, preferably LuckPerms or PermissionsEx
 - Spigot 1.8 or above, or equivalent forks
 
