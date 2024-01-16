@@ -47,3 +47,5 @@ Have you ever been in a situation where many players need help, but there are on
 <hr>
 
 This project is released under the [MIT License](https://opensource.org/license/mit/).
+
+<img src="https://bstats.org/signatures/bukkit/Admin360-Reloaded.svg">
