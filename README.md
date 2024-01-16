@@ -24,10 +24,6 @@ Have you ever been in a situation where many players need help, but there are on
 
 <hr>
 
-<img src="https://bstats.org/signatures/bukkit/Admin360-Reloaded.svg">
-
-<hr>
-
 ### Components
 
 1. Support Ticket System: _Automated Queuing, Status Queries, Organised Notifications and Informative Statistics_
