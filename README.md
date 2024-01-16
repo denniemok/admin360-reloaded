@@ -22,6 +22,8 @@ Have you ever been in a situation where many players need help, but there are on
 
 [First released](https://dev.bukkit.org/bukkit-plugins/admin360/) by Vidhu in 2013, Admin360 is a lightweight yet a very essential community relations tool for Minecraft server owners. The new version aims to bring this inactive plugin (since 2013) back to life together with several major improvements to its base. Not only does it feature bug fixes, revised performance, forward compatibility and customizable configuration, but this version also introduces many additional features and QoL changes.
 
+<hr>
+
 <img src="https://bstats.org/signatures/bukkit/Admin360-Reloaded.svg">
 
 <hr>
