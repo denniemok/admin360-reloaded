@@ -27,20 +27,20 @@ public class SQLite implements DataSource {
 			Class.forName("org.sqlite.JDBC");
 			con = DriverManager.getConnection("jdbc:sqlite:plugins/Admin360-Reloaded/database.db");
 		} catch (ClassNotFoundException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the SQLite driver.");
+			plugin.getLogger().severe("Couldn't find the SQLite driver.");
 			e.printStackTrace();
 			disconnect();
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		} catch (SQLException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the SQLite database.");
+			plugin.getLogger().severe("Failed to connect to the SQLite database.");
 			e.printStackTrace();
 			disconnect();
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		}
 
-		plugin.getLogger().info("[Admin360-Reloaded] Connected to the SQLite database.");
+		plugin.getLogger().info("Connected to the SQLite database.");
 
 	}
 
@@ -54,13 +54,13 @@ public class SQLite implements DataSource {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Failed to disconnect from the SQLite database.");
+			plugin.getLogger().severe("Failed to disconnect from the SQLite database.");
 			e.printStackTrace();
 			return;
 		}
 
 		con = null;
-		plugin.getLogger().info("[Admin360-Reloaded] Disconnected from the SQLite database.");
+		plugin.getLogger().info("Disconnected from the SQLite database.");
 
 	}
 
@@ -79,7 +79,7 @@ public class SQLite implements DataSource {
         			+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
 					+ "Reason TEXT DEFAULT NULL)");
         } catch(SQLException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the SQLite database.");
+			plugin.getLogger().severe("Failed to setup the SQLite database.");
 			e.printStackTrace();
 			close(st);
 			disconnect();
@@ -89,7 +89,7 @@ public class SQLite implements DataSource {
         	close(st);
         }
 
-		plugin.getLogger().info("[Admin360-Reloaded] Finished setting up the SQLite database.");
+		plugin.getLogger().info("Finished setting up the SQLite database.");
 
 	}
 	

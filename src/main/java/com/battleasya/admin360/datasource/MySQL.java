@@ -30,20 +30,20 @@ public class MySQL implements DataSource {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + options, username, password);
 		} catch (ClassNotFoundException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Couldn't find the MySQL driver.");
+			plugin.getLogger().severe("Couldn't find the MySQL driver.");
 			e.printStackTrace();
 			disconnect();
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		} catch (SQLException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Failed to connect to the MySQL database.");
+			plugin.getLogger().severe("Failed to connect to the MySQL database.");
 			e.printStackTrace();
 			disconnect();
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			return;
 		}
 
-		plugin.getLogger().info("[Admin360-Reloaded] Connected to the MySQL database.");
+		plugin.getLogger().info("Connected to the MySQL database.");
 
 	}
 
@@ -57,13 +57,13 @@ public class MySQL implements DataSource {
 		try {
 			con.close();
 		} catch (SQLException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Failed to disconnect from the MySQL database.");
+			plugin.getLogger().severe("Failed to disconnect from the MySQL database.");
 			e.printStackTrace();
 			return;
 		}
 
 		con = null;
-		plugin.getLogger().info("[Admin360-Reloaded] Disconnected from the MySQL database.");
+		plugin.getLogger().info("Disconnected from the MySQL database.");
 
 	}
 
@@ -82,7 +82,7 @@ public class MySQL implements DataSource {
 					+ "Honor_TimeStamp NUMERIC DEFAULT 0,"
 					+ "Reason TEXT DEFAULT NULL)");
 		} catch(SQLException e) {
-			plugin.getLogger().severe("[Admin360-Reloaded] Failed to setup the MySQL database.");
+			plugin.getLogger().severe("Failed to setup the MySQL database.");
 			e.printStackTrace();
 			close(st);
 			disconnect();
@@ -92,7 +92,7 @@ public class MySQL implements DataSource {
 			close(st);
 		}
 
-		plugin.getLogger().info("[Admin360-Reloaded] Finished setting up the MySQL database.");
+		plugin.getLogger().info("Finished setting up the MySQL database.");
 
 	}
 	
