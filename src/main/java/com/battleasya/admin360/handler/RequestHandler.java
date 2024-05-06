@@ -59,7 +59,7 @@ public class RequestHandler {
             if (secondsLeft != -1) { // still in cooldown
                 String secondsLeft2S = String.valueOf(secondsLeft);
                 User.messagePlayer(sender, Config.create_cooldown_message
-                        .replaceAll("<SECONDS>", secondsLeft2S));
+                        .replace("<SECONDS>", secondsLeft2S));
                 return;
             }
         }
@@ -73,25 +73,25 @@ public class RequestHandler {
         // notify user
         for (String message : Config.create_passed_notify_player) {
             User.messagePlayer(sender, message
-                    .replaceAll("<POSITION>", posInPndLst)
-                    .replaceAll("<DETAILS>", comment));
+                    .replace("<POSITION>", posInPndLst)
+                    .replace("<DETAILS>", comment));
         }
 
         // notify staff
         for (String message : Config.create_passed_notify_staff) {
             Admin.messageAdmins(message
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<AMOUNT>", posInPndLst));
+                    .replace("<PLAYERNAME>", playerName)
+                    .replace("<DETAILS>", comment)
+                    .replace("<AMOUNT>", posInPndLst));
         }
 
         // trigger custom commands
         if (Config.create_passed_trigger_enable) {
             for (String command : Config.create_passed_trigger_command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<POSITION>", posInPndLst)
-                        .replaceAll("<DETAILS>", comment));
+                        .replace("<PLAYERNAME>", playerName)
+                        .replace("<POSITION>", posInPndLst)
+                        .replace("<DETAILS>", comment));
             }
         }
 
@@ -118,10 +118,10 @@ public class RequestHandler {
                     .format(new Date(request.getTimestamp() * 1000));
 
             User.messagePlayer(admin, Config.list_body
-                    .replaceAll("<INDEX>", index)
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<DATETIME>", datetime));
+                    .replace("<INDEX>", index)
+                    .replace("<PLAYERNAME>", playerName)
+                    .replace("<DETAILS>", comment)
+                    .replace("<DATETIME>", datetime));
 
             i++;
 
@@ -172,7 +172,7 @@ public class RequestHandler {
 
             if (player == null) {
                 User.messagePlayer(admin, Config.attend_failed_not_online
-                        .replaceAll("<PLAYERNAME>", playerName));
+                        .replace("<PLAYERNAME>", playerName));
                 return;
             }
 
@@ -181,7 +181,7 @@ public class RequestHandler {
 
             if (request == null) {
                 User.messagePlayer(admin, Config.attend_failed_not_pending
-                        .replaceAll("<PLAYERNAME>", player.getName()));
+                        .replace("<PLAYERNAME>", player.getName()));
                 return;
             }
 
@@ -203,7 +203,7 @@ public class RequestHandler {
             try {
                 ((Player) admin).teleport(player);
                 User.messagePlayer(admin, Config.teleport_passed
-                        .replaceAll("<PLAYERNAME>", playerName));
+                        .replace("<PLAYERNAME>", playerName));
             } catch (Exception e) {
                 User.messagePlayer(admin, Config.teleport_failed);
             }
@@ -214,23 +214,23 @@ public class RequestHandler {
         // notify user
         for (String message : Config.attend_passed_notify_player) {
             User.messagePlayer(player, message
-                    .replaceAll("<ADMINNAME>", adminName));
+                    .replace("<ADMINNAME>", adminName));
         }
 
         // notify staff
         for (String message : Config.attend_passed_notify_staff) {
             Admin.messageAdmins(message
-                    .replaceAll("<ADMINNAME>", adminName)
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<AMOUNT>", ticketsRemain));
+                    .replace("<ADMINNAME>", adminName)
+                    .replace("<PLAYERNAME>", playerName)
+                    .replace("<AMOUNT>", ticketsRemain));
         }
 
         // trigger custom commands
         if (Config.attend_passed_trigger_enable) {
             for (String command : Config.attend_passed_trigger_command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<ADMINNAME>", adminName));
+                        .replace("<PLAYERNAME>", playerName)
+                        .replace("<ADMINNAME>", adminName));
             }
         }
 
@@ -255,7 +255,7 @@ public class RequestHandler {
         try {
             ((Player) admin).teleport(Bukkit.getPlayer(playerID));
             User.messagePlayer(admin, Config.teleport_passed
-                    .replaceAll("<PLAYERNAME>", playerName));
+                    .replace("<PLAYERNAME>", playerName));
         } catch (Exception e) {
             User.messagePlayer(admin, Config.teleport_failed);
         }
@@ -281,9 +281,9 @@ public class RequestHandler {
 
         for (String message : Config.info_passed) {
             User.messagePlayer(admin, message
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<DETAILS>", comment)
-                    .replaceAll("<DATETIME>", datetime));
+                    .replace("<PLAYERNAME>", playerName)
+                    .replace("<DETAILS>", comment)
+                    .replace("<DATETIME>", datetime));
         }
 
     }
@@ -306,11 +306,11 @@ public class RequestHandler {
         Player player = Bukkit.getPlayer(playerID);
 
         User.messagePlayer(admin, Config.drop_passed_notify_handler
-                .replaceAll("<PLAYERNAME>", playerName));
+                .replace("<PLAYERNAME>", playerName));
 
         for (String message : Config.drop_passed_notify_player) {
             User.messagePlayer(player, message
-                    .replaceAll("<ADMINNAME>", adminName));
+                    .replace("<ADMINNAME>", adminName));
         }
 
     }
@@ -323,7 +323,7 @@ public class RequestHandler {
         // check admin1 status
         if (!Request.inAtdLst(admin1ID)) {
             User.messagePlayer(admin1, Config.transfer_failed
-                    .replaceAll("<ADMINNAME>",admin2Name));
+                    .replace("<ADMINNAME>",admin2Name));
             return;
         }
 
@@ -332,7 +332,7 @@ public class RequestHandler {
 
         if (admin2 == null) {
             User.messagePlayer(admin1, Config.transfer_failed
-                    .replaceAll("<ADMINNAME>",admin2Name));
+                    .replace("<ADMINNAME>",admin2Name));
             return;
         }
 
@@ -342,7 +342,7 @@ public class RequestHandler {
         // check if admin2 is admin or if admin2 is attending
         if (!Admin.isAdmin(admin2ID) || Request.inAtdLst(admin2ID)) {
             User.messagePlayer(admin1, Config.transfer_failed
-                    .replaceAll("<ADMINNAME>",admin2Name));
+                    .replace("<ADMINNAME>",admin2Name));
             return;
         }
 
@@ -360,25 +360,25 @@ public class RequestHandler {
         String ticketsRemain = Integer.toString(Request.getPndLstSize());
 
         User.messagePlayer(admin1, Config.transfer_passed
-                .replaceAll("<ADMINNAME>",admin2Name));
+                .replace("<ADMINNAME>",admin2Name));
 
         for (String message : Config.attend_passed_notify_player) {
             User.messagePlayer(player, message
-                    .replaceAll("<ADMINNAME>", admin2Name));
+                    .replace("<ADMINNAME>", admin2Name));
         }
 
         for (String message : Config.attend_passed_notify_staff) {
             Admin.messageAdmins(message
-                    .replaceAll("<ADMINNAME>", admin2Name)
-                    .replaceAll("<PLAYERNAME>", playerName)
-                    .replaceAll("<AMOUNT>", ticketsRemain));
+                    .replace("<ADMINNAME>", admin2Name)
+                    .replace("<PLAYERNAME>", playerName)
+                    .replace("<AMOUNT>", ticketsRemain));
         }
 
         if (Config.attend_passed_trigger_enable) {
             for (String command : Config.attend_passed_trigger_command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<ADMINNAME>", admin2Name));
+                        .replace("<PLAYERNAME>", playerName)
+                        .replace("<ADMINNAME>", admin2Name));
             }
         }
 
@@ -413,7 +413,7 @@ public class RequestHandler {
 
         // Notify admin of a successful operation
         User.messagePlayer(admin, Config.close_passed
-                .replaceAll("<PLAYERNAME>", playerName));
+                .replace("<PLAYERNAME>", playerName));
 
         // Set review scheduler
         if (Config.review_reminder_enable) {
@@ -468,8 +468,8 @@ public class RequestHandler {
         if (Config.review_received_trigger_enable) {
             for (String command : Config.review_received_trigger_command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<ADMINNAME>", adminName));
+                        .replace("<PLAYERNAME>", playerName)
+                        .replace("<ADMINNAME>", adminName));
             }
         }
 
@@ -485,7 +485,7 @@ public class RequestHandler {
         if (isSatisfactory) {
 
             User.messagePlayer(admin, Config.review_upvote_notify_handler
-                    .replaceAll("<PLAYERNAME>", playerName));
+                    .replace("<PLAYERNAME>", playerName));
 
             // fireworks
             Firework fw = admin.getWorld().spawn(admin.getLocation(), Firework.class);
@@ -498,7 +498,7 @@ public class RequestHandler {
         } else {
 
             User.messagePlayer(admin, Config.review_downvote_notify_handler
-                    .replaceAll("<PLAYERNAME>", playerName));
+                    .replace("<PLAYERNAME>", playerName));
 
         }
 
@@ -521,14 +521,14 @@ public class RequestHandler {
 
         for (String message : Config.review_prompt) {
             User.messagePlayer(player, message
-                    .replaceAll("<ADMINNAME>", adminName));
+                    .replace("<ADMINNAME>", adminName));
         }
 
         if (Config.review_prompt_trigger_enable) {
             for (String command : Config.review_prompt_trigger_command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
-                        .replaceAll("<PLAYERNAME>", playerName)
-                        .replaceAll("<ADMINNAME>", adminName));
+                        .replace("<PLAYERNAME>", playerName)
+                        .replace("<ADMINNAME>", adminName));
             }
         }
 
@@ -575,8 +575,8 @@ public class RequestHandler {
 
         for (String message : Config.purge_message) {
             User.messagePlayer(sender, message
-                    .replaceAll("<AMOUNT>", amountPurged)
-                    .replaceAll("<TYPE>", option));
+                    .replace("<AMOUNT>", amountPurged)
+                    .replace("<TYPE>", option));
         }
 
     }
@@ -590,7 +590,7 @@ public class RequestHandler {
 
         if (player == null) {
             User.messagePlayer(sender, Config.remove_failed
-                    .replaceAll("<PLAYERNAME>", playerName));
+                    .replace("<PLAYERNAME>", playerName));
             return;
         }
 
@@ -601,7 +601,7 @@ public class RequestHandler {
         Review.removePlayer(playerID);
 
         User.messagePlayer(sender, Config.remove_passed
-                .replaceAll("<PLAYERNAME>", playerName));
+                .replace("<PLAYERNAME>", playerName));
 
     }
 
@@ -659,7 +659,7 @@ public class RequestHandler {
             case 1:
                 String posInPndLst = Integer.toString(Request.getPosInPndLst(playerID));
                 User.messagePlayer(sender, Config.status_pending
-                        .replaceAll("<POSITION>", posInPndLst));
+                        .replace("<POSITION>", posInPndLst));
                 return;
             case 2:
                 User.messagePlayer(sender, Config.status_attending);
@@ -705,12 +705,12 @@ public class RequestHandler {
 
         for (String message : Config.stats_message) {
             User.messagePlayer(sender, message
-                    .replaceAll("<PENDING>", pending)
-                    .replaceAll("<ATTENDING>", attending)
-                    .replaceAll("<COMPLETING>", completing)
-                    .replaceAll("<COMPLETED>", completed)
-                    .replaceAll("<TOTAL>", total2S)
-                    .replaceAll("<UPVOTE_PERCENT>", upVotePercent2S));
+                    .replace("<PENDING>", pending)
+                    .replace("<ATTENDING>", attending)
+                    .replace("<COMPLETING>", completing)
+                    .replace("<COMPLETED>", completed)
+                    .replace("<TOTAL>", total2S)
+                    .replace("<UPVOTE_PERCENT>", upVotePercent2S));
         }
 
             }
@@ -729,10 +729,10 @@ public class RequestHandler {
 
         if (plugin.getDataSource().resetAdminsHonor(target)) {
             User.messagePlayer(sender, Config.hpreset_passed
-                    .replaceAll("<ADMINNAME>", target));
+                    .replace("<ADMINNAME>", target));
         } else {
             User.messagePlayer(sender, Config.hpreset_failed
-                    .replaceAll("<ADMINNAME>", target));
+                    .replace("<ADMINNAME>", target));
         }
 
             }
@@ -764,11 +764,11 @@ public class RequestHandler {
             }
 
             User.messagePlayer(sender, Config.hptop_body
-                    .replaceAll("<ADMINNAME>", honors[i][0])
-                    .replaceAll("<UPVOTE>", honors[i][1])
-                    .replaceAll("<DOWNVOTE>", honors[i][2])
-                    .replaceAll("<TOTAL>", honors[i][3])
-                    .replaceAll("<UPVOTE_PERCENT>", honors[i][4]));
+                    .replace("<ADMINNAME>", honors[i][0])
+                    .replace("<UPVOTE>", honors[i][1])
+                    .replace("<DOWNVOTE>", honors[i][2])
+                    .replace("<TOTAL>", honors[i][3])
+                    .replace("<UPVOTE_PERCENT>", honors[i][4]));
 
         }
 
@@ -812,11 +812,11 @@ public class RequestHandler {
 
         for (String message : Config.hpstats_message) {
             User.messagePlayer(sender, message
-                    .replaceAll("<UPVOTE>", upvote2S)
-                    .replaceAll("<DOWNVOTE>", downvote2S)
-                    .replaceAll("<TOTAL>", total2S)
-                    .replaceAll("<UPVOTE_PERCENT>", upvotePercent2S)
-                    .replaceAll("<ADMINNAME>", adminName));
+                    .replace("<UPVOTE>", upvote2S)
+                    .replace("<DOWNVOTE>", downvote2S)
+                    .replace("<TOTAL>", total2S)
+                    .replace("<UPVOTE_PERCENT>", upvotePercent2S)
+                    .replace("<ADMINNAME>", adminName));
         }
 
             }
@@ -862,11 +862,11 @@ public class RequestHandler {
                     .format(new Date(Long.parseLong(history[i][3]) * 1000));
 
             User.messagePlayer(sender, Config.history_body
-                    .replaceAll("<PLAYERNAME>", history[i][0])
-                    .replaceAll("<ADMINNAME>", history[i][1])
-                    .replaceAll("<DETAILS>", history[i][2])
-                    .replaceAll("<DATETIME>", datetime)
-                    .replaceAll("<RATING>", rating));
+                    .replace("<PLAYERNAME>", history[i][0])
+                    .replace("<ADMINNAME>", history[i][1])
+                    .replace("<DETAILS>", history[i][2])
+                    .replace("<DATETIME>", datetime)
+                    .replace("<RATING>", rating));
 
         }
 
