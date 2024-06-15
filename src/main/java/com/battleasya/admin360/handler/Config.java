@@ -91,6 +91,9 @@ public class Config {
     public static String teleport_failed;
     public static String teleport_passed;
 
+    public static String invulnerable_on;
+    public static String invulnerable_off;
+
     public static String info_failed;
     public static List<String> info_passed;
 
@@ -256,6 +259,9 @@ public class Config {
 
         teleport_failed = config.getString("teleport.failed.message");
         teleport_passed = config.getString("teleport.passed.message");
+
+        invulnerable_on = config.getString("invulnerable.on");
+        invulnerable_off = config.getString("invulnerable.off");
 
         info_failed = config.getString("info.failed.message");
         info_passed = config.getStringList("info.passed.message");

@@ -211,7 +211,7 @@ public class RequestHandler {
 
         // make admin invulnerable
         if (Config.attend_invincibility) {
-            // TODO: message
+            User.messagePlayer(admin, Config.invulnerable_on);
             ((Player) admin).setInvulnerable(true);
         }
 
@@ -431,7 +431,7 @@ public class RequestHandler {
 
         // Un-invincibilize admin
         if (Config.attend_invincibility) {
-            // TODO: Message
+            User.messagePlayer(admin, Config.invulnerable_off);
             ((Player) admin).setInvulnerable(false);
         }
 
