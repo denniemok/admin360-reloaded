@@ -150,6 +150,8 @@ public class Config {
     public static String history_body;
     public static List<String> history_footer;
 
+    public static String pending_tickets;
+
     /* Init checking */
     public void initConfig() {
 
@@ -262,6 +264,8 @@ public class Config {
 
         invulnerable_on = config.getString("invulnerable.on");
         invulnerable_off = config.getString("invulnerable.off");
+
+        pending_tickets = config.getString("general.message.pending-tickets");
 
         info_failed = config.getString("info.failed.message");
         info_passed = config.getStringList("info.passed.message");

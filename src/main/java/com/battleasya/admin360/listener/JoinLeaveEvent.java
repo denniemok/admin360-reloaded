@@ -1,6 +1,7 @@
 package com.battleasya.admin360.listener;
 
 import com.battleasya.admin360.entities.Review;
+import com.battleasya.admin360.handler.Config;
 import com.battleasya.admin360.handler.Permission;
 import com.battleasya.admin360.entities.Admin;
 import com.battleasya.admin360.entities.Request;
@@ -22,6 +23,7 @@ public class JoinLeaveEvent implements Listener {
 
         if (User.hasPermission(player, Permission.ATTEND_TICKET, false)){
             Admin.addAdmin(player.getUniqueId());
+            User.messagePlayer(player, Config.pending_tickets.replace("{num}", String.valueOf(Request.requestPending.size())));
         }
 
     }
