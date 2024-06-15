@@ -209,6 +209,12 @@ public class RequestHandler {
             }
         }
 
+        // make admin invulnerable
+        if (Config.attend_invincibility) {
+            User.messagePlayer(admin, Config.invulnerable_on);
+            ((Player) admin).setInvulnerable(true);
+        }
+
         String ticketsRemain = Integer.toString(Request.getPndLstSize());
 
         // notify user
@@ -421,6 +427,12 @@ public class RequestHandler {
             Review.addToRmdLst(playerID, reminder);
         } else {
             promptFeedback(playerID, adminName);
+        }
+
+        // Un-invincibilize admin
+        if (Config.attend_invincibility) {
+            User.messagePlayer(admin, Config.invulnerable_off);
+            ((Player) admin).setInvulnerable(false);
         }
 
     }
