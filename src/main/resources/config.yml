@@ -294,6 +294,10 @@ attend:
   # Change this to false if you want to disable this option.
   auto-teleport: true
 
+  # Do you want Admin360 to make your staff invincible when attending a ticket?
+  # Change this to false if you want to disable this option.
+  ticket-invincibility: true
+
   # Attend aborted because ...
   # no-ticket : There are no pending tickets available in queue atm.
   # not-online : Selection target is not online atm.
@@ -366,6 +370,20 @@ info:
       - "&f[&6ADMIN360&f]     &6Details: &f<DETAILS>"
       - "&f[&6ADMIN360&f]     &6Time: &f<DATETIME>"
       - ""
+
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                Ticket Invulnerability                | #
+# +------------------------------------------------------+ #
+############################################################
+
+# If attend.ticket-invincibility is true, then these messages are used.
+
+invulnerable:
+  on: "&f[&6ADMIN360&f] &a&nInvulnerability Enabled for Ticket Attend"
+  off: "&f[&6ADMIN360&f] &c&nInvulnerability Disabled for Ticket Close"
 
 
 

@@ -75,6 +75,7 @@ public class Config {
     public static List<String> list_footer;
 
     public static boolean attend_auto_teleport;
+    public static boolean attend_invincibility;
 
     public static String attend_failed_no_ticket;
     public static String attend_failed_not_online;
@@ -89,6 +90,9 @@ public class Config {
 
     public static String teleport_failed;
     public static String teleport_passed;
+
+    public static String invulnerable_on;
+    public static String invulnerable_off;
 
     public static String info_failed;
     public static List<String> info_passed;
@@ -240,6 +244,7 @@ public class Config {
         list_footer = config.getStringList("list.message.footer");
 
         attend_auto_teleport = config.getBoolean("attend.auto-teleport");
+        attend_invincibility = config.getBoolean("attend.ticket-invincibility");
 
         attend_failed_no_ticket = config.getString("attend.failed.message.no-ticket");
         attend_failed_not_online = config.getString("attend.failed.message.not-online");
@@ -254,6 +259,9 @@ public class Config {
 
         teleport_failed = config.getString("teleport.failed.message");
         teleport_passed = config.getString("teleport.passed.message");
+
+        invulnerable_on = config.getString("invulnerable.on");
+        invulnerable_off = config.getString("invulnerable.off");
 
         info_failed = config.getString("info.failed.message");
         info_passed = config.getStringList("info.passed.message");
