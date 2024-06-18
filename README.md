@@ -46,4 +46,10 @@ Have you ever been in a situation where many players need help, but there are on
 
 <hr>
 
+### Contributos
+
+- [Dartanboy](https://github.com/Dartanboy) and Technofied from [DemocracyCraft](https://www.democracycraft.net/)
+
+<hr>
+
 This project is released under the [MIT License](https://opensource.org/license/mit/).
