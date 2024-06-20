@@ -21,7 +21,8 @@ public class JoinLeaveEvent implements Listener {
 
         Player player = event.getPlayer();
 
-        if (User.hasPermission(player, Permission.ATTEND_TICKET, false)){
+        if (Config.message_pending_on_join &&
+                User.hasPermission(player, Permission.ATTEND_TICKET, false)){
             Admin.addAdmin(player.getUniqueId());
             User.messagePlayer(player, Config.pending_tickets.replace("{num}", String.valueOf(Request.requestPending.size())));
         }
