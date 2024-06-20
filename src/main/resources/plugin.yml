@@ -2,7 +2,7 @@ name: Admin360-Reloaded
 main: com.battleasya.admin360.Admin360
 version: ${version}
 api-version: 1.14
-authors: [Dennie, Vidhu]
+authors: [Dennie, Vidhu, Dartanboy, Technofied]
 website: https://www.spigotmc.org/resources/28285/
 description: Manage real-time help requests.
 commands:
