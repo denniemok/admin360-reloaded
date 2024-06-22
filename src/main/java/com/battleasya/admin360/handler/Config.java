@@ -74,6 +74,8 @@ public class Config {
     public static String list_body;
     public static List<String> list_footer;
 
+    public static boolean message_pending_on_join;
+
     public static boolean attend_auto_teleport;
     public static boolean attend_invincibility;
 
@@ -149,6 +151,8 @@ public class Config {
     public static List<String> history_header;
     public static String history_body;
     public static List<String> history_footer;
+
+    public static String pending_tickets;
 
     /* Init checking */
     public void initConfig() {
@@ -243,6 +247,8 @@ public class Config {
         list_body = config.getString("list.message.body");
         list_footer = config.getStringList("list.message.footer");
 
+        message_pending_on_join = config.getBoolean("general.send-pending-message-to-admins-on-join");
+
         attend_auto_teleport = config.getBoolean("attend.auto-teleport");
         attend_invincibility = config.getBoolean("attend.ticket-invincibility");
 
@@ -262,6 +268,8 @@ public class Config {
 
         invulnerable_on = config.getString("invulnerable.on");
         invulnerable_off = config.getString("invulnerable.off");
+
+        pending_tickets = config.getString("general.message.pending-tickets");
 
         info_failed = config.getString("info.failed.message");
         info_passed = config.getStringList("info.passed.message");

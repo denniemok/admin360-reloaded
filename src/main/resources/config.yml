@@ -43,10 +43,13 @@
 version: "${version}"
 
 general:
+  # Set this to false if you don't want admins to get a message about pending tickets when they join the server
+  send-pending-message-to-admins-on-join: true
   message:
     no-permission: "&f[&6ADMIN360&f] &c&nAccess Denied&7 You do not have permission to use this command."
     incorrect-syntax: "&f[&6ADMIN360&f] &c&nIncorrect Syntax&7 Use &6/admin360 &7to display a list of commands."
     reload-config: "&f[&6ADMIN360&f] &7The config file has been reloaded successfully."
+    pending-tickets: '&f[&6ADMIN360&f] There are <PENDING> pending tickets!'
 
 # You MUST restart your server to apply any changes in this section.
 # Admin360 will use SQLite if mysql is set to false.
