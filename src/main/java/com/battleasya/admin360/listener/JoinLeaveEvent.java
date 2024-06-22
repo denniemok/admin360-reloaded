@@ -25,7 +25,7 @@ public class JoinLeaveEvent implements Listener {
             Admin.addAdmin(player.getUniqueId());
             if (Config.message_pending_on_join) {
                 User.messagePlayer(player,Config.pending_tickets
-                        .replace("{num}", String.valueOf(Request.requestPending.size())));
+                        .replace("<PENDING>", String.valueOf(Request.getPndLstSize())));
             }
         }
     }
